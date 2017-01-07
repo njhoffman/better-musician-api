@@ -1,0 +1,24 @@
+#!/usr/bin/env node
+
+var request = require('request');
+
+var options = {
+  url: 'http://localhost:3001/admin/reset/',
+  headers: {
+    'User-Agent' : 'curl'
+  }
+};
+
+process
+  .argv
+  .slice(2)
+  .forEach(function (modelName) {
+    options.url += modelName;
+    request(options, function(error, res, body) {
+      if (!error && res.statusCode == 200) {
+        console.log(body) // Show the HTML for the Google homepage.
+      } else {
+        console.log("ERROR", error);
+      }
+    });
+  });
