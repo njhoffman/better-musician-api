@@ -1,6 +1,6 @@
 /* eslint key-spacing:0 spaced-comment:0 */
 const path = require('path');
-const debug = require('debug')('app:config:project');
+const { debug } = require('debugger-256')('api:config:project');
 const argv = require('yargs').argv;
 const ip = require('ip');
 
@@ -16,10 +16,6 @@ const config = {
 
   // ----------------------------------
   path_base  : path.resolve(__dirname, '..'),
-  dir_client : 'src',
-  dir_dist   : 'dist',
-  dir_public : 'public',
-  dir_server : 'server',
   dir_test   : 'tests',
 
   // ----------------------------------
@@ -41,39 +37,6 @@ const config = {
   api_secret : 'asjdkfjsdkgh',
 
   // ----------------------------------
-  // Compiler Configuration
-  // ----------------------------------
-  compiler_babel : {
-    cacheDirectory : true,
-    plugins        : ['transform-runtime'],
-    presets        : ['es2015', 'react', 'stage-0']
-  },
-  compiler_devtool         : process.env.NODE_ENV === 'development' ? 'cheap-eval-source-map' : 'source-map',
-  // source maps in order of speed <--> performance, dev compiles sourcemap into original js
-  // (dev) eval => cheap-eval-source-map => cheap-module-eval-source-map => eval-source-map
-  // (prod) cheap-source-map => cheap-module-source-map => source-map => hidden-source-map
-  compiler_hash_type       : 'hash',
-  compiler_fail_on_warning : false,
-  compiler_quiet           : false,
-  compiler_public_path     : '/',
-  compiler_stats           : {
-    chunks:       false,
-    chunkModules: false,
-    colors:       true
-  },
-  compiler_vendors : [
-    'react',
-    'react-dom',
-    'react-redux',
-    'react-router',
-    'react-foundation',
-    'redux',
-    'redux-thunk',
-    'redux-orm',
-    'material-ui'
-  ],
-
-  // ----------------------------------
   // Test Configuration
   // ----------------------------------
   coverage_reporters : [
@@ -81,15 +44,6 @@ const config = {
     { type : 'lcov', dir : 'coverage' }
   ]
 };
-
-/************************************************
--------------------------------------------------
-
-All Internal Configuration Below
-Edit at Your Own Risk
-
--------------------------------------------------
-************************************************/
 
 // ------------------------------------
 // Environment
@@ -108,22 +62,6 @@ config.globals = {
 };
 
 // ------------------------------------
-// Validate Vendor Dependencies
-// ------------------------------------
-const pkg = require('../package.json');
-
-config.compiler_vendors = config.compiler_vendors
-  .filter((dep) => {
-    if (pkg.dependencies[dep]) return true;
-
-    debug(
-      `Package "${dep}" was not found as an npm dependency in package.json; ` +
-      `it won't be included in the webpack vendor bundle.
-       Consider removing it from \`compiler_vendors\` in ~/config/index.js`
-    );
-  });
-
-// ------------------------------------
 // Utilities
 // ------------------------------------
 function base () {
@@ -132,10 +70,7 @@ function base () {
 }
 
 config.paths = {
-  base   : base,
-  client : base.bind(null, config.dir_client),
-  public : base.bind(null, config.dir_public),
-  dist   : base.bind(null, config.dir_dist)
+  base   : base
 };
 
 // ========================================================
