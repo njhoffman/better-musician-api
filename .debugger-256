@@ -1,12 +1,22 @@
  {
    "api" : {
      "*" : 6,
-     "response" : 6,
-     "request" : 6
+       "main" : 6,
+       "db" : {
+         "*" : 4
+       },
+       "routes" : {
+         "*" : 6
+       },
+       "response": 6,
+       "request" : 6
    },
    "_debugger-256" : {
       "customColors" : {
+        "bold":                     { "fg": [23] },
+        "gray":                     { "fg": [8] },
         "responseGet":              { "fg": [1, 4, 3] },
+        "responsePost":             { "fg": [1, 2, 4] },
         "requestGet":               { "fg": [1, 4, 3] },
         "requestDelete":            { "fg": [4, 1, 1] },
         "requestPost":              { "fg": [1, 2, 4] },

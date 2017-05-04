@@ -7,10 +7,8 @@
     "src"
   ],
   "watch" : [
-    "server/api.js",
-    "server/api",
-    "bin/",
-    "server.*.js"
+    "lib/**/*.js",
+    "bin/"
   ],
   "env" : {
     "NODE_ENV" : "development"
