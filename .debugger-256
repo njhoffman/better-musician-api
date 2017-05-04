@@ -1,0 +1,24 @@
+ {
+   "api" : {
+     "*" : 6,
+     "response" : 6,
+     "request" : 6
+   },
+   "_debugger-256" : {
+      "customColors" : {
+        "responseGet":              { "fg": [1, 4, 3] },
+        "requestGet":               { "fg": [1, 4, 3] },
+        "requestDelete":            { "fg": [4, 1, 1] },
+        "requestPost":              { "fg": [1, 2, 4] },
+        "requestOther":             { "fg": [1, 3, 3] },
+        "requestUrl":               { "fg": [4, 4, 4] },
+        "requestStatusError":       { "fg": [4, 0, 0] },
+        "requestStatusWarn":        { "fg": [4, 2, 1] },
+        "requestStatusInfo":        { "fg": [0, 2, 4] },
+        "requestStatusOk":          { "fg": [0, 3, 0] },
+        "webpackMemoryLabel":       { "fg": [1, 2, 4] },
+        "webpackMemoryValue":       { "fg": [4, 2, 1] },
+        "webpackDetailMemoryValue": { "fg": [5, 5, 5] }
+      }
+   }
+ }
