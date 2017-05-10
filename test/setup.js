@@ -13,5 +13,4 @@ global.expect = chai.expect;
 global.assert = chai.assert;
 global.should = chai.should();
 global.proxyquire = proxyquire;
-
 require('../lib/server');
