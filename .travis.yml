@@ -1,4 +1,5 @@
 language: "node_js"
+after_success: "npm run coveralls"
 env:
   - CXX=g++-4.8
 addons:
