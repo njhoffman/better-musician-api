@@ -6,5 +6,6 @@ rethinkdb_data
 
 dist
 coverage
+.coveralls.yml
 
 .idea/
