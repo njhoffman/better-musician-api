@@ -19,8 +19,10 @@
   },
   "betterScripts": {
     "start": {
-      "command": "node bin/server",
+      "command": "bin/rethinkdb.sh & node bin/server",
       "env": {
+        "NODE_ENV": "production",
+        "API_PORT" : 4001,
         "DEBUG": "api:*"
       }
     },
