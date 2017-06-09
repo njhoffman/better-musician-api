@@ -10,9 +10,14 @@ module.exports = {
   // http://stackoverflow.com/questions/34133808/webpack-ots-parsing-error-loading-fonts/34133809#34133809
   development : (config) => ({
     // compiler_public_path : `http://${config.server_host}:${config.server_port}/`
-    compiler_public_path : `http://localhost:3000/`
+    compiler_public_path : `http://localhost:3000/`,
+    db_port: 28016,
+    db_name: 'instrumental_dev'
   }),
-
+  test: (config) => ({
+    db_port: 28017,
+    db_name: 'instrumental_test'
+  }),
   // ======================================================
   // Overrides when NODE_ENV === 'production'
   // ======================================================

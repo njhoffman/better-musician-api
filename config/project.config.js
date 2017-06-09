@@ -86,4 +86,7 @@ if (overrides) {
   debug('No environment overrides found, defaults will be used.');
 }
 
+global.__TEST__ = config.globals.__TEST__;
+
+debug('Config', config);
 module.exports = config;

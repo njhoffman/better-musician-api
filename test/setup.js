@@ -3,7 +3,9 @@ const chai = require('chai');
 const sinonChai = require('sinon-chai');
 const chaiAsPromised = require('chai-as-promised');
 const proxyquire = require('proxyquire');
+const request = require('supertest');
 
+console.log("setting up tests");
 chai.config.includeStack = true;
 chai.use(sinonChai);
 chai.use(chaiAsPromised);
@@ -13,4 +15,5 @@ global.expect = chai.expect;
 global.assert = chai.assert;
 global.should = chai.should();
 global.proxyquire = proxyquire;
-require('../lib/server');
+global.request = request;
+

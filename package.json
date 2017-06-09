@@ -10,9 +10,9 @@
     "start": "better-npm-run start",
     "dev": "better-npm-run dev",
     "deploy": "better-npm-run deploy",
-    "test": "mocha",
-    "test:mochista": "mochista --reporter spec --opts ./test/mochista.opts",
-    "test:watch": "mocha --watch --reporter spec",
+    "test": "NODE_ENV=test mocha",
+    "test:mochista": "NODE_ENV=test mochista --reporter spec --opts ./test/mochista.opts",
+    "test:watch": "NODE_ENV=test mocha --watch --reporter spec",
     "coverage": "better-npm-run coverage",
     "coverage:watch": "npm run test:mochista -- --watch",
     "coveralls": "npm run coverage && cat ./coverage/lcov.info | coveralls && rm -rf coverage"
@@ -22,12 +22,12 @@
       "command": "bin/rethinkdb.sh & node bin/server",
       "env": {
         "NODE_ENV": "production",
-        "API_PORT" : 4001,
+        "API_PORT": 4001,
         "DEBUG": "api:*"
       }
     },
     "dev": {
-      "command": "bin/rethinkdb.sh & nodemon --config ./nodemon.json bin/server",
+      "command": "nodemon --config ./nodemon.json bin/server",
       "env": {
         "NODE_ENV": "development",
         "DEBUG": "api:*"
@@ -73,6 +73,7 @@
     "piping": "^1.0.0-rc.4",
     "request": "^2.79.0",
     "rethinkdb": "^2.3.3",
+    "supertest": "^3.0.0",
     "yargs": "^6.6.0"
   },
   "devDependencies": {
