@@ -45,48 +45,60 @@ const config = {
   ]
 };
 
-// ------------------------------------
-// Environment
-// ------------------------------------
-// N.B.: globals added here must _also_ be added to .eslintrc
-config.globals = {
-  'process.env'  : {
-    'NODE_ENV' : JSON.stringify(config.env)
-  },
-  'NODE_ENV'     : config.env,
-  '__DEV__'      : config.env === 'development',
-  '__PROD__'     : config.env === 'production',
-  '__TEST__'     : config.env === 'test',
-  '__COVERAGE__' : !argv.watch && config.env === 'test',
-  '__BASENAME__' : JSON.stringify(process.env.BASENAME || '')
+const initConfig = () => {
+  return new Promise(resolve => {
+
+    // ------------------------------------
+    // Environment
+    // ------------------------------------
+    // N.B.: globals added here must _also_ be added to .eslintrc
+    config.globals = {
+      'NODE_ENV'     : config.env,
+      '__DEV__'      : config.env === 'development',
+      '__PROD__'     : config.env === 'production',
+      '__TEST__'     : config.env === 'test',
+      '__COVERAGE__' : !argv.watch && config.env === 'test',
+      '__BASENAME__' : JSON.stringify(process.env.BASENAME || ''),
+      '__SKIP_AUTH__' : config.env !== 'production'
+    };
+
+    // ========================================================
+    // Environment Configuration
+    // ========================================================
+    debug(`Looking for environment overrides for NODE_ENV "${config.env}".`);
+    const environments = require('./environments.config');
+    const overrides = environments[config.env];
+    if (overrides) {
+      debug('Found overrides, applying to default configuration.');
+      Object.assign(config, overrides(config));
+    } else {
+      debug('No environment overrides found, defaults will be used.');
+    }
+
+    // so we don't have to import config everywhere
+    global.__TEST__ = config.globals.__TEST__;
+    global.__SKIP_AUTH__ = config.globals.__SKIP_AUTH__;
+    global.__NODE_ENV__ = config.globals.__NODE_ENV__;
+
+    // ------------------------------------
+    // Utilities
+    // ------------------------------------
+    const base = () => {
+      const args = [config.path_base].concat([].slice.call(arguments));
+      return path.resolve.apply(path, args);
+    }
+
+    config.errorHandlers = require('../lib/utils/error');
+
+    config.paths = {
+      base   : base
+    };
+
+    debug('Config initialized', config);
+    resolve(config);
+  });
 };
 
-// ------------------------------------
-// Utilities
-// ------------------------------------
-function base () {
-  const args = [config.path_base].concat([].slice.call(arguments));
-  return path.resolve.apply(path, args);
-}
+const getConfig = () => config;
 
-config.paths = {
-  base   : base
-};
-
-// ========================================================
-// Environment Configuration
-// ========================================================
-debug(`Looking for environment overrides for NODE_ENV "${config.env}".`);
-const environments = require('./environments.config');
-const overrides = environments[config.env];
-if (overrides) {
-  debug('Found overrides, applying to default configuration.');
-  Object.assign(config, overrides(config));
-} else {
-  debug('No environment overrides found, defaults will be used.');
-}
-
-global.__TEST__ = config.globals.__TEST__;
-
-debug('Config', config);
-module.exports = config;
+module.exports = { getConfig, initConfig };

@@ -1,18 +1,18 @@
  {
    "api" : {
-     "*" : 6,
-       "main" : 6,
+     "*" : 1,
+       "main" : 1,
        "db" : {
-         "*" : 4
+         "*" : 1
        },
        "model" : {
-        "*" : 5
+        "*" : 1
        },
        "routes" : {
-         "*" : 6
+         "*" : 1
        },
-       "response": 6,
-       "request" : 6
+       "response": 1,
+       "request" : 1
    },
    "_debugger-256" : {
       "customColors" : {

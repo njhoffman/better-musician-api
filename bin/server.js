@@ -7,4 +7,4 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 require('../lib/utils/server.babel'); // babel registration (runtime transpilation for node)
-require('../lib/server').initServer();
+require('../lib/server')();
