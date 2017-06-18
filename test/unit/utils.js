@@ -1,4 +1,5 @@
 const { pick } = require('lodash');
+const initServer = require('../../lib/server');
 
 const login = (app) =>
   new Promise((resolve, reject) => {
@@ -18,9 +19,25 @@ const login = (app) =>
       })
   });
 
-const setupServer = () => {
-  const initServer = require('../../lib/server');
-  return initServer();
-};
+const logout = (app, headers) =>
+  new Promise((resolve, reject) => {
+    return request(app)
+      .delete('/users/logout')
+      .end((err, res) => {
+        if (err) { reject(err); }
+        resolve();
+      })
+  });
 
-module.exports = { login, setupServer };
+const setupServer = () =>
+  new Promise((resolve, reject) => {
+    return initServer().then(app => {
+      return request(app)
+        .get('/admin/reset/all')
+        .then(res => {
+          resolve(app);
+        }).catch(err => reject(err));
+    });
+  });
+
+module.exports = { login, logout, setupServer };

@@ -78,7 +78,7 @@ const initConfig = () => {
     // so we don't have to import config everywhere
     global.__TEST__ = config.globals.__TEST__;
     global.__SKIP_AUTH__ = config.globals.__SKIP_AUTH__;
-    global.__NODE_ENV__ = config.globals.__NODE_ENV__;
+    global.__NODE_ENV__ = config.globals.NODE_ENV;
 
     // ------------------------------------
     // Utilities

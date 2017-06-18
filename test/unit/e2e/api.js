@@ -31,7 +31,7 @@ describe('Main API', () => {
       });
   });
 
-  // technically part of users route but essential for rest of other tests
+  // needed for other tests
   it('Should authenticate with correct credentials', (done) => {
     request(app)
       .post('/users/login')
@@ -42,19 +42,6 @@ describe('Main API', () => {
         expect(err).to.be.null;
         expect(res.statusCode).to.equal(200);
         expect(res.body.data).to.be.an('object').that.contains({ id: 0 });
-        done();
-      });
-  });
-
-  it('Should fail authentication with incorrect credentials', (done) => {
-    request(app)
-      .post('/users/login')
-      .send({
-        'email-sign-in-email': 'baduser@example.com',
-        'email-sign-in-password': 'badpassword'
-      }).end((err, res) => {
-        expect(err).to.be.null;
-        expect(res.statusCode).to.equal(401);
         done();
       });
   });
