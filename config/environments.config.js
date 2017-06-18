@@ -11,11 +11,9 @@ module.exports = {
   development : (config) => ({
     // compiler_public_path : `http://${config.server_host}:${config.server_port}/`
     compiler_public_path : `http://localhost:3000/`,
-    db_port: 28016,
     db_name: 'instrumental_dev'
   }),
   test: (config) => ({
-    db_port: 28017,
     db_name: 'instrumental_test'
   }),
   // ======================================================
