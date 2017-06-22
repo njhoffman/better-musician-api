@@ -1,4 +1,4 @@
-test/unit
+test/e2e
 --compilers js:babel-register
 --recursive
 --require test/setup.js

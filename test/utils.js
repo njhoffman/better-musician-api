@@ -1,5 +1,5 @@
 const { pick } = require('lodash');
-const initServer = require('../../lib/server');
+const initServer = require('../lib/server');
 
 const login = (app) =>
   new Promise((resolve, reject) => {
