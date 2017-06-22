@@ -10,7 +10,7 @@ describe('User Routes', () => {
   });
 
   // tested in main api test
-  describe('/login', () => {
+  describe('/users/login', () => {
     it('Should authenticate with correct credentials', (done) => {
       request(app)
         .post('/users/login')
@@ -39,7 +39,7 @@ describe('User Routes', () => {
     });
   })
 
-  describe('/register', () => {
+  describe('/users/register', () => {
     it('Should return 400 with error message if password not provided', (done) => {
       const data = { 'email-sign-up-email' : 'testuser@example.com' };
       request(app)
@@ -117,7 +117,7 @@ describe('User Routes', () => {
     });
   });
 
-  describe('/validate_token', () => {
+  describe('/users/validate_token', () => {
     it('Should return 401 if not authenticated', (done) => {
       request(app)
         .get('/users/validate_token')
@@ -142,7 +142,7 @@ describe('User Routes', () => {
     });
   });
 
-  describe('/update', () => {
+  describe('/users/update', () => {
 
     it('Should return 401 if not authenticated', (done) => {
       request(app)
@@ -194,7 +194,7 @@ describe('User Routes', () => {
     });
   });
 
-  describe('/me', () => {
+  describe('/users/me', () => {
     it('Should return user information', (done) => {
       login(app)
         .then(headers => {
@@ -219,7 +219,7 @@ describe('User Routes', () => {
     });
   });
 
-  describe('/logout', () => {
+  describe('/users/logout', () => {
     it('Should logout user', (done) => {
       login(app)
         .then(headers => {

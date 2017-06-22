@@ -1,0 +1,327 @@
+const { getDbModule } = require('../utils/db');
+const { existsSync } = require('fs');
+const { resolve } = require('path');
+const StatsD = require('node-statsd');
+const sdc = new StatsD();
+const { omit, omitBy, pick, pickBy, map, has }  = require('lodash');
+const { trace, log, info } = require('debugger-256')('api:baseModel');
+const validator = require('validator');
+
+class BaseModel {
+  static get args () { return getDbModule().r.args; }
+  static get db () { return getDbModule().db; }
+  static get conn () { return getDbModule().conn; }
+
+  static get foreignKeys () {
+    return pickBy(this.tableKeys, (field) => { return field.relation !== undefined });
+  }
+
+  static get count () {
+    return this.db
+      .table(this.tableName)
+      .count()
+      .run(this.conn);
+  }
+
+  static get all () {
+    sdc.increment('api_db_query');
+    return this.db
+      .table(this.tableName)
+      .orderBy('id')
+      .coerceTo('array')
+      .run(this.conn);
+  }
+
+  static get allDeep () {
+    return this.all.then(records => {
+      const recordIds = map(records, 'id');
+      let queries = [];
+      Object.keys(this.foreignKeys).forEach(key => {
+        const { relation: { table, field = 'id' } } = this.foreignKeys[key];
+        const query = this.allByField(field, recordIds, table);
+        queries.push(Promise.all([query, { key, field }]));
+      });
+      queries.unshift(records);
+      return Promise.all(queries)
+    }).then(results => {
+      let records = results[0];
+      for (let i = 1; i < results.length; i++) {
+        const fieldItems = results[i][0];
+        const { key, field } = results[i][1];
+        records = records.map(record => {
+          record[key] = fieldItems.filter(fi => fi[field] === record.id);
+          return record;
+        });
+      }
+      return records;
+    });
+  }
+
+  static get seedData () {
+    const envPath = resolve(`${__dirname}/seedData/${global.__NODE_ENV__}/${this.tableName}.js`);
+    const defaultPath = resolve(`${__dirname}/seedData/default/${this.tableName}.js`);
+    if (existsSync(envPath)) {
+      return require(envPath);
+    } else if (existsSync(defaultPath)) {
+      return require(defaultPath);
+    } else {
+      throw new Error(`Cannot find seed data for table ${this.tableName} in
+        ${envPath} or ${defaultPath}`);
+    }
+  }
+
+  static findById (id) {
+    sdc.increment('api_db_query');
+    return this.db
+      .table(this.tableName)
+      .get(id)
+      .run(this.conn);
+  }
+
+  static findByIds (ids) {
+    sdc.increment('api_db_query');
+    return this.db
+      .table(this.tableName)
+      .getAll(this.args(ids))
+      .coerceTo('array')
+      .run(this.conn);
+  }
+
+  static modelById (id) {
+    return this.findById(id)
+      .then(data => {
+        return data ? new this(data) : data;
+      });
+  }
+
+  static allByField (fKey, fVals, tableName = false) {
+    sdc.increment('api_db_query');
+    return this.db
+      .table(tableName || this.tableName)
+      .filter(record => {
+        return fVals.indexOf(record(fKey));
+      })
+      .coerceTo('array')
+      .run(this.conn);
+  }
+
+  static findByField (field, tableName = false) {
+    sdc.increment('api_db_query');
+    return this.db
+      .table(tableName || this.tableName)
+      .filter(field)
+      .coerceTo('array')
+      .run(this.conn).then(res => {
+        return  res.length === 0 ? false
+          : res.length === 1 ? res[0]
+          : res;
+      });
+  }
+
+  static modelByField (field) {
+    return this.findByField(field)
+      .then(data => {
+        return data ? new this(data) : data;
+      });
+  }
+
+  static createTable () {
+    return this.db
+      .tableCreate(this.tableName)
+      .run(this.conn)
+      .then(() => log(`Created ${this.tableName} table`));
+  }
+
+  static seed (num = 0, mergeObj) {
+    let exampleData = num > 0
+      ? this.seedData.slice(0, num)
+      : this.seedData;
+
+    if (mergeObj) {
+      exampleData = exampleData.map(data => {
+        // initial database seeding does not merge in fields
+        // if merging in fields, remove id as we want a new record
+        delete data.id;
+        return Object.assign(data, mergeObj);
+      });
+    }
+
+    info(`Seeding records for table: ${this.tableName}, model: ${this.modelName}`);
+    return this.db
+      .table(this.tableName)
+      .insert(exampleData)
+      .run(this.conn)
+      .then(res => {
+        if (res.errors === 0) {
+          log(`Seeded ${res.inserted} records for model ${this.modelName}`);
+          return res;
+        } else {
+          throw new Error(`ERROR Seeding ${this.modelName}: ${res.first_error}`);
+        }
+
+      });
+  }
+
+  static empty () {
+    return this.db
+      .table(this.tableName)
+      .delete()
+      .run(this.conn);
+  }
+
+  static reset () {
+    return this.empty().then(() => this.seed());
+  }
+
+  static add (data) {
+    return new this(data).add();
+  }
+
+  constructor (tableName, tableKeys, data) {
+    this.tableName = tableName;
+    this.tableKeys = tableKeys;
+    this.cleanFields = data && data[0] ? data[0] : (data ? data : null);
+    this.warnings = [];
+    this.errors = [];
+  }
+
+  get db () { return BaseModel.db; }
+  get conn () { return BaseModel.conn; }
+
+  get cleanFields () {
+    const hiddenFields = pickBy(this.tableKeys, (field) => { return field.hidden === true })
+    return omit(this.fields, Object.keys(hiddenFields));
+  }
+
+  set cleanFields(fieldData) {
+    const newFields = this.validateFields(fieldData);
+    this.fields = this.populateDefaults(newFields);
+  }
+
+  get saveFields() {
+    const fKeys = pickBy(this.tableKeys, (field) =>
+      field.relation !== undefined && !field.relation.reverse);
+    const foreignLookups = [];
+    Object.keys(fKeys).forEach(fKey => {
+    });
+  }
+
+  validateFields (fields) {
+    // check existence of keys
+    const vFields = pick(fields, Object.keys(this.tableKeys));
+    Object.keys(omit(fields, Object.keys(vFields)))
+      .forEach(badKey => {
+        this.warnings.push(`${badKey} was not found in tableKeys definition for table: ${this.tableName}`);
+      })
+    // check required fields
+    const reqFields = pickBy(this.tableKeys, (tk) => (tk.required === true));
+    Object.keys(reqFields).forEach(rf => {
+      if (!vFields.hasOwnProperty(rf) || ((vFields[rf] + '').trim() === '')) {
+        this.errors.push(`${rf} is a required field for ${this.tableName}`);
+      }
+    });
+    // validate fields
+    Object.keys(vFields).forEach(vfKey => {
+      if (this.tableKeys[vfKey].validate) {
+        this.tableKeys[vfKey].validate.forEach(vf => {
+          valMap = {
+            'email' : isEmail,
+            'number' : isNumeric,
+            'url' : isURL,
+            'bool' : isBoolean
+          };
+          const valResult = validator[valMap[vf]](vFields[vfKey]);
+          if (!valResult) {
+            this.errors.push(`${vfKey} failed ${vf} validation for data: ${vFields[vfKey]}`);
+            delete vFields[vfKey];
+          }
+        });
+      }
+      valFields[vf] = validator.escape(valFields[vf]);
+    });
+    console.log(this.warnings, this.errors);
+    return valFields;
+  }
+
+  populateDefaults (fields) {
+    Object.keys(this.tableKeys).forEach(tableKey => {
+      if (!has(fields, tableKey) && !has(this.fields, tableKey) && has(this.tableKeys, `${tableKey}.default`)) {
+        fields[tableKey] = this.tableKeys[tableKey]['default'];
+      }
+    });
+    return {...this.fields, ...fields};
+  }
+
+  testUnique () {
+    const uniqueFields = pickBy(this.tableKeys, { unique: true });
+    console.log("\n\nUNIQUE FIELDS\n\n", uniqueFields);
+    return (Object.keys(uniqueFields).length === 0 ?
+      Promise.resolve(true) : this.findByIds(uniqueFields));
+  }
+
+  delete () {
+    log('deleting model %O', this);
+    return this.db
+      .table(this.tableName)
+      .get(this.fields.id)
+      .delete()
+      .run(this.conn);
+  }
+
+  update () {
+    if (this.fields.updatedAt) {
+      this.fields.updatedAt.push(new Date().getTime()); ;
+    }
+    return this.db
+      .table(this.tableName)
+      .get(this.fields.id)
+      .update(omit(this.fields, 'id'))
+      .run(this.conn)
+      .then(res => {
+        if (res.errors === 0) {
+					log(`Successfully updated ${res.replaced} records:`, this.fields);
+          sdc.increment('api_db_update');
+          return this.cleanFields;
+        } else {
+          throw new Error(`ERROR Updating: ${res.first_error}`);
+        }
+      });
+  }
+
+  add () {
+    this.fields.createdAt = new Date().getTime();
+    this.fields.updatedAt = [new Date().getTime()];
+    return this.testUnique()
+    .then(unique => {
+      if (unique === true) {
+        return this.db
+          .table(this.tableName)
+          .insert(this.fields)
+          .run(this.conn)
+          .then((res) => {
+            if (res.errors === 0) {
+              this.fields.id = res.generated_keys[0];
+              log('Successfully added record', this);
+              sdc.increment('api_db_add');
+              return this.cleanFields;
+            } else {
+              throw new Error(`ERROR Adding Record: ${res.first_error}`);
+            }
+          });
+      } else {
+        console.log("\nNow we need to update unique: ", unique);
+      }
+    })
+  }
+
+  save (newFields) {
+    this.cleanFields = newFields;
+    if (this.fields.hasOwnProperty('id')) {
+      return this.update();
+    } else {
+      return this.add();
+    }
+  }
+}
+
+module.exports = BaseModel;

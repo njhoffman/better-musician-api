@@ -74,6 +74,7 @@
     "request": "^2.79.0",
     "rethinkdb": "^2.3.3",
     "supertest": "^3.0.0",
+    "validator": "^7.0.0",
     "yargs": "^6.6.0"
   },
   "devDependencies": {

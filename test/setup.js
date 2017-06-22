@@ -4,6 +4,8 @@ const sinonChai = require('sinon-chai');
 const chaiAsPromised = require('chai-as-promised');
 const proxyquire = require('proxyquire');
 const request = require('supertest');
+const { fatal, error, warn } = require('debugger-256')('api:test');
+
 
 console.log("setting up tests");
 chai.config.includeStack = true;
@@ -17,3 +19,5 @@ global.should = chai.should();
 global.proxyquire = proxyquire;
 global.request = request;
 
+// process.on('uncaughtException', error);
+// process.on('unhandledRejection', error);
