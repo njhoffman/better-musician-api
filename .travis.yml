@@ -10,6 +10,5 @@ addons:
     - g++-4.8
 node_js:
   - "6"
-  - "iojs"
 after_script:
   - npm run coveralls
