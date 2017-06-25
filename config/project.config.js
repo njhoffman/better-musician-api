@@ -1,10 +1,10 @@
 /* eslint key-spacing:0 spaced-comment:0 */
 const path = require('path');
-const { debug } = require('debugger-256')('api:config:project');
+const { info, debug, trace } = require('debugger-256')('api:config:project');
 const argv = require('yargs').argv;
 const ip = require('ip');
 
-debug('Creating default configuration.');
+info('Creating default configuration.');
 // ========================================================
 // Default Configuration
 // ========================================================
@@ -65,11 +65,11 @@ const initConfig = () => {
     // ========================================================
     // Environment Configuration
     // ========================================================
-    debug(`Looking for environment overrides for NODE_ENV "${config.env}".`);
+    debug(`Looking for environment overrides for NODE_ENV %${config.env}%`);
     const environments = require('./environments.config');
     const overrides = environments[config.env];
     if (overrides) {
-      debug('Found overrides, applying to default configuration.');
+      debug('Found overrides, applying to default configuration.', overrides(config));
       Object.assign(config, overrides(config));
     } else {
       debug('No environment overrides found, defaults will be used.');
@@ -94,7 +94,8 @@ const initConfig = () => {
       base   : base
     };
 
-    debug('Config initialized', config);
+    info(`Config initialized for %${config.env}%`, { color: 'cyan' });
+    trace(config);
     resolve(config);
   });
 };

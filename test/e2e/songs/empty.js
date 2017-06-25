@@ -32,7 +32,8 @@ module.exports = function() {
               expect(res.body.data.tables)
                 .to.be.an('object')
                 .that.has.property('songs')
-                .that.is.false;
+                .that.is.an('array')
+                .with.length(0);
               done();
             }).catch(done);
         });

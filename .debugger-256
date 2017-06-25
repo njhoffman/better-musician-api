@@ -3,16 +3,17 @@
      "*" : 6,
        "main" : 6,
        "db" : {
-         "*" : 6
+         "*" : 5
        },
+       "config": 5,
        "model" : {
         "*" : 6
        },
        "routes" : {
-         "*" : 6
+         "*" : 5
        },
-       "response": 6,
-       "request" : 6
+       "response": 5,
+       "request" : 5
    },
    "_env": {
      "test" : {
@@ -27,6 +28,7 @@
         "gray":                     { "fg": [8] },
         "responseGet":              { "fg": [1, 4, 3] },
         "responsePost":             { "fg": [1, 2, 4] },
+        "responseDelete":           { "fg": [4, 1, 4] },
         "requestGet":               { "fg": [1, 4, 3] },
         "requestDelete":            { "fg": [4, 1, 1] },
         "requestPost":              { "fg": [1, 2, 4] },
