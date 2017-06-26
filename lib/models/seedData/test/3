@@ -1,6 +1,5 @@
 const { setupServer } = require('../utils');
 
-module.exports = function() {
   describe('Main API', () => {
     let app;
 
@@ -46,4 +45,3 @@ module.exports = function() {
         });
     });
   });
-}

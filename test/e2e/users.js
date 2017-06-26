@@ -5,6 +5,7 @@ const registerRoute = require('./users/register');
 const updateRoute = require('./users/update');
 const validateTokenRoute = require('./users/validate_token');
 
+module.exports = function() {
   describe('User Routes', () => {
     loginRoute();
     logoutRoute();
@@ -13,3 +14,4 @@ const validateTokenRoute = require('./users/validate_token');
     updateRoute();
     validateTokenRoute();
   });
+}

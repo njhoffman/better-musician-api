@@ -1,3 +1,4 @@
+// TODO: replace db route queries with direct db model calls
 
 const apiRoutes = require('./e2e/api');
 const fieldRoutes = require('./e2e/fields');

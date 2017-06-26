@@ -1,5 +1,8 @@
 const { pick } = require('lodash');
 const initServer = require('../lib/server');
+const getModels = require('../lib/models/');
+
+const { _dbg } = require('debugger-256')('api:test');
 
 const login = (app) =>
   new Promise((resolve, reject) => {
@@ -40,4 +43,24 @@ const setupServer = () =>
     });
   });
 
-module.exports = { login, logout, setupServer };
+const outModelByField = (modelName, field) =>
+  new Promise((resolve, reject) => {
+    const Model = getModels()[modelName];
+    return Model.findByField(field)
+      .then(res => {
+        // _dbg(`${modelName} by field ${field}`, res);
+        resolve(res);
+      });
+  });
+
+const outModelAll = (modelName) =>
+  new Promise((resolve, reject) => {
+    const Model = getModels()[modelName];
+    return Model.all
+      .then(res => {
+        // _dbg(`${modelName} (all)`, res);
+        resolve(res);
+      });
+  });
+
+module.exports = { login, logout, setupServer, outModelByField, outModelAll };

@@ -19,7 +19,7 @@ global.should = chai.should();
 global.proxyquire = proxyquire;
 global.request = request;
 
-// process.on('uncaughtException', error);
-// process.on('unhandledRejection', error);
+process.on('uncaughtException', error);
+process.on('unhandledRejection', error);
 //
 

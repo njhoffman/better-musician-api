@@ -1,4 +1,4 @@
-const { login, logout, setupServer } = require('../../utils');
+const { login, logout, setupServer, outModelAll } = require('../../utils');
 
 module.exports = function() {
   describe('/fields/update', () => {
@@ -20,7 +20,7 @@ module.exports = function() {
     });
 
     it('Should update existing field with validated fields', (done) => {
-      const data = { id: 0, label: 'New Label', tabName: 'New Tab Name' };
+      const data = { id: "0", label: 'New Label', tabName: 'New Tab Name', type: 0 };
       login(app)
         .then(headers => {
           request(app)
@@ -29,18 +29,17 @@ module.exports = function() {
             .send(data)
             .then(res => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body.data) .to.be.an('object').that.contains(data);
-              return request(app).get('/admin/list/fields')
+              expect(res.body.data).to.be.an('object').that.contains(data);
+              return outModelAll('Field');
             }).then(res => {
-              expect(res.statusCode).to.equal(200);
-              expect(res.body[0]).to.be.an('object').that.contains(data);
+              expect(res[0]).to.be.an('object').that.contains(data);
               done();
             }).catch(done);
         });
     });
 
     it('Should ignore fields not in table schema', (done) => {
-      const data = { _badFieldName: 'shouldnt exist', id: 0 };
+      const data = { _badFieldName: 'shouldnt exist', id: "0", type: "0", tabName: 'New Tab Name', label: 'New Label' };
       login(app)
         .then(headers => {
           request(app)
@@ -49,13 +48,12 @@ module.exports = function() {
             .send(data)
             .then(res => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body.data).to.be.an('object').that.contains({ id: 0 });
+              expect(res.body.data).to.be.an('object').that.contains({ id: "0" });
               expect(res.body.data).to.not.have.property('_badFieldName');
-              return request(app).get('/admin/list/fields');
+              return outModelAll('Field');
             }).then(res => {
-              expect(res.statusCode).to.equal(200);
-              expect(res.body[0]).to.be.an('object').that.contains({ id: 0 });
-              expect(res.body[0]).to.not.have.property('_badFieldName');
+              expect(res[0]).to.be.an('object').that.contains({ id: "0" });
+              expect(res[0]).to.not.have.property('_badFieldName');
               done();
             }).catch(done);
         });

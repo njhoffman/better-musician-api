@@ -57,7 +57,7 @@ module.exports = function() {
               return request(app).get('/songs').set(headers);
             }).then(res => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body.data.tables.songs[16]).to.contain({ instrument: 0, user: 0 });
+              expect(res.body.data.tables.songs[16]).to.contain({ instrument: "0", user: "0" });
               done();
             }).catch(done);
         });
@@ -76,7 +76,7 @@ module.exports = function() {
               return request(app).get('/songs').set(headers);
             }).then(res => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body.data.tables.songs[16]).to.contain.key('instrument').that.is.not.equal(0);
+              expect(res.body.data.tables.songs[16]).to.contain.key('instrument').that.is.not.equal("0");
               done();
             }).catch(done);
         });
