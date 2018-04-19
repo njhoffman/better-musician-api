@@ -1,6 +1,6 @@
 /* eslint key-spacing:0 spaced-comment:0 */
 const path = require('path');
-const { info, debug, trace } = require('debugger-256')('api:config:project');
+const { info, debug, trace } = require('../lib/utils/logger')('api:config:project');
 const argv = require('yargs').argv;
 const ip = require('ip');
 
