@@ -32,7 +32,7 @@ const config = {
   db_name : process.env.DB_NAME || 'instrumental',
 
   // API Configuration
-  api_host   : process.env.API_HOST || 'localhost',
+  api_host   : process.env.API_HOST || '0.0.0.0',
   api_port   : process.env.API_PORT || 3001,
   api_secret : 'asjdkfjsdkgh',
 
@@ -69,7 +69,7 @@ const initConfig = () => {
     const environments = require('./environments.config');
     const overrides = environments[config.env];
     if (overrides) {
-      debug('Found overrides, applying to default configuration.', overrides(config));
+      debug(overrides(config), 'Found overrides, applying to default configuration.');
       Object.assign(config, overrides(config));
     } else {
       debug('No environment overrides found, defaults will be used.');
@@ -94,7 +94,7 @@ const initConfig = () => {
       base   : base
     };
 
-    info(`Config initialized for %${config.env}%`, { color: 'cyan' });
+    info({ color: 'bold' }, `Config initialized for %${config.env}%`);
     trace(config);
     resolve(config);
   });
