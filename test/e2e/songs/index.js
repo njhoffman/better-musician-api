@@ -1,8 +1,12 @@
 const { login, logout, setupServer } = require('../../utils');
 
-module.exports = function() {
+module.exports = function(routes) {
   describe('/songs', () => {
     let app;
+
+    after(function() {
+      routes.push('/songs');
+    });
 
     beforeEach(function() {
       this.timeout(10000);
@@ -47,6 +51,7 @@ module.exports = function() {
             .get('/songs')
             .set(headers)
             .then(res => {
+              // TODO: write utility functions to get seed data for assertions
               expect(res.statusCode).to.equal(200);
               expect(res.body.data.tables)
                 .to.have.property('fields')
@@ -55,15 +60,15 @@ module.exports = function() {
               expect(res.body.data.tables)
                 .to.have.property('instruments')
                 .that.is.an('array')
-                .that.has.length(1);
+                .that.has.length(4);
               expect(res.body.data.tables)
                 .to.have.property('genres')
                 .that.is.an('array')
-                .that.has.length(1);
+                .that.has.length(4);
               expect(res.body.data.tables)
                 .to.have.property('artists')
                 .that.is.an('array')
-                .that.has.length(8);
+                .that.has.length(29);
               done();
             }).catch(done);
         });

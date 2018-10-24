@@ -4,9 +4,12 @@ const _BaseModel = require('../../lib/models/_BaseModel');
 module.exports = function() {
   describe('Models (Standard)', () => {
 
+
     Object.keys(allModels).forEach(modelKey => {
       const model = allModels[modelKey];
       const newModel = new model();
+      const _BaseModelStub = sinon.stub(_BaseModel, 'constructor');
+
       describe(`${modelKey}`, () => {
         it('Should be have static properties tableName, modelName, and tableKeys', () => {
           expect(newModel).to.contain.property('tableName').that.is.a('string');
@@ -24,14 +27,15 @@ module.exports = function() {
         });
 
         it('Should call base constructor with model data and instance data', () => {
-          const _BaseModelStub = sinon.sandbox.stub(_BaseModel, 'constructor');
-          const modelProxy = proxyquire(`../lib/models/${modelKey}`, { './_BaseModel' : _BaseModelStub });
+          const modelProxy = proxyquire(
+            `../lib/models/${modelKey}`, {
+              './_BaseModel' : _BaseModelStub
+            });
           const newModelProxy = new modelProxy({ id: 'test_id' });
-          expect(_BaseModelStub).to.be.called.once;
+          expect(_BaseModelStub).to.have.been.calledOnce;
           expect(_BaseModelStub.args[0]).to.have.length.gt(1);
           expect(_BaseModelStub.args[0][0]).to.contain.keys('tableName', 'modelName', 'tableKeys');
           expect(_BaseModelStub.args[0][1]).to.contain({ id: 'test_id' });
-          _BaseModelStub.restore();
         });
 
         it('tableKeys should have an id field', () => {
@@ -53,6 +57,7 @@ module.exports = function() {
           });
         });
       });
+      _BaseModelStub.restore();
     });
     // TODO: test required fields return error, bad fields get filtered with warnings, test validation
   });

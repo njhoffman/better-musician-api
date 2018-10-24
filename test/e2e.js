@@ -4,8 +4,14 @@ const fieldRoutes = require('./e2e/fields');
 const songRoutes = require('./e2e/songs');
 
 describe('e2e Route Tests', () => {
-  apiRoutes();
-  userRoutes();
-  fieldRoutes();
-  songRoutes();
+  const routes = [];
+
+  after(function() {
+    console.log(`Successfully tested: ${routes.length} routes...`);
+    console.log('Starting unit tests');
+  });
+  apiRoutes(routes);
+  userRoutes(routes);
+  fieldRoutes(routes);
+  songRoutes(routes);
 });

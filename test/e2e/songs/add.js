@@ -1,8 +1,24 @@
 const { login, logout, setupServer } = require('../../utils');
 
-module.exports = function() {
+module.exports = function(routes) {
   describe('/songs/add', () => {
     let app;
+
+    const mockSong = {
+      title: 'My example song',
+      artist: { lastName: 'Thrustmaster', firstName: 'Gonzo' },
+      instrument: { name: 'piano' }
+    };
+
+    const mockSongUniq = {
+      title: 'My example song',
+      artist: { lastName: 'Thrustmaster', firstName: 'Gonzo' },
+      instrument: { name: 'new instrument' }
+    };
+
+    after(function() {
+      routes.push('/songs/add');
+    });
 
     beforeEach(function() {
       this.timeout(10000);
@@ -20,42 +36,43 @@ module.exports = function() {
     });
 
     it('Should add a song if required fields exist', (done) => {
-      const mockSong = { title: 'My example song', artist: { lastName: 'Thrustmaster', firstName: 'Gonzo' }, instrument: { name: 'piano' } };
       login(app)
         .then(headers => {
           request(app)
             .post('/songs/add')
             .set(headers)
             .send(mockSong)
-            .then(res => {
+            .then((res, err) => {
               expect(res.statusCode).to.equal(200);
               expect(res.body.data).to.be.an('object').that.contains.keys(['title', 'artist', 'instrument', 'id']);
               expect(res.body.data.artist).to.not.be.an('object');
               expect(res.body.data.instrument).to.not.be.an('object');
-              return request(app).get('/songs').set(headers);
-            }).then(res => {
+              return err ? done(err) : request(app).get('/songs').set(headers);
+            }).then((res, err) => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body.data.tables)
-                .to.be.an('object')
-                .that.has.property('songs')
-                .with.length(17);
-              done();
+              expect(res.body.data.tables).to.be.an('object').that.has.property('songs').with.length(17);
+              done(err);
             }).catch(done);
         });
     });
 
     it('Should add a song with existing foreign records if unique data is matched', (done) => {
-      const mockSong = { title: 'My example song', artist: { lastName: 'Thrustmaster', firstName: 'Gonzo' }, instrument: { name: 'piano' } };
+      const mockSong = {
+        title: 'My example song',
+        artist: { lastName: 'Thrustmaster', firstName: 'Gonzo' },
+        instrument: { name: 'piano' }
+      };
+
       login(app)
         .then(headers => {
           request(app)
             .post('/songs/add')
             .set(headers)
-            .send(mockSong)
-            .then(res => {
+            .send(mockSongUniq)
+            .then((res, err1) => {
               expect(res.statusCode).to.equal(200);
               return request(app).get('/songs').set(headers);
-            }).then(res => {
+            }).then((res, err2)=> {
               expect(res.statusCode).to.equal(200);
               expect(res.body.data.tables.songs[16]).to.contain({ instrument: "0", user: "0" });
               done();
@@ -64,17 +81,22 @@ module.exports = function() {
     });
 
     it('Should add a song with new foreign records if unique data is different', (done) => {
-      const mockSong = { title: 'My example song', artist: { lastName: 'Thrustmaster', firstName: 'Gonzo' }, instrument: { name: 'new instrument' } };
+      const mockSong = {
+        title: 'My example song',
+        artist: { lastName: 'Thrustmaster', firstName: 'Gonzo' },
+        instrument: { name: 'new instrument' }
+      };
+
       login(app)
         .then(headers => {
           request(app)
             .post('/songs/add')
             .set(headers)
             .send(mockSong)
-            .then(res => {
+            .then((res, err1) => {
               expect(res.statusCode).to.equal(200);
               return request(app).get('/songs').set(headers);
-            }).then(res => {
+            }).then((res, err2) => {
               expect(res.statusCode).to.equal(200);
               expect(res.body.data.tables.songs[16]).to.contain.key('instrument').that.is.not.equal("0");
               done();

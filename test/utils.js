@@ -2,7 +2,7 @@ const { pick } = require('lodash');
 const initServer = require('../lib/server');
 const getModels = require('../lib/models/');
 
-const { _dbg } = require('debugger-256')('api:test');
+const { _dbg, info } = require('debugger-256')('api:test');
 
 const login = (app) =>
   new Promise((resolve, reject) => {
@@ -12,7 +12,10 @@ const login = (app) =>
         'email-sign-in-email': 'testuser@example.com',
         'email-sign-in-password': 'dummypassword'
       }).end((err, res) => {
-        if (err) { reject(err); }
+        // dont reject AssertionErrors in tests
+        if (err) {
+          info(`login error: ${err.name}`);
+        }
         const headers = pick(res.headers, [
           'access-token',
           'token-type'
@@ -27,8 +30,10 @@ const logout = (app, headers) =>
     return request(app)
       .delete('/users/logout')
       .end((err, res) => {
-        if (err) { reject(err); }
-        resolve();
+        if (err) {
+          info(`logout error: ${err.name}`);
+        }
+        resolve(res);
       })
   });
 

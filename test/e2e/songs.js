@@ -3,11 +3,11 @@ const deleteRoute = require('./songs/delete');
 const emptyRoute = require('./songs/empty');
 const indexRoute = require('./songs/index');
 
-module.exports = function() {
+module.exports = function(routes) {
   describe('Song Routes', () => {
-    addRoute();
-    deleteRoute();
-    emptyRoute();
-    indexRoute();
+    addRoute(routes);
+    deleteRoute(routes);
+    emptyRoute(routes);
+    indexRoute(routes);
   });
 }

@@ -1,8 +1,12 @@
 const { login, logout, setupServer } = require('../../utils');
 
-module.exports = function() {
+module.exports = function(routes) {
   describe('/fields/delete', () => {
     let app;
+
+    after(function() {
+      routes.push('/fields/delete');
+    });
 
     beforeEach(function() {
       this.timeout(10000);

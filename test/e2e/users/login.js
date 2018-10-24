@@ -1,9 +1,13 @@
-const { login, logout, setupServer } = require('../../utils');
+const { login, logout, setupServer } = require('test/utils');
 
-module.exports = function() {
+module.exports = function(routes) {
   // tested in main api test
   describe('/users/login', () => {
     let app;
+
+    after(function() {
+      routes.push('/users/login');
+    });
 
     beforeEach(function() {
       this.timeout(10000);
@@ -21,7 +25,7 @@ module.exports = function() {
           expect(err).to.be.null;
           expect(res.statusCode).to.equal(200);
           expect(res.body.data).to.be.an('object').that.contains({ id: "0" });
-          done();
+          done(err);
         });
     });
 
@@ -34,7 +38,8 @@ module.exports = function() {
         }).end((err, res) => {
           expect(err).to.be.null;
           expect(res.statusCode).to.equal(401);
-          done();
+          routes.push('/users/login');
+          done(err);
         });
     });
   })

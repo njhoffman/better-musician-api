@@ -1,8 +1,12 @@
 const { login, logout, setupServer } = require('../../utils');
 
-module.exports = function() {
+module.exports = function(routes) {
   describe('/users/validate_token', () => {
     let app;
+
+    after(function() {
+      routes.push('/users/validate_token');
+    });
 
     beforeEach(function() {
       this.timeout(10000);

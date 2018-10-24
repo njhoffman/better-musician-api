@@ -5,13 +5,13 @@ const registerRoute = require('./users/register');
 const updateRoute = require('./users/update');
 const validateTokenRoute = require('./users/validate_token');
 
-module.exports = function() {
+module.exports = function(routes) {
   describe('User Routes', () => {
-    loginRoute();
-    logoutRoute();
-    meRoute();
-    registerRoute();
-    updateRoute();
-    validateTokenRoute();
+    loginRoute(routes);
+    logoutRoute(routes);
+    meRoute(routes);
+    registerRoute(routes);
+    updateRoute(routes);
+    validateTokenRoute(routes);
   });
 }

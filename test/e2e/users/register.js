@@ -1,9 +1,13 @@
 const { login, logout, setupServer } = require('../../utils');
 const { find } = require('lodash');
 
-module.exports = function() {
+module.exports = function(routes) {
   describe('/users/register', () => {
     let app;
+
+    after(function() {
+      routes.push('/users/register');
+    });
 
     beforeEach(function() {
       this.timeout(10000);

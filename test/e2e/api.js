@@ -1,13 +1,19 @@
 const { setupServer } = require('../utils');
 
-module.exports = function() {
+module.exports = function(routes) {
   describe('Main API', () => {
     let app;
+
+    after(function() {
+      routes.push('/version');
+    });
 
     before(function() {
       this.timeout(10000);
       return setupServer()
-        .then(_app => (app = _app));
+        .then(_app => {
+          app = _app;
+        });
     });
 
     it('Should return version number', (done) => {
@@ -32,17 +38,18 @@ module.exports = function() {
     });
 
     // needed for other tests
-    it('Should authenticate with correct credentials', (done) => {
+    it('Should authenticate with correct credentials (db utility function)', (done) => {
       request(app)
         .post('/users/login')
         .send({
           'email-sign-in-email': 'testuser@example.com',
           'email-sign-in-password': 'dummypassword'
-        }).end((err, res) => {
+        })
+        .end((err, res) => {
           expect(err).to.be.null;
           expect(res.statusCode).to.equal(200);
           expect(res.body.data).to.be.an('object').that.contains({ id: "0" });
-          done();
+          done(err);
         });
     });
   });

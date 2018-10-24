@@ -1,16 +1,22 @@
 {
-  "presets": [["env", { "modules" : false }], "es2015", "stage-0"],
-
-  "plugins": [
-    "transform-runtime",
-    "add-module-exports",
-    "transform-decorators-legacy"
+  "presets": [
+    ["@babel/preset-env"]
   ],
 
+  "plugins": [
+    "@babel/plugin-transform-runtime",
+    ["@babel/plugin-proposal-decorators", { "legacy": true }],
+    ["module-resolver", {
+      "root": ["./lib"],
+      "alias": {
+        "test": "./test",
+        "underscore": "lodash"
+      }
+    }]
+  ],
   "env": {
     "development": {
       "plugins": [
-        "typecheck"
       ]
     }
   }
