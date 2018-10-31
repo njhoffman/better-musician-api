@@ -1,0 +1,7 @@
+{
+  "verbose" : true,
+  "ext": "*",
+  "env" : {
+    "NODE_ENV" : "development"
+  }
+}

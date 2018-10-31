@@ -1,6 +1,6 @@
-const { login, logout, setupServer } = require('../../utils');
+const { login, setupServer } = require('../../utils');
 
-module.exports = function(routes) {
+module.exports = function fieldsAddE2E(routes) {
   describe('/fields/add', () => {
     let app;
 
@@ -11,7 +11,7 @@ module.exports = function(routes) {
     beforeEach(function() {
       this.timeout(10000);
       return setupServer()
-        .then(_app => (app = _app));
+        .then(_app => { app = _app; });
     });
 
     it('Should return 401 if not authenticated', (done) => {
@@ -38,13 +38,14 @@ module.exports = function(routes) {
               return request(app)
                 .get('/admin/list/Field')
                 .set(headers);
-            }).then((res, err) => {
+            })
+            .then((res, err) => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body).to.be.an('array').with.length(6);
+              expect(res.body.data).to.be.an('array').with.length(5);
               done(err);
-            }).catch(done);
+            })
+            .catch(done);
         });
     });
   });
-}
-
+};

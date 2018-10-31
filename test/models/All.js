@@ -1,14 +1,11 @@
-const allModels = require('../../lib/models/')();
-const _BaseModel = require('../../lib/models/_BaseModel');
+const allModels = require('lib/models')();
+const _BaseModel = require('lib/models/_BaseModel');
 
 module.exports = function() {
   describe('Models (Standard)', () => {
-
-
     Object.keys(allModels).forEach(modelKey => {
-      const model = allModels[modelKey];
-      const newModel = new model();
-      const _BaseModelStub = sinon.stub(_BaseModel, 'constructor');
+      const Model = allModels[modelKey];
+      const newModel = new Model();
 
       describe(`${modelKey}`, () => {
         it('Should be have static properties tableName, modelName, and tableKeys', () => {
@@ -27,24 +24,31 @@ module.exports = function() {
         });
 
         it('Should call base constructor with model data and instance data', () => {
-          const modelProxy = proxyquire(
+          const _BaseModelStub = sinon.stub(_BaseModel.prototype, 'constructor');
+          const ModelProxy = proxyquire(
             `../lib/models/${modelKey}`, {
               './_BaseModel' : _BaseModelStub
-            });
-          const newModelProxy = new modelProxy({ id: 'test_id' });
+            }
+          );
+          /* eslint-disable no-unused-vars */
+          const newModelProxy = new ModelProxy({ id: 'test_id' });
+          /* eslint-enable no-unused-vars */
           expect(_BaseModelStub).to.have.been.calledOnce;
           expect(_BaseModelStub.args[0]).to.have.length.gt(1);
           expect(_BaseModelStub.args[0][0]).to.contain.keys('tableName', 'modelName', 'tableKeys');
           expect(_BaseModelStub.args[0][1]).to.contain({ id: 'test_id' });
+          _BaseModelStub.restore();
         });
 
         it('tableKeys should have an id field', () => {
           expect(newModel).to.contain.property('tableKeys').that.is.an('object').that.contains.property('id');
         });
 
-        const fKeys =  Object.keys(newModel.tableKeys).filter(tk => {
-          return newModel.tableKeys[tk].hasOwnProperty('relation') ? newModel.tableKeys[tk] : null;
-        });
+        const fKeys =  Object.keys(newModel.tableKeys).filter(tk => (
+          Object.prototype.hasOwnProperty.call(newModel.tableKeys[tk], 'relation')
+            ? newModel.tableKeys[tk]
+            : null
+        ));
 
         fKeys.forEach(fk => {
           it(`Foreign key "${fk}" should have a "Model" property pointing to linked model`, () => {
@@ -53,12 +57,11 @@ module.exports = function() {
               .that.is.an('object')
               .that.contains.property('relation')
               .that.is.an('object')
-              .that.contains.property('model');
+              .that.contains.property('Model');
           });
         });
       });
-      _BaseModelStub.restore();
     });
     // TODO: test required fields return error, bad fields get filtered with warnings, test validation
   });
-}
+};

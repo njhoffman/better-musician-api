@@ -1,6 +1,6 @@
-const { login, logout, setupServer } = require('../../utils');
+const { login, setupServer } = require('../../utils');
 
-module.exports = function(routes) {
+module.exports = function UsersMeE2E(routes) {
   describe('/users/me', () => {
     let app;
 
@@ -11,7 +11,7 @@ module.exports = function(routes) {
     beforeEach(function() {
       this.timeout(10000);
       return setupServer()
-        .then(_app => (app = _app));
+        .then(_app => { app = _app; });
     });
 
     it('Should return user information', (done) => {
@@ -37,5 +37,4 @@ module.exports = function(routes) {
         });
     });
   });
-}
-
+};

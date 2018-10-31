@@ -1,4 +1,4 @@
-const { login, logout, setupServer } = require('test/utils');
+const { setupServer } = require('test/utils');
 
 module.exports = function(routes) {
   // tested in main api test
@@ -12,7 +12,7 @@ module.exports = function(routes) {
     beforeEach(function() {
       this.timeout(10000);
       return setupServer()
-        .then(_app => (app = _app));
+        .then(_app => { app = _app; });
     });
 
     it('Should authenticate with correct credentials', (done) => {
@@ -21,10 +21,13 @@ module.exports = function(routes) {
         .send({
           'email-sign-in-email': 'testuser@example.com',
           'email-sign-in-password': 'dummypassword'
-        }).end((err, res) => {
+        })
+        .end((err, res) => {
           expect(err).to.be.null;
           expect(res.statusCode).to.equal(200);
-          expect(res.body.data).to.be.an('object').that.contains({ id: "0" });
+          expect(res.body.data).to.be.an('object').that.contains({
+            id: '30000000-0000-0000-0000-000000000000'
+          });
           done(err);
         });
     });
@@ -35,13 +38,13 @@ module.exports = function(routes) {
         .send({
           'email-sign-in-email': 'baduser@example.com',
           'email-sign-in-password': 'badpassword'
-        }).end((err, res) => {
+        })
+        .end((err, res) => {
           expect(err).to.be.null;
           expect(res.statusCode).to.equal(401);
           routes.push('/users/login');
           done(err);
         });
     });
-  })
-}
-
+  });
+};

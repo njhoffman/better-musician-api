@@ -10,4 +10,4 @@ module.exports = function(routes) {
     emptyRoute(routes);
     indexRoute(routes);
   });
-}
+};

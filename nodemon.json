@@ -6,9 +6,11 @@
     "rethinkdb_data",
     "src"
   ],
+  "execMap" : {
+    "js": "node --inspect=0.0.0.0:9229"
+  },
   "watch" : [
-    "lib/**/*.js",
-    "bin/"
+    "lib/**/*.js"
   ],
   "env" : {
     "NODE_ENV" : "development"

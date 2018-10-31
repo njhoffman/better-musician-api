@@ -12,7 +12,7 @@ module.exports = function(routes) {
       this.timeout(10000);
       return setupServer()
         .then(_app => {
-          app = _app
+          app = _app;
         });
     });
 
@@ -51,5 +51,4 @@ module.exports = function(routes) {
         });
     });
   });
-}
-
+};

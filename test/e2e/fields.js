@@ -8,4 +8,4 @@ module.exports = function(routes) {
     deleteRoute(routes);
     updateRoute(routes);
   });
-}
+};

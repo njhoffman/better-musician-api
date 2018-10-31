@@ -14,4 +14,4 @@ module.exports = function(routes) {
     updateRoute(routes);
     validateTokenRoute(routes);
   });
-}
+};

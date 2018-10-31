@@ -1,7 +1,7 @@
-const { login, logout, setupServer } = require('../../utils');
 const { find } = require('lodash');
+const { setupServer } = require('../../utils');
 
-module.exports = function(routes) {
+module.exports = function UserRegisterE2E(routes) {
   describe('/users/register', () => {
     let app;
 
@@ -12,7 +12,7 @@ module.exports = function(routes) {
     beforeEach(function() {
       this.timeout(10000);
       return setupServer()
-        .then(_app => (app = _app));
+        .then(_app => { app = _app; });
     });
 
     it('Should return 400 with error message if password not provided', (done) => {
@@ -49,18 +49,20 @@ module.exports = function(routes) {
             .to.be.an('object')
             .that.contains.keys('id', 'email', 'maxDifficulty');
           savedId = res.body.data.id;
-          return request(app).get('/admin/list/User')
-        }).then(res => {
+          return request(app).get('/admin/list/User');
+        })
+        .then(res => {
           expect(res.statusCode).to.equal(200);
-          expect(res.body)
+          expect(res.body.data)
             .to.be.an('array')
             .that.has.length(4);
-          const savedUser = find(res.body, { id: savedId });
+          const savedUser = find(res.body.data, { id: savedId });
           expect(savedUser)
             .to.be.an('object')
             .that.contains.keys('id', 'email', 'maxDifficulty');
           done();
-        }).catch(done);
+        })
+        .catch(done);
     });
 
     it('Should seed the new user with example custom fields', (done) => {
@@ -72,19 +74,22 @@ module.exports = function(routes) {
         .then(res => {
           expect(res.statusCode).to.equal(200);
           savedId = res.body.data.id;
-          return request(app).get('/admin/list/User/deep')
-        }).then(res => {
+          return request(app).get('/admin/list/User/deep');
+        })
+        .then(res => {
           expect(res.statusCode).to.equal(200);
-          const savedUser = find(res.body, { id: savedId });
+          const savedUser = find(res.body.data, { id: savedId });
           expect(savedUser)
             .to.be.an('object')
             .that.has.property('customFields')
-            .with.length(5);
+            .with.length(4);
+
           done();
-        }).catch(done);
+        })
+        .catch(done);
     });
 
-    it('Should seed the new user with example songs including associated custom fields', (done) => {
+    it('Should populate new user seed data with custom fields', (done) => {
       const data = { 'email-sign-up-email' : 'new-testuser@example.com', 'email-sign-up-password': 'newpassword' };
       let savedId;
       request(app)
@@ -93,10 +98,11 @@ module.exports = function(routes) {
         .then(res => {
           expect(res.statusCode).to.equal(200);
           savedId = res.body.data.id;
-          return request(app).get('/admin/list/User/deep')
-        }).then(res => {
+          return request(app).get('/admin/list/User/deep');
+        })
+        .then(res => {
           expect(res.statusCode).to.equal(200);
-          const savedUser = find(res.body, { id: savedId });
+          const savedUser = find(res.body.data, { id: savedId });
           expect(savedUser).to.be.an('object').that.has.property('songs').with.length(16);
           savedUser.songs.forEach(song => {
             expect(song)
@@ -113,8 +119,8 @@ module.exports = function(routes) {
             });
           });
           done();
-        }).catch(done);
+        })
+        .catch(done);
     });
   });
-}
-
+};

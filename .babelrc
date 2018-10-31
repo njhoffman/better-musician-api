@@ -6,9 +6,11 @@
   "plugins": [
     "@babel/plugin-transform-runtime",
     ["@babel/plugin-proposal-decorators", { "legacy": true }],
+    "add-module-exports",
     ["module-resolver", {
-      "root": ["./lib"],
+      "root": ["./"],
       "alias": {
+        "lib": "./lib",
         "test": "./test",
         "underscore": "lodash"
       }

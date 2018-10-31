@@ -1,8 +1,10 @@
-const { login, logout, setupServer, outModelAll } = require('../../utils');
+const { login, setupServer, outModelAll } = require('../../utils');
 
-module.exports = function(routes) {
+module.exports = function fieldsUpdateE2E(routes) {
   describe('/fields/update', () => {
     let app;
+
+    const fieldId =  '60000000-0000-0000-0000-000000000000';
 
     after(function() {
       routes.push('/fields/update');
@@ -11,7 +13,7 @@ module.exports = function(routes) {
     beforeEach(function() {
       this.timeout(10000);
       return setupServer()
-        .then(_app => (app = _app));
+        .then(_app => { app = _app; });
     });
 
     it('Should return 401 if not authenticated', (done) => {
@@ -24,7 +26,12 @@ module.exports = function(routes) {
     });
 
     it('Should update existing field with validated fields', (done) => {
-      const data = { id: "0", label: 'New Label', tabName: 'New Tab Name', type: 0 };
+      const data = {
+        id: '60000000-0000-0000-0000-000000000000',
+        label: 'New Label',
+        tabName: 'New Tab Name',
+        type: 0
+      };
       login(app)
         .then(headers => {
           request(app)
@@ -35,15 +42,23 @@ module.exports = function(routes) {
               expect(res.statusCode).to.equal(200);
               expect(res.body.data).to.be.an('object').that.contains(data);
               return outModelAll('Field');
-            }).then(res => {
+            })
+            .then(res => {
               expect(res[0]).to.be.an('object').that.contains(data);
               done();
-            }).catch(done);
+            })
+            .catch(done);
         });
     });
 
     it('Should ignore fields not in table schema', (done) => {
-      const data = { _badFieldName: 'shouldnt exist', id: "0", type: "0", tabName: 'New Tab Name', label: 'New Label' };
+      const data = {
+        _badFieldName: 'shouldnt exist',
+        id: fieldId,
+        type: '0',
+        tabName: 'New Tab Name',
+        label: 'New Label'
+      };
       login(app)
         .then(headers => {
           request(app)
@@ -52,17 +67,17 @@ module.exports = function(routes) {
             .send(data)
             .then(res => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body.data).to.be.an('object').that.contains({ id: "0" });
+              expect(res.body.data).to.be.an('object').that.contains({ id: fieldId });
               expect(res.body.data).to.not.have.property('_badFieldName');
               return outModelAll('Field');
-            }).then(res => {
-              expect(res[0]).to.be.an('object').that.contains({ id: "0" });
+            })
+            .then(res => {
+              expect(res[0]).to.be.an('object').that.contains({ id: fieldId });
               expect(res[0]).to.not.have.property('_badFieldName');
               done();
-            }).catch(done);
+            })
+            .catch(done);
         });
     });
-
-
   });
-}
+};

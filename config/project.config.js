@@ -1,8 +1,10 @@
 /* eslint key-spacing:0 spaced-comment:0 */
 const path = require('path');
-const { info, debug, trace } = require('../lib/utils/logger')('api:config:project');
-const argv = require('yargs').argv;
+const { argv } = require('yargs');
 const ip = require('ip');
+const errorHandlers = require('lib/utils/error');
+const { info, debug, trace } = require('lib/utils/logger')('api:config:project');
+const environments = require('./environments.config');
 
 info('Creating default configuration.');
 // ========================================================
@@ -27,14 +29,14 @@ const config = {
   // ----------------------------------
   // Database Configuration
   // ----------------------------------
-  db_host : process.env.DB_HOST || 'localhost' ,
+  db_host : process.env.DB_HOST || 'localhost',
   db_port : process.env.DB_PORT || 28015,
   db_name : process.env.DB_NAME || 'instrumental',
 
   // API Configuration
   api_host   : process.env.API_HOST || '0.0.0.0',
   api_port   : process.env.API_PORT || 3001,
-  api_secret : 'asjdkfjsdkgh',
+  API_SECRET : 'asjdkfjsdkgh',
 
   // ----------------------------------
   // Test Configuration
@@ -45,28 +47,26 @@ const config = {
   ]
 };
 
-const initConfig = () => {
-  return new Promise(resolve => {
-
+const initConfig = () => (
+  new Promise(resolve => {
     // ------------------------------------
     // Environment
     // ------------------------------------
     // N.B.: globals added here must _also_ be added to .eslintrc
     config.globals = {
-      'NODE_ENV'     : config.env,
-      '__DEV__'      : config.env === 'development',
-      '__PROD__'     : config.env === 'production',
-      '__TEST__'     : config.env === 'test',
-      '__COVERAGE__' : !argv.watch && config.env === 'test',
-      '__BASENAME__' : JSON.stringify(process.env.BASENAME || ''),
-      '__SKIP_AUTH__' : config.env !== 'production'
+      NODE_ENV      : config.env,
+      __DEV__       : config.env === 'development',
+      __PROD__      : config.env === 'production',
+      __TEST__      : config.env === 'test',
+      __COVERAGE__  : !argv.watch && config.env === 'test',
+      __BASENAME__  : JSON.stringify(process.env.BASENAME || ''),
+      __SKIP_AUTH__ : config.env !== 'production'
     };
 
     // ========================================================
     // Environment Configuration
     // ========================================================
     debug(`Looking for environment overrides for NODE_ENV %${config.env}%`);
-    const environments = require('./environments.config');
     const overrides = environments[config.env];
     if (overrides) {
       debug(overrides(config), 'Found overrides, applying to default configuration.');
@@ -83,22 +83,20 @@ const initConfig = () => {
     // ------------------------------------
     // Utilities
     // ------------------------------------
-    const base = () => {
-      const args = [config.path_base].concat([].slice.call(arguments));
-      return path.resolve.apply(path, args);
-    }
-
-    config.errorHandlers = require('../lib/utils/error');
-
-    config.paths = {
-      base   : base
+    const base = (...args) => {
+      const baseArgs = [config.path_base].concat([].slice.call(args));
+      return path.resolve(...baseArgs);
     };
+
+    config.errorHandlers = errorHandlers;
+
+    config.paths = { base };
 
     info({ color: 'bold' }, `Config initialized for %${config.env}%`);
     trace(config);
     resolve(config);
-  });
-};
+  })
+);
 
 const getConfig = () => config;
 

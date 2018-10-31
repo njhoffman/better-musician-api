@@ -1,4 +1,4 @@
-const { login, logout, setupServer } = require('../../utils');
+const { login, setupServer } = require('../../utils');
 
 module.exports = function(routes) {
   describe('/songs/delete', () => {
@@ -11,7 +11,7 @@ module.exports = function(routes) {
     beforeEach(function() {
       this.timeout(10000);
       return setupServer()
-        .then(_app => (app = _app));
+        .then(_app => { app = _app; });
     });
 
     it('Should return 401 if not authenticated', (done) => {
@@ -31,21 +31,25 @@ module.exports = function(routes) {
             .set(headers)
             .then(res => {
               expect(res.statusCode).to.equal(200);
-              const song = res.body.data.tables.songs.pop();
+              const song = res.body.data.songs.pop();
               return request(app)
                 .post('/songs/delete')
                 .set(headers)
                 .send({ id: song.id });
-            }).then(res => {
+            })
+            .then(res => {
               expect(res.body.data).to.be.an('object').that.contains({ deleted: 1 });
-              return request(app).get('/songs').set(headers);
-            }).then(res => {
+              return request(app)
+                .get('/songs')
+                .set(headers);
+            })
+            .then(res => {
               expect(res.body.data).to.be.an('object')
-                .that.has.property('tables')
                 .that.has.property('songs')
                 .that.has.length(15);
               done();
-            }).catch(done);
+            })
+            .catch(done);
         });
     });
 
@@ -58,14 +62,17 @@ module.exports = function(routes) {
             .send({ id: 'BADID' })
             .then(res => {
               expect(res.body.data).to.be.an('object').that.contains({ deleted: 0 });
-              return request(app).get('/songs').set(headers);
-            }).then(res => {
+              return request(app)
+                .get('/songs')
+                .set(headers);
+            })
+            .then(res => {
               expect(res.body.data).to.be.an('object')
-                .that.has.property('tables')
                 .that.has.property('songs')
                 .that.has.length(16);
               done();
-            }).catch(done);
+            })
+            .catch(done);
         });
     });
 
@@ -78,16 +85,18 @@ module.exports = function(routes) {
             .send({ id: 1 })
             .then(res => {
               expect(res.body.data).to.be.an('object').that.contains({ deleted: 0 });
-              return request(app).get('/songs').set(headers);
-            }).then(res => {
+              return request(app)
+                .get('/songs')
+                .set(headers);
+            })
+            .then(res => {
               expect(res.body.data).to.be.an('object')
-                .that.has.property('tables')
                 .that.has.property('songs')
                 .that.has.length(16);
               done();
-            }).catch(done);
+            })
+            .catch(done);
         });
     });
   });
-}
-
+};

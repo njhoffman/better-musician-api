@@ -1,6 +1,6 @@
-const { login, logout, setupServer } = require('../../utils');
+const { login, setupServer } = require('../../utils');
 
-module.exports = function(routes) {
+module.exports = function SongsEmptyE2E(routes) {
   describe('/songs/empty', () => {
     let app;
 
@@ -11,7 +11,7 @@ module.exports = function(routes) {
     beforeEach(function() {
       this.timeout(10000);
       return setupServer()
-        .then(_app => (app = _app));
+        .then(_app => { app = _app; });
     });
 
     it('Should return 401 if not authenticated', (done) => {
@@ -31,18 +31,21 @@ module.exports = function(routes) {
             .set(headers)
             .then(res => {
               expect(res.statusCode).to.equal(200);
-              return request(app).get('/songs').set(headers);
-            }).then(res => {
+              return request(app)
+                .get('/songs')
+                .set(headers);
+            })
+            .then(res => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body.data.tables)
+              expect(res.body.data)
                 .to.be.an('object')
                 .that.has.property('songs')
                 .that.is.an('array')
                 .with.length(0);
               done();
-            }).catch(done);
+            })
+            .catch(done);
         });
     });
   });
-}
-
+};

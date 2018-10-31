@@ -1,6 +1,6 @@
-const { login, logout, setupServer } = require('../../utils');
+const { login, setupServer } = require('../../utils');
 
-module.exports = function(routes) {
+module.exports = function usersValidateTokenE2E(routes) {
   describe('/users/validate_token', () => {
     let app;
 
@@ -11,8 +11,9 @@ module.exports = function(routes) {
     beforeEach(function() {
       this.timeout(10000);
       return setupServer()
-        .then(_app => (app = _app));
+        .then(_app => { app = _app; });
     });
+
     it('Should return 401 if not authenticated', (done) => {
       request(app)
         .get('/users/validate_token')
@@ -36,5 +37,4 @@ module.exports = function(routes) {
         });
     });
   });
-}
-
+};
