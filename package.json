@@ -4,6 +4,7 @@
   "description": "API for Instrumental App",
   "main": "index.js",
   "scripts": {
+    "postinstall": "./bin/init-hooks",
     "lint": "./node_modules/.bin/esw bin config lib test --color",
     "lint:fix": "npm run lint -- --fix",
     "lint:watch": "npm run lint -- --cache --watch --clear --changed",
