@@ -1,6 +1,7 @@
 .DS_STORE
 *.log
 
+.nyc_output/
 node_modules
 rethinkdb_data
 
