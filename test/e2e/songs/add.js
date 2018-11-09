@@ -7,13 +7,19 @@ module.exports = function SongsAddE2E(routes) {
     const mockSong = {
       title: 'My example song',
       artist: { lastName: 'Thrustmaster', firstName: 'Gonzo' },
-      instrument: { name: 'piano' }
+      instrument: {
+        user: '30000000-0000-0000-0000-000000000000',
+        name: 'piano'
+      }
     };
 
     const mockSongUniq = {
       title: 'My example song',
       artist: { lastName: 'Thrustmaster', firstName: 'Gonzo' },
-      instrument: { name: 'new instrument' }
+      instrument: {
+        user: '30000000-0000-0000-0000-000000000000',
+        name: 'new instrument'
+      }
     };
 
     after(function() {

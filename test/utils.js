@@ -66,7 +66,7 @@ const outModelByField = (modelName, field) =>
 const outModelAll = (modelName) =>
   new Promise((resolve, reject) => {
     const Model = getModels()[modelName];
-    return Model.all
+    return Model.all()
       .then(res => {
         // _dbg(`${modelName} (all)`, res);
         resolve(res);

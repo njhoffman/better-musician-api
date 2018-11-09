@@ -3,7 +3,7 @@ const path = require('path');
 const { argv } = require('yargs');
 const ip = require('ip');
 const errorHandlers = require('lib/utils/error');
-const { info, debug, trace } = require('lib/utils/logger')('api:config:project');
+const { info, debug, trace } = require('lib/utils/logger')('config:project');
 const environments = require('./environments.config');
 
 info('Creating default configuration.');

@@ -17,7 +17,6 @@ describe('e2e Route Tests', () => {
   });
 
   apiRoutes(routes);
-  // artistRoutes(routes);
   userRoutes(routes);
   fieldRoutes(routes);
   songRoutes(routes);
