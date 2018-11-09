@@ -11,10 +11,10 @@ module.exports = {
   development : (config) => ({
     // compiler_public_path : `http://${config.server_host}:${config.server_port}/`
     compiler_public_path : 'http://localhost:4000/',
-    db_name: 'instrumental_dev'
+    db_name: 'better_musician_dev'
   }),
   test: (config) => ({
-    db_name: 'instrumental_test'
+    db_name: 'better_musician_test'
   }),
   // ======================================================
   // Overrides when NODE_ENV === 'production'

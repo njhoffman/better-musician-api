@@ -10,7 +10,7 @@ const monitoredTables = [
 ];
 
 
-const dbName = 'instrumental_test';
+const dbName = 'better_musician_test';
 const indexSpacing = 15;
 const cols = process.env.TERM_COLWIDTH || 180;
 

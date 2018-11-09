@@ -31,7 +31,7 @@ const config = {
   // ----------------------------------
   db_host : process.env.DB_HOST || 'localhost',
   db_port : process.env.DB_PORT || 28015,
-  db_name : process.env.DB_NAME || 'instrumental',
+  db_name : process.env.DB_NAME || 'better_musician',
 
   // API Configuration
   api_host   : process.env.API_HOST || '0.0.0.0',

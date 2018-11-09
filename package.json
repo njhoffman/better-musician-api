@@ -1,7 +1,7 @@
 {
-  "name": "instrumental-api",
+  "name": "better-musician-api",
   "version": "1.1.4",
-  "description": "API for Instrumental App",
+  "description": "API for BetterMusician App",
   "main": "index.js",
   "scripts": {
     "postinstall": "./bin/init-hooks",
