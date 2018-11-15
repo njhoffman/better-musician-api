@@ -10,26 +10,6 @@
 </p>
 </details>
 
-<details><summary> Outstanding tasks... (click to see more)</summary>
-<p>
-  
-* Create ROADMAP.md for broad goals/brainstorming, get "Outstanding tasks" itemized and implemented with github issues
-* Use hexo and follow cypress-documentation method for autogenerating split (by minor version) changelog entries
-* Create minor/major version bumper script that autopopulates new changelog snippet with entries from current trunk.
-* Bumper script should also auto generate plato reports and track basic stats like # of patches, # of commits, sloc, test coverage, etc. (include in changelog as a "Stats" section accordion).
-* Consolidate API configuration with client configuration, fold into common module.
-* Think of a way to trigger API pulls and builds on server from npm script (auto execute ssh command with -t switch? security issue?)
-* Improve seeding capability to randomize / autopopulate certain data fields.
-* Automate dependency diffing on minor/major bump
-* Create script to autodiff package.json on major/minor version bumps and create table with the following layout in the changelog (accordiong functionality)
-
-| Type  | Package Name                       | Version  |
-|:-----:| ---------------------------------- |:--------:|
-|   U   | @babel/core                        |  ^7.0.0  |
-
-</p>
-</details>
-
 ## 1.1.0
 **(October 31, 2018)**
 
@@ -40,7 +20,6 @@
 * Consolidated structure of route layouts and handling for scalable and consistent growth of the API.
 * Established base model functionality to wrap table definitions (such as users, songs) into instantiated models with common CRUD, validation, and error handling utilities.
 
-
 ### Fixes
 
 * All previous linter errors resolved with eslint rules based on airbnb guidelines.
@@ -48,9 +27,6 @@
 * Implemented validation script to prevent erroneous data being written to database tables.
 
 ### Other
-
-* Fix incorrect sharing of context state between `renderToNodeStream()` calls. ([@sebmarkbage](https://github.com/sebmarkbage) in [#14182](https://github.com/facebook/react/pull/14182))
-* Add a warning about incorrect usage of the context API. ([@trueadm](https://github.com/trueadm) in [#14033](https://github.com/facebook/react/pull/14033))
 
 ### Documentation
 
@@ -127,5 +103,26 @@
 * proxyquire:                ^2.1.0,
 * sinon:                     ^7.0.0,
 * sinon-chai:                ^3.2.0
+</p>
+</details>
+
+## [TODO]
+<details><summary> Outstanding tasks... (click to see more)</summary>
+<p>
+  
+* Create ROADMAP.md for broad goals/brainstorming, get "Outstanding tasks" itemized and implemented with github issues
+* Use hexo and follow cypress-documentation method for autogenerating split (by minor version) changelog entries
+* Create minor/major version bumper script that autopopulates new changelog snippet with entries from current trunk.
+* Bumper script should also auto generate plato reports and track basic stats like # of patches, # of commits, sloc, test coverage, etc. (include in changelog as a "Stats" section accordion).
+* Consolidate API configuration with client configuration, fold into common module.
+* Think of a way to trigger API pulls and builds on server from npm script (auto execute ssh command with -t switch? security issue?)
+* Improve seeding capability to randomize / autopopulate certain data fields.
+* Automate dependency diffing on minor/major bump
+* Create script to autodiff package.json on major/minor version bumps and create table with the following layout in the changelog (accordiong functionality)
+
+| Type  | Package Name                       | Version  |
+|:-----:| ---------------------------------- |:--------:|
+|   U   | @babel/core                        |  ^7.0.0  |
+
 </p>
 </details>
