@@ -1,15 +1,18 @@
 ## [Trunk]
 <details><summary>Unreleased version notes (click to see more)</summary>
 <p>
+  
 ### Features
 ### Fixes
 ### Other
 ### Documentation
+
 </p>
 </details>
 
 <details><summary> Outstanding tasks... (click to see more)</summary>
 <p>
+  
 * Create ROADMAP.md for broad goals/brainstorming, get "Outstanding tasks" itemized and implemented with github issues
 * Use hexo and follow cypress-documentation method for autogenerating split (by minor version) changelog entries
 * Create minor/major version bumper script that autopopulates new changelog snippet with entries from current trunk.
@@ -55,6 +58,7 @@
 
 <details><summary> Core Dependencies (click to see list)</summary>
 <p>
+  
 *	@babel/core:                       ^7.0.0,
 *	@babel/plugin-proposal-decorators: ^7.1.2,
 *	@babel/plugin-transform-runtime:   ^7.1.0,
@@ -100,6 +104,7 @@
 
 <details><summary> Development Dependencies (click to see list)</summary>
 <p>
+  
 * babel-eslint:              ^10.0.0,
 * chai:                      ^4.2.0,
 * chai-as-promised:          ^7.1.1,
