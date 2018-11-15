@@ -36,7 +36,7 @@
       }
     },
     "deploy": {
-      "command": "npm run lint && npm run test && npm run clean && npm run compile",
+      "command": "npm run lint && npm run test && npm run clean && npm trigger production pull and build",
       "env": {
         "DEBUG": "api:*"
       }
@@ -72,7 +72,6 @@
     "express": "^4.16.4",
     "geoip-lite": "^1.3.3",
     "http": "0.0.0",
-    "ip": "^1.1.4",
     "json-pretty-html": "1.1.5",
     "jsonwebtoken": "^8.3.0",
     "lodash": "^4.17.11",

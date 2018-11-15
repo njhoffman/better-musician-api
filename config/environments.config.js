@@ -1,33 +1,20 @@
-// Here is where you can define configuration overrides based on the execution environment.
-// Supply a key to the default export matching the NODE_ENV that you wish to target, and
-// the base configuration will apply your overrides before exporting itself.
 module.exports = {
   // ======================================================
   // Overrides when NODE_ENV === 'development'
   // ======================================================
-  // NOTE: In development, we use an explicit public path when the assets
-  // are served webpack by to fix this issue:
+  // in development, an explicit public path is used when the assets are served webpack by to fix:
   // http://stackoverflow.com/questions/34133808/webpack-ots-parsing-error-loading-fonts/34133809#34133809
   development : (config) => ({
-    // compiler_public_path : `http://${config.server_host}:${config.server_port}/`
-    compiler_public_path : 'http://localhost:4000/',
-    db_name: 'better_musician_dev'
+    dbName: 'better_musician_dev'
   }),
   test: (config) => ({
-    db_name: 'better_musician_test'
+    dbName: 'better_musician_test'
   }),
   // ======================================================
   // Overrides when NODE_ENV === 'production'
   // ======================================================
   production : (config) => ({
-    compiler_public_path     : '/',
-    compiler_fail_on_warning : false,
-    compiler_hash_type       : 'chunkhash',
-    compiler_devtool         : null,
-    compiler_stats           : {
-      chunks       : true,
-      chunkModules : true,
-      colors       : true
-    }
+    dbName: 'better_musician',
+    apiPort   : process.env.API_PORT || 88
   })
 };
