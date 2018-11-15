@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# wrapper that allows tracked hooks to be executed followed by user hooks ending in '.local'
+
+exitcodes=()
+hookname=`basename $0`
+CUSTOM_HOOKS_DIR=$(git rev-parse --show-toplevel)/bin/hooks
+NATIVE_HOOKS_DIR=$(git rev-parse --git-dir)/hooks
+
+for hook in $CUSTOM_HOOKS_DIR/$(basename $0)-*; do
+  test -x "$hook" || continue
+  echo "> $0 git hook is executing"
+  out=`$hook "$@"`
+  exitcodes+=($?)
+  echo "$out"
+done
+
+# check if there was a local hook that was moved previously
+if [ -f "$NATIVE_HOOKS_DIR/$hookname.local" ]; then
+    out=`$NATIVE_HOOKS_DIR/$hookname.local "$@"`
+    exitcodes+=($?)
+    echo "$out"
+fi
+
+# If any exit code isn't 0, bail.
+for i in "${exitcodes[@]}"; do
+  [ "$i" == 0 ] || exit $i
+done
