@@ -4,6 +4,7 @@
 .nyc_output/
 node_modules
 rethinkdb_data
+.eslintcache
 
 dist
 coverage
