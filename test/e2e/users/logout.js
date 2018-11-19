@@ -1,4 +1,4 @@
-const { login, logout, setupServer } = require('../../utils');
+const { login, setupServer } = require('../../utils');
 
 module.exports = function(routes) {
   describe('/users/logout', () => {
@@ -27,28 +27,6 @@ module.exports = function(routes) {
             done(err);
           });
       });
-    });
-
-    it('Should not allow access to unauthorized pages after logout', (done) => {
-      login(app)
-        .then(headers => logout(app, headers))
-        .then(() => {
-          request(app)
-            .get('/users/me')
-            .end((err, res) => {
-              expect(res.statusCode).to.equal(401);
-              done();
-            });
-        });
-    });
-
-    it('Should return 401 if not authenticated', (done) => {
-      request(app)
-        .get('/users/logout')
-        .end((err, res) => {
-          expect(res.statusCode).to.equal(401);
-          done();
-        });
     });
   });
 };

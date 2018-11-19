@@ -27,24 +27,29 @@ module.exports = function(routes) {
       login(app)
         .then(headers => {
           request(app)
-            .get('/songs')
+            .get('/admin/list/User/deep')
             .set(headers)
             .then(res => {
               expect(res.statusCode).to.equal(200);
-              const song = res.body.data.songs.pop();
+              expect(res.body.records[0])
+                .to.be.an('object')
+                .that.has.property('songs')
+                .that.is.an('array')
+                .with.length(16);
+              const song = res.body.records[0].songs.pop();
               return request(app)
                 .post('/songs/delete')
                 .set(headers)
                 .send({ id: song.id });
             })
             .then(res => {
-              expect(res.body.data).to.be.an('object').that.contains({ deleted: 1 });
+              expect(res.body.records).to.be.an('object').that.contains({ deleted: 1 });
               return request(app)
-                .get('/songs')
+                .get('/admin/list/User/deep')
                 .set(headers);
             })
             .then(res => {
-              expect(res.body.data).to.be.an('object')
+              expect(res.body.records[0]).to.be.an('object')
                 .that.has.property('songs')
                 .that.has.length(15);
               done();
@@ -61,13 +66,13 @@ module.exports = function(routes) {
             .set(headers)
             .send({ id: 'BADID' })
             .then(res => {
-              expect(res.body.data).to.be.an('object').that.contains({ deleted: 0 });
+              expect(res.body.records).to.be.an('object').that.contains({ deleted: 0 });
               return request(app)
-                .get('/songs')
+                .get('/admin/list/User/deep')
                 .set(headers);
             })
             .then(res => {
-              expect(res.body.data).to.be.an('object')
+              expect(res.body.records[0]).to.be.an('object')
                 .that.has.property('songs')
                 .that.has.length(16);
               done();
@@ -84,13 +89,13 @@ module.exports = function(routes) {
             .set(headers)
             .send({ id: 1 })
             .then(res => {
-              expect(res.body.data).to.be.an('object').that.contains({ deleted: 0 });
+              expect(res.body.records).to.be.an('object').that.contains({ deleted: 0 });
               return request(app)
-                .get('/songs')
+                .get('/admin/list/User/deep')
                 .set(headers);
             })
             .then(res => {
-              expect(res.body.data).to.be.an('object')
+              expect(res.body.records[0]).to.be.an('object')
                 .that.has.property('songs')
                 .that.has.length(16);
               done();

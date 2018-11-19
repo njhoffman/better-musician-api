@@ -1,4 +1,5 @@
-const { info } = _initLogger_('e2e');
+global.__APP_NAME__ = 'bmusic-api-e2e';
+const { info } = _initLogger_(global.__APP_NAME__);
 
 const apiRoutes = require('./e2e/api');
 const userRoutes = require('./e2e/users');

@@ -33,14 +33,14 @@ module.exports = function(routes) {
             .send(data)
             .then(res => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body.data)
-                .to.be.an('object')
+              expect(res.body.records).to.be.an('array').with.length(1);
+              expect(res.body.records[0]).to.be.an('object')
                 .that.contains({ email: 'testuser@example.com', maxDifficulty: 13 });
 
               return request(app).get('/admin/list/users');
             })
             .then(res => {
-              expect(res.body.data[0])
+              expect(res.body.records[0])
                 .to.be.an('object')
                 .that.contains({ email: 'testuser@example.com', maxDifficulty: 13 });
               done();
@@ -59,13 +59,15 @@ module.exports = function(routes) {
             .send(data)
             .then(res => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body.data).to.be.an('object').that.contains({ email: 'testuser@example.com' });
-              expect(res.body.data).to.not.contain(data);
+              expect(res.body.records).to.be.an('array').with.length(1);
+              expect(res.body.records[0]).to.be.an('object').that.contains({ email: 'testuser@example.com' });
+              expect(res.body.records[0]).to.not.contain(data);
               return request(app).get('/admin/list/users');
             })
             .then(res => {
-              expect(res.body.data[0]).to.be.an('object').that.contains({ email: 'testuser@example.com' });
-              expect(res.body.data[0]).to.not.contain(data);
+              expect(res.body.records).to.be.an('array').with.length(3);
+              expect(res.body.records[0]).to.be.an('object').that.contains({ email: 'testuser@example.com' });
+              expect(res.body.records[0]).to.not.contain(data);
               done();
             })
             .catch(done);

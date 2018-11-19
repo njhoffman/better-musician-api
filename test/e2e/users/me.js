@@ -14,6 +14,15 @@ module.exports = function UsersMeE2E(routes) {
         .then(_app => { app = _app; });
     });
 
+    it('Should return 401 if not authenticated', (done) => {
+      request(app)
+        .get('/users/me')
+        .end((err, res) => {
+          expect(res.statusCode).to.equal(401);
+          done();
+        });
+    });
+
     it('Should return user information', (done) => {
       login(app)
         .then(headers => {
@@ -22,18 +31,10 @@ module.exports = function UsersMeE2E(routes) {
             .set(headers)
             .end((err, res) => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body.user).to.be.an('object').that.contains({ email: 'testuser@example.com' });
+              expect(res.body.records).to.be.an('array').with.length(1);
+              expect(res.body.records[0]).to.be.an('object').that.contains({ email: 'testuser@example.com' });
               done();
             });
-        });
-    });
-
-    it('Should return 401 if not authenticated', (done) => {
-      request(app)
-        .get('/users/me')
-        .end((err, res) => {
-          expect(res.statusCode).to.equal(401);
-          done();
         });
     });
   });

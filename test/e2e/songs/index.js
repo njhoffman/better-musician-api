@@ -31,14 +31,8 @@ module.exports = function SongsIndexE2E(routes) {
             .set(headers)
             .then(res => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body).to.be.an('object')
-                .that.has.property('data')
-                .that.is.an('object')
-                .that.is.an('object');
-              expect(res.body.data)
-                .to.have.property('songs')
-                .that.is.an('array')
-                .that.has.length(16);
+              expect(res.body.records).to.be.an('array').with.length(1);
+              expect(res.body.records[0].songs).to.be.an('array').with.length(16);
               done();
             })
             .catch(done);
@@ -54,19 +48,19 @@ module.exports = function SongsIndexE2E(routes) {
             .then(res => {
               // TODO: write utility functions to get seed data for assertions
               expect(res.statusCode).to.equal(200);
-              expect(res.body.data)
+              expect(res.body.records[0])
                 .to.have.property('fields')
                 .that.is.an('array')
                 .that.has.length(4);
-              expect(res.body.data)
+              expect(res.body.records[0])
                 .to.have.property('instruments')
                 .that.is.an('array')
                 .that.has.length(4);
-              expect(res.body.data)
+              expect(res.body.records[0])
                 .to.have.property('genres')
                 .that.is.an('array')
                 .that.has.length(4);
-              expect(res.body.data)
+              expect(res.body.records[0])
                 .to.have.property('artists')
                 .that.is.an('array')
                 .that.has.length(29);

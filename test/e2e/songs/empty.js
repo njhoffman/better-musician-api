@@ -37,8 +37,8 @@ module.exports = function SongsEmptyE2E(routes) {
             })
             .then(res => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body.data)
-                .to.be.an('object')
+              expect(res.body.records).to.be.an('array').with.length(1);
+              expect(res.body.records[0]).to.be.an('object')
                 .that.has.property('songs')
                 .that.is.an('array')
                 .with.length(0);

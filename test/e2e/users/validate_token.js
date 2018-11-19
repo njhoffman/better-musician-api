@@ -31,7 +31,8 @@ module.exports = function usersValidateTokenE2E(routes) {
             .set(headers)
             .end((err, res) => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body.data).to.be.an('object').that.contains({ email: 'testuser@example.com' });
+              expect(res.body.records).to.be.an('array').with.length(1);
+              expect(res.body.records[0]).to.be.an('object').that.contains({ email: 'testuser@example.com' });
               done();
             });
         });

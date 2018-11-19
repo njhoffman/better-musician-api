@@ -22,6 +22,7 @@ module.exports = function(routes) {
           done();
         });
     });
+
     it('Should delete a field if valid id is submitted', (done) => {
       login(app)
         .then(headers => {
@@ -30,12 +31,12 @@ module.exports = function(routes) {
             .set(headers)
             .then(res => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body.data[0])
+              expect(res.body.records[0])
                 .to.be.an('object')
                 .that.has.property('customFields')
                 .that.is.an('array')
                 .with.length(4);
-              const customField = res.body.data[0].customFields.pop();
+              const customField = res.body.records[0].customFields.pop();
               return request(app)
                 .post('/fields/delete')
                 .set(headers)
@@ -43,14 +44,14 @@ module.exports = function(routes) {
             })
             .then(res => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body.data).to.be.an('object').that.contains({ deleted: 1 });
+              expect(res.body.records).to.be.an('object').that.contains({ deleted: 1 });
               return request(app)
                 .get('/admin/list/User/deep')
                 .set(headers);
             })
             .then(res => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body.data[0])
+              expect(res.body.records[0])
                 .to.be.an('object')
                 .that.has.property('customFields')
                 .that.is.an('array')
@@ -69,13 +70,13 @@ module.exports = function(routes) {
             .set(headers)
             .send({ id: 'BADID' })
             .then(res => {
-              expect(res.body.data).to.be.an('object').that.contains({ deleted: 0 });
+              expect(res.body.records).to.be.an('object').that.contains({ deleted: 0 });
               return request(app)
                 .get('/admin/list/User/deep')
                 .set(headers);
             })
             .then(res => {
-              expect(res.body.data[0]).to.be.an('object')
+              expect(res.body.records[0]).to.be.an('object')
                 .that.has.property('customFields')
                 .that.is.an('array')
                 .that.has.length(4);
@@ -93,13 +94,13 @@ module.exports = function(routes) {
             .set(headers)
             .send({ id: '5' })
             .then(res => {
-              expect(res.body.data).to.be.an('object').that.contains({ deleted: 0 });
+              expect(res.body.records).to.be.an('object').that.contains({ deleted: 0 });
               return request(app)
                 .get('/admin/list/Field')
                 .set(headers);
             })
             .then(res => {
-              expect(res.body.data).to.be.an('array').that.has.length(4);
+              expect(res.body.records).to.be.an('array').that.has.length(4);
               done();
             })
             .catch(done);

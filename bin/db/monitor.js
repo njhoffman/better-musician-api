@@ -13,6 +13,7 @@ const monitoredTables = [
 const dbName = 'better_musician_test';
 const indexSpacing = 15;
 const cols = process.env.TERM_COLWIDTH || 180;
+const oneLine = true;
 
 // echo '\e[38;2;255;50;180m\e[48;2;130;180;255mHello TruColors'
 // echo -ne '\e[1;10;255m BOLD GREEN' #
@@ -37,14 +38,20 @@ const ansiRE = /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZc
 
 const lineLength = (str) => str.trim().replace(ansiRE, '').length;
 
-const trimLine = (line) => (
-  lineLength(line) > cols
-    ? line.slice(0, (cols - lineLength(line))).trim()
-    : line.trim()
-);
+const trimLine = (line) => {
+  if (oneLine) {
+    return lineLength(line) > cols
+      ? line.slice(0, (cols - lineLength(line))).trim()
+      : line.trim();
+  }
+  return line;
+};
 
 const outputLine = (line, idx) => {
-  const indexPad = Array(cols - lineLength(line) - idx.toString().length + indexSpacing).join(' ');
+  const indexPad = oneLine
+    ? Array(cols - lineLength(line) - idx.toString().length + indexSpacing).join(' ')
+    : '   ';
+
   return `${line}${clr.index}${indexPad}${idx}${clr.reset}\n`;
 };
 
@@ -65,8 +72,7 @@ const monitorTable = (tableName) => (
       const namePad = Array(3 - tableName.length + (
         monitoredTables
           .reduce((acc, table) => (acc > table.length ? acc : table.length), 0)
-          .join(' ')
-      ));
+      )).join(' ');
 
       cursor.each((cursorErr, row) => {
         if (cursorErr) {

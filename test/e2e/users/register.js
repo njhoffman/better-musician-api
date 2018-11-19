@@ -45,21 +45,16 @@ module.exports = function UserRegisterE2E(routes) {
         .send(data)
         .then(res => {
           expect(res.statusCode).to.equal(200);
-          expect(res.body.data)
-            .to.be.an('object')
-            .that.contains.keys('id', 'email', 'maxDifficulty');
-          savedId = res.body.data.id;
+          expect(res.body.records).to.be.an('array').with.length(1);
+          expect(res.body.records[0]).to.be.an('object').that.contains.keys('id', 'email', 'maxDifficulty');
+          savedId = res.body.records[0].id;
           return request(app).get('/admin/list/User');
         })
         .then(res => {
           expect(res.statusCode).to.equal(200);
-          expect(res.body.data)
-            .to.be.an('array')
-            .that.has.length(4);
-          const savedUser = find(res.body.data, { id: savedId });
-          expect(savedUser)
-            .to.be.an('object')
-            .that.contains.keys('id', 'email', 'maxDifficulty');
+          expect(res.body.records).to.be.an('array').that.has.length(4);
+          const savedUser = find(res.body.records, { id: savedId });
+          expect(savedUser).to.be.an('object').that.contains.keys('id', 'email', 'maxDifficulty');
           done();
         })
         .catch(done);
@@ -73,17 +68,13 @@ module.exports = function UserRegisterE2E(routes) {
         .send(data)
         .then(res => {
           expect(res.statusCode).to.equal(200);
-          savedId = res.body.data.id;
+          savedId = res.body.records[0].id;
           return request(app).get('/admin/list/User/deep');
         })
         .then(res => {
           expect(res.statusCode).to.equal(200);
-          const savedUser = find(res.body.data, { id: savedId });
-          expect(savedUser)
-            .to.be.an('object')
-            .that.has.property('customFields')
-            .with.length(4);
-
+          const savedUser = find(res.body.records, { id: savedId });
+          expect(savedUser).to.be.an('object').that.has.property('customFields').with.length(4);
           done();
         })
         .catch(done);
@@ -97,25 +88,18 @@ module.exports = function UserRegisterE2E(routes) {
         .send(data)
         .then(res => {
           expect(res.statusCode).to.equal(200);
-          savedId = res.body.data.id;
+          savedId = res.body.records[0].id;
           return request(app).get('/admin/list/User/deep');
         })
         .then(res => {
           expect(res.statusCode).to.equal(200);
-          const savedUser = find(res.body.data, { id: savedId });
+          const savedUser = find(res.body.records, { id: savedId });
           expect(savedUser).to.be.an('object').that.has.property('songs').with.length(16);
           savedUser.songs.forEach(song => {
-            expect(song)
-              .to.be.an('object')
-              .that.has.property('customFields');
-            expect(song.customFields)
-              .to.be.an('array')
-              .with.length(4);
+            expect(song).to.be.an('object').that.has.property('customFields');
+            expect(song.customFields).to.be.an('array').with.length(4);
             song.customFields.forEach(cf => {
-              expect(cf)
-                .to.be.an('object')
-                .with.property('id')
-                .that.is.not.empty;
+              expect(cf).to.be.an('object').with.property('id').that.is.not.empty;
             });
           });
           done();

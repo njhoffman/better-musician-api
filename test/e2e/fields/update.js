@@ -40,7 +40,8 @@ module.exports = function fieldsUpdateE2E(routes) {
             .send(data)
             .then(res => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body.data).to.be.an('object').that.contains(data);
+              expect(res.body.records).to.be.an('array').with.length(1);
+              expect(res.body.records[0]).to.be.an('object').that.contains(data);
               return outModelAll('Field');
             })
             .then(res => {
@@ -67,8 +68,9 @@ module.exports = function fieldsUpdateE2E(routes) {
             .send(data)
             .then(res => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body.data).to.be.an('object').that.contains({ id: fieldId });
-              expect(res.body.data).to.not.have.property('_badFieldName');
+              expect(res.body.records).to.be.an('array').with.length(1);
+              expect(res.body.records[0]).to.be.an('object').that.contains({ id: fieldId });
+              expect(res.body.records[0]).to.not.have.property('_badFieldName');
               return outModelAll('Field');
             })
             .then(res => {

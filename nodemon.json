@@ -6,7 +6,7 @@
     "rethinkdb_data",
     "src"
   ],
-  "_execMap" : {
+  "execMap" : {
     "js": "node --inspect=0.0.0.0:9229"
   },
   "watch" : [

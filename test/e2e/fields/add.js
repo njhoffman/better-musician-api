@@ -33,15 +33,14 @@ module.exports = function fieldsAddE2E(routes) {
             .send(mockField)
             .then(res => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body.data).to.be.an('object').that.contains.keys(['user', 'id', 'type', 'label']);
-              expect(res.body.data.user).to.not.be.an('object');
-              return request(app)
-                .get('/admin/list/Field')
-                .set(headers);
+              expect(res.body.records).to.be.an('array').with.length(1);
+              expect(res.body.records[0]).to.be.an('object').that.contains.keys(['user', 'id', 'type', 'label']);
+              expect(res.body.records.user).to.not.be.an('object');
+              return request(app).get('/admin/list/Field');
             })
             .then((res, err) => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body.data).to.be.an('array').with.length(5);
+              expect(res.body.records).to.be.an('array').with.length(5);
               done(err);
             })
             .catch(done);

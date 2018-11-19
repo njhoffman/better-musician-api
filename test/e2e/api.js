@@ -48,7 +48,8 @@ module.exports = function(routes) {
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.statusCode).to.equal(200);
-          expect(res.body.data).to.be.an('object').that.contains({
+          expect(res.body.records).to.be.an('array').with.length(1);
+          expect(res.body.records[0]).to.be.an('object').that.contains({
             id: '30000000-0000-0000-0000-000000000000'
           });
           done(err);
