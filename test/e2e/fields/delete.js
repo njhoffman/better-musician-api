@@ -44,7 +44,7 @@ module.exports = function(routes) {
             })
             .then(res => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body.records).to.be.an('object').that.contains({ deleted: 1 });
+              expect(res.body).to.be.an('object').that.contains({ deleted: 1 });
               return request(app)
                 .get('/admin/list/User/deep')
                 .set(headers);
@@ -70,7 +70,7 @@ module.exports = function(routes) {
             .set(headers)
             .send({ id: 'BADID' })
             .then(res => {
-              expect(res.body.records).to.be.an('object').that.contains({ deleted: 0 });
+              expect(res.body).to.be.an('object').that.contains({ deleted: 0 });
               return request(app)
                 .get('/admin/list/User/deep')
                 .set(headers);
@@ -94,7 +94,7 @@ module.exports = function(routes) {
             .set(headers)
             .send({ id: '5' })
             .then(res => {
-              expect(res.body.records).to.be.an('object').that.contains({ deleted: 0 });
+              expect(res.body).to.be.an('object').that.contains({ deleted: 0 });
               return request(app)
                 .get('/admin/list/Field')
                 .set(headers);

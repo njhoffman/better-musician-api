@@ -34,9 +34,7 @@ module.exports = function(routes) {
             .then(res => {
               expect(res.statusCode).to.equal(200);
               expect(res.body.records).to.be.an('array').with.length(1);
-              expect(res.body.records[0]).to.be.an('object')
-                .that.contains({ email: 'testuser@example.com', maxDifficulty: 13 });
-
+              expect(res.body.records[0]).to.be.an('object').that.contains(data);
               return request(app).get('/admin/list/users');
             })
             .then(res => {
@@ -60,7 +58,6 @@ module.exports = function(routes) {
             .then(res => {
               expect(res.statusCode).to.equal(200);
               expect(res.body.records).to.be.an('array').with.length(1);
-              expect(res.body.records[0]).to.be.an('object').that.contains({ email: 'testuser@example.com' });
               expect(res.body.records[0]).to.not.contain(data);
               return request(app).get('/admin/list/users');
             })
