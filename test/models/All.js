@@ -1,6 +1,8 @@
 const allModels = require('lib/models')();
 const _BaseModel = require('lib/models/_BaseModel');
 
+// test that user fields have authLock assigned
+// check foreign keys fields and reverse key deep fields are accessible
 module.exports = function() {
   describe('Models (Standard)', () => {
     Object.keys(allModels).forEach(modelKey => {
@@ -8,19 +10,21 @@ module.exports = function() {
       const newModel = new Model();
 
       describe(`${modelKey}`, () => {
-        it('Should be have static properties tableName, modelName, and tableKeys', () => {
+        it('Should have static properties tableName, modelName, and tableKeys', () => {
           expect(newModel).to.contain.property('tableName').that.is.a('string');
           expect(newModel).to.contain.property('modelName').that.is.a('string');
           expect(newModel).to.contain.property('tableKeys').that.is.an('object');
         });
 
-        it('Should be have baseModel static properties warnings and errors', () => {
-          expect(newModel).to.contain.property('warnings').that.is.an('array');
-          expect(newModel).to.contain.property('errors').that.is.an('array');
+        it('Should have baseModel static database getters', () => {
+          expect(newModel.constructor).to.contain.property('args').that.is.an('function');
+          expect(newModel.constructor).to.contain.property('row').that.is.an('function');
+          expect(newModel.constructor).to.contain.property('db').that.is.an('function');
+          expect(newModel.constructor).to.contain.property('conn').that.is.an('object');
         });
 
-        it('Should be have baseModel static properties cleanFields', () => {
-          expect(newModel).to.contain.property('cleanFields').that.is.an('object');
+        it('Should be have baseModel static properties fields', () => {
+          expect(newModel).to.contain.property('fields').that.is.an('object');
         });
 
         it('Should call base constructor with model data and instance data', () => {

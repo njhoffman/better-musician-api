@@ -40,7 +40,7 @@ module.exports = function fieldsAddE2E(routes) {
             })
             .then((res, err) => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body.records).to.be.an('array').with.length(5);
+              expect(res.body.records).to.be.an('array').with.length(6);
               done(err);
             })
             .catch(done);

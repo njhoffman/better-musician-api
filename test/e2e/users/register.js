@@ -74,7 +74,7 @@ module.exports = function UserRegisterE2E(routes) {
         .then(res => {
           expect(res.statusCode).to.equal(200);
           const savedUser = find(res.body.records, { id: savedId });
-          expect(savedUser).to.be.an('object').that.has.property('customFields').with.length(4);
+          expect(savedUser).to.be.an('object').that.has.property('customFields').with.length(5);
           done();
         })
         .catch(done);
@@ -94,7 +94,7 @@ module.exports = function UserRegisterE2E(routes) {
         .then(res => {
           expect(res.statusCode).to.equal(200);
           const savedUser = find(res.body.records, { id: savedId });
-          expect(savedUser).to.be.an('object').that.has.property('songs').with.length(16);
+          expect(savedUser).to.be.an('object').that.has.property('songs').with.length(17);
           savedUser.songs.forEach(song => {
             expect(song).to.be.an('object').that.has.property('customFields');
             expect(song.customFields).to.be.an('array').with.length(4);
