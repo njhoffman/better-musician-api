@@ -29,7 +29,6 @@ module.exports = function fieldsUpdateE2E(routes) {
       const data = {
         id: '60000000-0000-0000-0000-000000000000',
         label: 'New Label',
-        tabName: 'New Tab Name',
         type: 0
       };
       login(app)
@@ -57,7 +56,6 @@ module.exports = function fieldsUpdateE2E(routes) {
         _badFieldName: 'shouldnt exist',
         id: fieldId,
         type: '0',
-        tabName: 'New Tab Name',
         label: 'New Label'
       };
       login(app)

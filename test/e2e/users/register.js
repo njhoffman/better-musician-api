@@ -60,7 +60,7 @@ module.exports = function UserRegisterE2E(routes) {
         .catch(done);
     });
 
-    it('Should seed the new user with example custom fields', (done) => {
+    it('Should seed the new user with example user fields', (done) => {
       const data = { 'email-sign-up-email' : 'new-testuser@example.com', 'email-sign-up-password': 'newpassword' };
       let savedId;
       request(app)
@@ -74,13 +74,13 @@ module.exports = function UserRegisterE2E(routes) {
         .then(res => {
           expect(res.statusCode).to.equal(200);
           const savedUser = find(res.body.records, { id: savedId });
-          expect(savedUser).to.be.an('object').that.has.property('customFields').with.length(5);
+          expect(savedUser).to.be.an('object').that.has.property('userFields').with.length(5);
           done();
         })
         .catch(done);
     });
 
-    it('Should populate new user seed data with custom fields', (done) => {
+    it('Should populate new user seed data with user fields', (done) => {
       const data = { 'email-sign-up-email' : 'new-testuser@example.com', 'email-sign-up-password': 'newpassword' };
       let savedId;
       request(app)
@@ -96,9 +96,9 @@ module.exports = function UserRegisterE2E(routes) {
           const savedUser = find(res.body.records, { id: savedId });
           expect(savedUser).to.be.an('object').that.has.property('songs').with.length(17);
           savedUser.songs.forEach(song => {
-            expect(song).to.be.an('object').that.has.property('customFields');
-            expect(song.customFields).to.be.an('array').with.length(4);
-            song.customFields.forEach(cf => {
+            expect(song).to.be.an('object').that.has.property('userFields');
+            expect(song.userFields).to.be.an('array').with.length(4);
+            song.userFields.forEach(cf => {
               expect(cf).to.be.an('object').with.property('id').that.is.not.empty;
             });
           });

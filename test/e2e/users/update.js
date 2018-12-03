@@ -47,8 +47,8 @@ module.exports = function(routes) {
         });
     });
 
-    it('Should ignore fields not in table schema', (done) => {
-      const data = { _badFieldName: 'shouldnt exist' };
+    it('Should ignore fields not in table schema when updating', (done) => {
+      const data = { _badFieldName: 'shouldnt exist', email: 'testval@testval.com' };
       login(app)
         .then(headers => {
           request(app)
@@ -63,8 +63,8 @@ module.exports = function(routes) {
             })
             .then(res => {
               expect(res.body.records).to.be.an('array').with.length(3);
-              expect(res.body.records[0]).to.be.an('object').that.contains({ email: 'testuser@example.com' });
-              expect(res.body.records[0]).to.not.contain(data);
+              expect(res.body.records[0]).to.be.an('object').that.contains({ email: data.email });
+              expect(res.body.records[0]).to.not.contain({ _badFieldName: data._badFieldName });
               done();
             })
             .catch(done);

@@ -1,13 +1,46 @@
 const allModels = require('lib/models')();
 const _BaseModel = require('lib/models/_BaseModel');
 
+const defaultData = {
+  User: {
+    email: 'testemail@test.com'
+  },
+  Artist: {
+    lastName: 'testNameVal',
+    user: 0
+  },
+  Instrument: {
+    name: 'testNameVal',
+    user: 0
+  },
+  Genre: {
+    name: 'testNameVal',
+    user: 0
+  },
+  Field: {
+    user: 0,
+    type: 'testTypeVal',
+    label: 'testLabelVal',
+  },
+  FieldTab: {
+    user: 0,
+    name: 'testNameVal'
+  },
+  Song: {
+    user: 0,
+    artist: 0,
+    title: 'testTitleVal',
+    instrument: 0
+  }
+};
+
 // test that user fields have authLock assigned
 // check foreign keys fields and reverse key deep fields are accessible
 module.exports = function() {
   describe('Models (Standard)', () => {
     Object.keys(allModels).forEach(modelKey => {
       const Model = allModels[modelKey];
-      const newModel = new Model();
+      const newModel = new Model(defaultData[modelKey]);
 
       describe(`${modelKey}`, () => {
         it('Should have static properties tableName, modelName, and tableKeys', () => {

@@ -48,10 +48,11 @@ module.exports = function SongsIndexE2E(routes) {
             .then(res => {
               // TODO: write utility functions to get seed data for assertions
               expect(res.statusCode).to.equal(200);
+              // has 4 fields if linking through songs, 5 if linking through userID
               expect(res.body.records[0])
                 .to.have.property('fields')
                 .that.is.an('array')
-                .that.has.length(4);
+                .that.has.length(5);
               expect(res.body.records[0])
                 .to.have.property('instruments')
                 .that.is.an('array')

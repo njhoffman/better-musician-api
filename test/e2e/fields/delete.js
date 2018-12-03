@@ -1,3 +1,4 @@
+const { filter } = require('lodash');
 const { login, setupServer } = require('../../utils');
 
 module.exports = function(routes) {
@@ -33,14 +34,14 @@ module.exports = function(routes) {
               expect(res.statusCode).to.equal(200);
               expect(res.body.records[0])
                 .to.be.an('object')
-                .that.has.property('customFields')
+                .that.has.property('userFields')
                 .that.is.an('array')
-                .with.length(4);
-              const customField = res.body.records[0].customFields.pop();
+                .with.length(5);
+              const userField = res.body.records[0].userFields.pop();
               return request(app)
                 .post('/fields/delete')
                 .set(headers)
-                .send({ id: customField.id });
+                .send({ id: userField.id });
             })
             .then(res => {
               expect(res.statusCode).to.equal(200);
@@ -53,9 +54,9 @@ module.exports = function(routes) {
               expect(res.statusCode).to.equal(200);
               expect(res.body.records[0])
                 .to.be.an('object')
-                .that.has.property('customFields')
+                .that.has.property('userFields')
                 .that.is.an('array')
-                .with.length(3);
+                .with.length(4);
               done();
             })
             .catch(done);
@@ -79,9 +80,9 @@ module.exports = function(routes) {
             .then(res => {
               expect(res.statusCode).to.equal(200);
               expect(res.body.records[0]).to.be.an('object')
-                .that.has.property('customFields')
+                .that.has.property('userFields')
                 .that.is.an('array')
-                .that.has.length(4);
+                .that.has.length(5);
               done();
             })
             .catch(done);
@@ -94,7 +95,7 @@ module.exports = function(routes) {
           request(app)
             .post('/fields/delete')
             .set(headers)
-            .send({ id: '60000000-0000-0000-0000-000000000004' })
+            .send({ id: '60000000-0000-0000-0000-000000000005' })
             .then(res => {
               expect(res.statusCode).to.equal(401);
               expect(res.body.error).to.be.an('object').that.keys(['name', 'message', 'status']);
@@ -111,14 +112,15 @@ module.exports = function(routes) {
           request(app)
             .post('/fields/delete')
             .set(headers)
-            .send({ id: '60000000-0000-0000-0000-000000000004' })
+            .send({ id: '60000000-0000-0000-0000-000000000005' })
             .then(res => (
               request(app)
                 .get('/admin/list/Field')
                 .set(headers)
             ))
             .then(res => {
-              expect(res.body.records).to.be.an('array').that.has.length(5);
+              const userFields = filter(res.body.records, { user: headers.uid });
+              expect(userFields).to.be.an('array').that.has.length(5);
               done();
             })
             .catch(done);

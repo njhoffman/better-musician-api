@@ -17,6 +17,7 @@ const login = (app) => (
           // info(`login error: ${err.name}`);
         }
         const headers = pick(res.headers, [
+          'uid',
           'access-token',
           'token-type'
         ]);
