@@ -1,6 +1,6 @@
 {
   "name": "better-musician-api",
-  "version": "1.1.18",
+  "version": "1.2.0",
   "description": "API for BetterMusician App",
   "main": "index.js",
   "scripts": {
