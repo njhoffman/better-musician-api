@@ -2,38 +2,25 @@
 const path = require('path');
 const { argv } = require('yargs');
 const errorHandlers = require('lib/utils/error');
-const { info, debug, trace } = require('lib/utils/logger')('config:project');
-const environments = require('./environments.config');
+const { info, debug, trace } = require('lib/utils/logger')('config');
+const environments = require('./environments');
 
 info('Creating default configuration.');
-// ========================================================
-// Default Configuration
-// ========================================================
+
+// default/base configuration, can be overridden with environment files
 const config = {
   env : process.env.NODE_ENV || 'development',
-
-  // ----------------------------------
-  // Project Structure
-
-  // ----------------------------------
   path_base  : path.resolve(__dirname, '..'),
   dir_test   : 'tests',
 
-  // ----------------------------------
-  // Database Configuration
-  // ----------------------------------
   dbHost : process.env.DB_HOST || 'localhost',
   dbPort : process.env.DB_PORT || 28015,
   dbName : process.env.DB_NAME || 'better_musician',
 
-  // API Configuration
   apiHost   : process.env.API_HOST || '0.0.0.0',
   apiPort   : process.env.API_PORT || 3001,
   API_SECRET : 'asjdkfjsdkgh',
 
-  // ----------------------------------
-  // Test Configuration
-  // ----------------------------------
   coverage_reporters : [
     { type : 'text-summary' },
     { type : 'lcov', dir : 'coverage' }
@@ -42,9 +29,6 @@ const config = {
 
 const initConfig = () => (
   new Promise(resolve => {
-    // ------------------------------------
-    // Environment
-    // ------------------------------------
     // N.B.: globals added here must _also_ be added to .eslintrc
     config.globals = {
       NODE_ENV      : config.env,
@@ -56,9 +40,6 @@ const initConfig = () => (
       __SKIP_AUTH__ : config.env !== 'production'
     };
 
-    // ========================================================
-    // Environment Configuration
-    // ========================================================
     debug(`Looking for environment overrides for NODE_ENV %${config.env}%`);
     const overrides = environments[config.env];
     if (overrides) {
@@ -73,18 +54,13 @@ const initConfig = () => (
     global.__SKIP_AUTH__ = config.globals.__SKIP_AUTH__;
     global.__NODE_ENV__ = config.globals.NODE_ENV;
 
-    // ------------------------------------
-    // Utilities
-    // ------------------------------------
+    // utilities
     const base = (...args) => {
       const baseArgs = [config.path_base].concat([].slice.call(args));
       return path.resolve(...baseArgs);
     };
-
     config.errorHandlers = errorHandlers;
-
     config.paths = { base };
-
     info({ color: 'bold' }, `Config initialized for %${config.env}%`);
     trace(config);
     resolve(config);
