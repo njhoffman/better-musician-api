@@ -4,8 +4,8 @@
 
 exitcodes=()
 hookname=`basename $0`
-CUSTOM_HOOKS_DIR=$(git rev-parse --show-toplevel)/bin/hooks
-NATIVE_HOOKS_DIR=$(git rev-parse --git-dir)/hooks
+CUSTOM_HOOKS_DIR=$(git rev-parse --show-toplevel)/bin/git/hooks
+NATIVE_HOOKS_DIR=$(git rev-parse --git-dir)/git/hooks
 
 for hook in $CUSTOM_HOOKS_DIR/$(basename $0)-*; do
   test -x "$hook" || continue

@@ -5,7 +5,7 @@ if git rev-parse --git-dir > /dev/null 2>&1; then
   echo "Creating git hook symbolic links..."
   HOOK_NAMES="applypatch-msg pre-applypatch post-applypatch pre-commit prepare-commit-msg commit-msg post-commit pre-rebase post-checkout post-merge pre-receive update post-receive post-update pre-auto-gc pre-push"
   HOOKS_DIR=$(git rev-parse --git-dir)/hooks
-  WRAPPER_DIR=$(git rev-parse --show-toplevel)/bin
+  WRAPPER_DIR=$(git rev-parse --show-toplevel)/bin/git
   HOOK_N=0
 	for hook in $HOOK_NAMES; do
     # If the hook already exists, is a file, and is not a symlink
