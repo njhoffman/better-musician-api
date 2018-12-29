@@ -1,10 +1,12 @@
 .DS_STORE
 *.log
 
+_*
 .nyc_output/
 node_modules
 rethinkdb_data
 .eslintcache
+./nodemon-*.json
 
 coverage
 .coveralls.yml

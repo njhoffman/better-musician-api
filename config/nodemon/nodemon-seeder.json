@@ -1,0 +1,19 @@
+{
+  "verbose" : true,
+  "ignore" : [
+    ".git",
+    "node_modules/**/node_modules",
+    "rethinkdb_data",
+    "src"
+  ],
+  "execMap" : {
+    "js": "node bin/seeder.js"
+  },
+  "watch" : [
+    "bin/**/*.js",
+    "lib/**/*.js"
+  ],
+  "env" : {
+    "NODE_ENV" : "development"
+  }
+}
