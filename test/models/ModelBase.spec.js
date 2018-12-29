@@ -1,9 +1,9 @@
 
 // describe('Models', () => {
-//   describe('_BaseModel', () => {
+//   describe('ModelBase', () => {
 //     const getDbModuleStub = sinon.stub().returns({ conn: 'test_conn', db: 'test_db' });
-//     const _BaseModel = proxyquire(
-//       '../lib/models/_BaseModel', {
+//     const ModelBase = proxyquire(
+//       '../lib/models/ModelBase', {
 //         '../lib/utils/db' : { getDbModule : getDbModuleStub }
 //       }
 //     );

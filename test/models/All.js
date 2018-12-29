@@ -1,5 +1,5 @@
 const allModels = require('lib/models')();
-const _BaseModel = require('lib/models/_BaseModel');
+const ModelBase = require('lib/models/ModelBase');
 
 const defaultData = {
   User: {
@@ -49,32 +49,32 @@ module.exports = function() {
           expect(newModel).to.contain.property('tableKeys').that.is.an('object');
         });
 
-        it('Should have baseModel static database getters', () => {
+        it('Should have modelBase static database getters', () => {
           expect(newModel.constructor).to.contain.property('args').that.is.an('function');
           expect(newModel.constructor).to.contain.property('row').that.is.an('function');
           expect(newModel.constructor).to.contain.property('db').that.is.an('function');
           expect(newModel.constructor).to.contain.property('conn').that.is.an('object');
         });
 
-        it('Should be have baseModel static properties fields', () => {
+        it('Should be have modelBase static properties fields', () => {
           expect(newModel).to.contain.property('fields').that.is.an('object');
         });
 
         it('Should call base constructor with model data and instance data', () => {
-          const _BaseModelStub = sinon.stub(_BaseModel.prototype, 'constructor');
+          const ModelBaseStub = sinon.stub(ModelBase.prototype, 'constructor');
           const ModelProxy = proxyquire(
-            `../lib/models/${modelKey}`, {
-              './_BaseModel' : _BaseModelStub
+            `../lib/models/ModelTables/${modelKey}`, {
+              '../ModelBase' : ModelBaseStub
             }
           );
           /* eslint-disable no-unused-vars */
           const newModelProxy = new ModelProxy({ id: 'test_id' });
           /* eslint-enable no-unused-vars */
-          expect(_BaseModelStub).to.have.been.calledOnce;
-          expect(_BaseModelStub.args[0]).to.have.length.gt(1);
-          expect(_BaseModelStub.args[0][0]).to.contain.keys('tableName', 'modelName', 'tableKeys');
-          expect(_BaseModelStub.args[0][1]).to.contain({ id: 'test_id' });
-          _BaseModelStub.restore();
+          expect(ModelBaseStub).to.have.been.calledOnce;
+          expect(ModelBaseStub.args[0]).to.have.length.gt(1);
+          expect(ModelBaseStub.args[0][0]).to.contain.keys('tableName', 'modelName', 'tableKeys');
+          expect(ModelBaseStub.args[0][1]).to.contain({ id: 'test_id' });
+          ModelBaseStub.restore();
         });
 
         it('tableKeys should have an id field', () => {

@@ -1,4 +1,4 @@
-// global.__SUPPRESS_LOGS__ = true;
+global.__SUPPRESS_LOGS__ = process.env.NODE_TEST_QUIET;
 
 const sinon = require('sinon');
 const chai = require('chai');
