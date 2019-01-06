@@ -9,7 +9,7 @@ NATIVE_HOOKS_DIR=$(git rev-parse --git-dir)/hooks
 
 for hook in $CUSTOM_HOOKS_DIR/$(basename $0)-*; do
   test -x "$hook" || continue
-  echo `\n> $0 git hook is executing\n`
+  echo -e "\n> $0 git hook is executing\n"
   out=`$hook "$@"`
   exitcodes+=($?)
   echo "$out"
@@ -17,7 +17,7 @@ done
 
 # check if there was a local hook that was moved previously
 if [ -f "$NATIVE_HOOKS_DIR/$hookname.local" ]; then
-    echo `\n> $hookname.local local hook is executing\n`
+    echo -e "\n> $hookname.local local hook is executing\n"
     out=`$NATIVE_HOOKS_DIR/$hookname.local "$@"`
     exitcodes+=($?)
     echo "$out"
