@@ -75,6 +75,7 @@ const generateMarkdown = ({
     `${chalk.bold(Object.keys(depsDiff.dev).length)} development dependencies`
   ].join(' '));
 
+  // TODO: tests % lines, % branch, total passing tests, failing tests
   const markdown = [
     mdHeader(newVersion),
     mdChanges(lastVersion, summary, commits.total),

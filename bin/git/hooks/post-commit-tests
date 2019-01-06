@@ -1,11 +1,10 @@
 #!/bin/sh
 
 # run npm notes to list TODOs
-npm run notes
+npm run reports:notes
 
 # unused dependency check
-npm run depcheck
+npm run reports:depcheck
 
 # run tests and coverage for good measure
-npm run test:quiet
-npm run coverage
+npm run test:coverage

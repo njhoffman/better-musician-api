@@ -16,6 +16,7 @@ const { statSync, mkdirSync, readdirSync, readFileSync } = require('fs');
 const { warn, info, info: trace } = console;
 
 let outputFiles = true;
+const verbosity = 1; // 0, 1, or 2 (most verbose)
 const reportsDir = `${appRoot}/reports/plato`;
 
 // TODO: make this and file output configurable with commands
@@ -127,7 +128,7 @@ const processReports = ({ reports, startTime, fileList }, done) => {
 
     if (messages.length > 0) {
       warn(`\t${file.replace(appRoot, '')}`);
-    } else {
+    } else if (verbosity > 1) {
       trace(`\t${file.replace(appRoot, '')} : clean`);
     }
 
