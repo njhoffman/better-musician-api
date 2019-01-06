@@ -1,23 +1,25 @@
-const { login, setupServer } = require('../../utils');
+const _ = require('lodash');
+const { login, setupServer, getSeedData } = require('../../utils');
 
 module.exports = function SongsAddE2E(routes) {
   describe('/songs/add', () => {
+    const { users, instruments, songs } = getSeedData();
+    const userSongs = _.filter(songs, { user: users[0].id });
     let app;
 
     const mockSong = {
       title: 'My example song',
       artist: { lastName: 'Thrustmaster', firstName: 'Gonzo' },
       instrument: {
-        name: 'Weird Instrument'
+        name: 'Piano'
       }
     };
 
     const mockSongUniq = {
-      title: 'My example song',
+      title: 'My example unique instrument song',
       artist: { lastName: 'Thrustmaster', firstName: 'Gonzo' },
       instrument: {
-        user: '30000000-0000-0000-0000-000000000000',
-        name: 'new instrument'
+        name: 'New Instrument'
       }
     };
 
@@ -58,7 +60,9 @@ module.exports = function SongsAddE2E(routes) {
             })
             .then((res, err) => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body.records[0]).to.be.an('object').that.has.property('songs').with.length(17);
+              expect(res.body.records[0]).to.be.an('object')
+                .that.has.property('songs')
+                .with.length(userSongs.length + 1);
               done(err);
             })
             .catch(done)
@@ -92,7 +96,7 @@ module.exports = function SongsAddE2E(routes) {
           request(app)
             .post('/songs/add')
             .set(headers)
-            .send(mockSongUniq)
+            .send(mockSong)
             .then((res, err) => {
               if (err) {
                 return done(err);
@@ -104,10 +108,11 @@ module.exports = function SongsAddE2E(routes) {
             })
             .then((res, err) => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body.records[0].songs).to.be.an('array').with.length(17);
-              expect(res.body.records[0].songs[16]).to.contain({
-                instrument: '40000000-0000-0000-0000-000000000000',
-                user: '30000000-0000-0000-0000-000000000000',
+              expect(res.body.records[0].songs).to.be.an('array').with.length(userSongs.length + 1);
+              expect(res.body.records[0].instruments).to.be.an('array').with.length(instruments.length);
+              expect(res.body.records[0].songs.pop()).to.contain({
+                instrument: instruments[0].id,
+                user:  users[0].id
               });
               done(err);
             })
@@ -130,8 +135,9 @@ module.exports = function SongsAddE2E(routes) {
             })
             .then((res) => {
               expect(res.statusCode).to.equal(200);
-              expect(res.body.records[0].songs).to.be.an('array').with.length(17);
-              expect(res.body.records[0].songs[16]).to.contain.key('instrument').that.is.not.equal('0');
+              expect(res.body.records[0].songs).to.be.an('array').with.length(userSongs.length + 1);
+              expect(res.body.records[0].instruments).to.be.an('array').with.length(instruments.length + 1);
+              expect(res.body.records[0].songs.pop()).to.contain.key('instrument').that.is.not.equal(instruments[0].id);
               done();
             })
             .catch(done);

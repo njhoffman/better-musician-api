@@ -1,7 +1,10 @@
-const { pick } = require('lodash');
+const { __SEED_GROUP__ } = global;
+
+const { pick, keys } = require('lodash');
 
 const initServer = require('lib/server');
 const getModels = require('lib/models');
+
 
 const login = (app) => (
   new Promise((resolve, reject) => (
@@ -45,7 +48,7 @@ const setupServer = () => (
     initServer()
       .then(app => (
         request(app)
-          .get('/admin/reset/all')
+          .get(`/admin/reset/all/${__SEED_GROUP__}`)
           .then(res => {
             resolve(app);
           })
@@ -74,4 +77,17 @@ const outModelAll = (modelName) =>
       });
   });
 
-module.exports = { login, logout, setupServer, outModelByField, outModelAll };
+const getSeedData = () => {
+  const seedData = {};
+  /* eslint-disable import/no-dynamic-require, global-require */
+  const models = getModels();
+  keys(models).forEach(modelKey => {
+    const { tableName } = models[modelKey];
+    const modelFile = `${__SEED_GROUP__}/${tableName}.json`;
+    seedData[tableName] = require(`../lib/models/seed/data/${modelFile}`);
+  });
+  /* eslint-enable import/no-dynamic-require, global-require */
+  return seedData;
+};
+
+module.exports = { login, logout, setupServer, outModelByField, outModelAll, getSeedData };

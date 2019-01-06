@@ -6,7 +6,9 @@ _*
 node_modules
 rethinkdb_data
 .eslintcache
+
 nodemon-*.json
+lib/**/*.json
 
 coverage
 .coveralls.yml

@@ -1,7 +1,10 @@
-const { login, setupServer } = require('../../utils');
+const _ = require('lodash');
+const { login, setupServer, getSeedData } = require('../../utils');
 
 module.exports = function SongsIndexE2E(routes) {
   describe('/songs', () => {
+    const { fields, instruments, genres, artists, songs, users } = getSeedData();
+    const userSongs = _.filter(songs, { user: users[0].id });
     let app;
 
     after(function() {
@@ -32,7 +35,7 @@ module.exports = function SongsIndexE2E(routes) {
             .then(res => {
               expect(res.statusCode).to.equal(200);
               expect(res.body.records).to.be.an('array').with.length(1);
-              expect(res.body.records[0].songs).to.be.an('array').with.length(16);
+              expect(res.body.records[0].songs).to.be.an('array').with.length(userSongs.length);
               done();
             })
             .catch(done);
@@ -46,25 +49,23 @@ module.exports = function SongsIndexE2E(routes) {
             .get('/songs')
             .set(headers)
             .then(res => {
-              // TODO: write utility functions to get seed data for assertions
               expect(res.statusCode).to.equal(200);
-              // has 4 fields if linking through songs, 5 if linking through userID
               expect(res.body.records[0])
                 .to.have.property('fields')
                 .that.is.an('array')
-                .that.has.length(5);
+                .that.has.length(fields.length);
               expect(res.body.records[0])
                 .to.have.property('instruments')
                 .that.is.an('array')
-                .that.has.length(4);
+                .that.has.length(instruments.length);
               expect(res.body.records[0])
                 .to.have.property('genres')
                 .that.is.an('array')
-                .that.has.length(4);
+                .that.has.length(genres.length);
               expect(res.body.records[0])
                 .to.have.property('artists')
                 .that.is.an('array')
-                .that.has.length(29);
+                .that.has.length(artists.length);
               done();
             })
             .catch(done);

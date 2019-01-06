@@ -62,7 +62,6 @@ module.exports = function(routes) {
               return request(app).get('/admin/list/users');
             })
             .then(res => {
-              expect(res.body.records).to.be.an('array').with.length(3);
               expect(res.body.records[0]).to.be.an('object').that.contains({ email: data.email });
               expect(res.body.records[0]).to.not.contain({ _badFieldName: data._badFieldName });
               done();

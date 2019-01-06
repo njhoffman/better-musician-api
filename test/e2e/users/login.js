@@ -1,8 +1,9 @@
-const { setupServer } = require('test/utils');
+const { setupServer, getSeedData } = require('test/utils');
 
 module.exports = function(routes) {
   // tested in main api test
   describe('/users/login', () => {
+    const { users } = getSeedData();
     let app;
 
     after(function() {
@@ -27,9 +28,7 @@ module.exports = function(routes) {
           expect(res.statusCode).to.equal(200);
           // expect(res.body.records).to.be.an('object').that.contains.key('records');
           expect(res.body.records).to.be.an('array').with.length(1);
-          expect(res.body.records[0]).to.be.an('object').that.contains({
-            id: '30000000-0000-0000-0000-000000000000'
-          });
+          expect(res.body.records[0]).to.be.an('object').that.contains({ id: users[0].id });
           done(err);
         });
     });

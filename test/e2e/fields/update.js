@@ -1,10 +1,15 @@
-const { login, setupServer, outModelAll } = require('../../utils');
+const _ = require('lodash');
+const { login, setupServer, getSeedData, outModelAll } = require('../../utils');
 
 module.exports = function fieldsUpdateE2E(routes) {
   describe('/fields/update', () => {
+    const { fields } = getSeedData();
     let app;
-
-    const fieldId =  '60000000-0000-0000-0000-000000000000';
+    const data = {
+      id: fields[0].id,
+      label: 'New Label',
+      typeId: 0
+    };
 
     after(function() {
       routes.push('/fields/update');
@@ -26,11 +31,6 @@ module.exports = function fieldsUpdateE2E(routes) {
     });
 
     it('Should update existing field with validated fields', (done) => {
-      const data = {
-        id: '60000000-0000-0000-0000-000000000000',
-        label: 'New Label',
-        type: 0
-      };
       login(app)
         .then(headers => {
           request(app)
@@ -44,7 +44,8 @@ module.exports = function fieldsUpdateE2E(routes) {
               return outModelAll('Field');
             })
             .then(res => {
-              expect(res[0]).to.be.an('object').that.contains(data);
+              const updatedField = _.find(res, { id: fields[0].id });
+              expect(updatedField).to.be.an('object').that.contains(data);
               done();
             })
             .catch(done);
@@ -52,12 +53,7 @@ module.exports = function fieldsUpdateE2E(routes) {
     });
 
     it('Should ignore fields not in table schema', (done) => {
-      const data = {
-        _badFieldName: 'shouldnt exist',
-        id: fieldId,
-        type: '0',
-        label: 'New Label'
-      };
+      _.merge(data, { _badFieldName: 'shouldnt exist' });
       login(app)
         .then(headers => {
           request(app)
@@ -67,13 +63,14 @@ module.exports = function fieldsUpdateE2E(routes) {
             .then(res => {
               expect(res.statusCode).to.equal(200);
               expect(res.body.records).to.be.an('array').with.length(1);
-              expect(res.body.records[0]).to.be.an('object').that.contains({ id: fieldId });
+              expect(res.body.records[0]).to.be.an('object').that.contains({ id: fields[0].id });
               expect(res.body.records[0]).to.not.have.property('_badFieldName');
               return outModelAll('Field');
             })
             .then(res => {
-              expect(res[0]).to.be.an('object').that.contains({ id: fieldId });
-              expect(res[0]).to.not.have.property('_badFieldName');
+              const updatedField = _.find(res, { id: fields[0].id });
+              expect(updatedField).to.be.an('object').that.contains({ id: fields[0].id });
+              expect(updatedField).to.not.have.property('_badFieldName');
               done();
             })
             .catch(done);

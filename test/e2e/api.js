@@ -1,7 +1,8 @@
-const { setupServer } = require('../utils');
+const { setupServer, getSeedData } = require('../utils');
 
 module.exports = function(routes) {
   describe('Main API', () => {
+    const { users } = getSeedData();
     let app;
 
     after(function() {
@@ -49,9 +50,7 @@ module.exports = function(routes) {
           expect(err).to.be.null;
           expect(res.statusCode).to.equal(200);
           expect(res.body.records).to.be.an('array').with.length(1);
-          expect(res.body.records[0]).to.be.an('object').that.contains({
-            id: '30000000-0000-0000-0000-000000000000'
-          });
+          expect(res.body.records[0]).to.be.an('object').that.contains({ id: users[0].id });
           done(err);
         });
     });

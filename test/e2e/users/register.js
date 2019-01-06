@@ -52,7 +52,7 @@ module.exports = function UserRegisterE2E(routes) {
         })
         .then(res => {
           expect(res.statusCode).to.equal(200);
-          expect(res.body.records).to.be.an('array').that.has.length(4);
+          expect(res.body.records).to.be.an('array').that.has.length(2);
           const savedUser = find(res.body.records, { id: savedId });
           expect(savedUser).to.be.an('object').that.contains.keys('id', 'email', 'maxDifficulty');
           done();

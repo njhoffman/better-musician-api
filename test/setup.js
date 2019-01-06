@@ -1,4 +1,6 @@
+global.__APP_NAME__ = 'bmusic-api-test';
 global.__SUPPRESS_LOGS__ = process.env.NODE_TEST_QUIET;
+global.__SEED_GROUP__ = process.env.NODE_TEST_SEED_GROUP || 'test-standard';
 
 const sinon = require('sinon');
 const chai = require('chai');

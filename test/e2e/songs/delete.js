@@ -1,8 +1,11 @@
 const _ = require('lodash');
-const { login, setupServer } = require('../../utils');
+const { login, setupServer, getSeedData } = require('../../utils');
 
 module.exports = function(routes) {
   describe('/songs/delete', () => {
+    const { users, songs } = getSeedData();
+    const userSongs = _.filter(songs, { user: users[0].id });
+
     let app;
 
     after(function() {
@@ -59,28 +62,28 @@ module.exports = function(routes) {
     //     });
     // });
 
-    // it('Should not delete a song if an invalid id is submitted', (done) => {
-    //   login(app)
-    //     .then(headers => {
-    //       request(app)
-    //         .post('/songs/delete')
-    //         .set(headers)
-    //         .send({ id: 'BADID' })
-    //         .then(res => {
-    //           expect(res.body).to.be.an('object').that.contains({ deleted: 0 });
-    //           return request(app)
-    //             .get('/admin/list/User/deep')
-    //             .set(headers);
-    //         })
-    //         .then(res => {
-    //           expect(res.body.records[0]).to.be.an('object')
-    //             .that.has.property('songs')
-    //             .that.has.length(16);
-    //           done();
-    //         })
-    //         .catch(done);
-    //     });
-    // });
+    it('Should not delete a song if an invalid id is submitted', (done) => {
+      login(app)
+        .then(headers => {
+          request(app)
+            .post('/songs/delete')
+            .set(headers)
+            .send({ id: 'BADID' })
+            .then(res => {
+              expect(res.body).to.be.an('object').that.contains({ deleted: 0 });
+              return request(app)
+                .get('/admin/list/User/deep')
+                .set(headers);
+            })
+            .then(res => {
+              expect(res.body.records[0]).to.be.an('object')
+                .that.has.property('songs')
+                .that.has.length(userSongs.length);
+              done();
+            })
+            .catch(done);
+        });
+    });
 
     // it('Should return AuthLockError with code 401 when deleting song assigned to another user if not admin', (done) => {
     //   login(app)
@@ -111,20 +114,17 @@ module.exports = function(routes) {
           request(app)
             .get('/admin/list/Song')
             .set(headers)
-            .then(res => {
-              const songUpdate = _.find(res.body.records, { user: '30000000-0000-0000-0000-000000000002' });
-              return request(app)
-                .post('/songs/delete')
-                .set(headers)
-                .send({ id: songUpdate.id });
-            })
+            .then(res => request(app)
+              .post('/songs/delete')
+              .set(headers)
+              .send({ id: users[1].id }))
             .then(res => (
               request(app)
                 .get('/admin/list/Song')
                 .set(headers)
             ))
             .then(res => {
-              expect(res.body.records).to.be.an('array').that.has.length(17);
+              expect(res.body.records).to.be.an('array').that.has.length(songs.length);
               done();
             })
             .catch(done)

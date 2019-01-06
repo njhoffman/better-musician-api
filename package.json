@@ -5,48 +5,21 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "./bin/git/init-hooks",
+    "devtools:eject": "node ./bin/devtools-eject.js",
+    "devtools:clean": "node ./bin/devtools-clean.js",
     "lint": "./node_modules/.bin/esw bin config lib test --color",
     "lint:fix": "npm run lint -- --fix",
     "lint:watch": "npm run lint -- --cache --watch --clear --changed",
     "lint:watch:all": "npm run lint -- --watch --clear",
-    "start": "better-npm-run start",
-    "dev": "better-npm-run dev",
-    "deploy": "better-npm-run deploy",
+    "start": "bin/rethinkdb.sh & node bin/server",
+    "dev": "NODE_ENV=development nodemon --config ./nodemon.json bin/server",
+    "deploy": "npm run lint && npm run test && npm trigger production pull and build",
     "test": "NODE_ENV=test ./node_modules/.bin/mocha",
     "test:mochista": "NODE_ENV=test mochista --reporter spec --opts ./test/mochista.opts",
     "test:watch": "NODE_ENV=test ./node_modules/.bin/mocha --watch --reporter spec",
-    "coverage": "better-npm-run coverage",
+    "coverage": "NODE_ENV=test nyc mocha",
     "coverage:watch": "npm run test:mochista -- --watch",
     "coveralls": "npm run coverage && cat ./coverage/lcov.info | coveralls && rm -rf coverage"
-  },
-  "betterScripts": {
-    "start": {
-      "command": "bin/rethinkdb.sh & node bin/server",
-      "env": {
-        "NODE_ENV": "production",
-        "API_PORT": 4001,
-        "DEBUG": "api:*"
-      }
-    },
-    "dev": {
-      "command": "nodemon --config ./nodemon.json bin/server",
-      "env": {
-        "NODE_ENV": "development",
-        "DEBUG": "api:*"
-      }
-    },
-    "deploy": {
-      "command": "npm run lint && npm run test && npm run clean && npm trigger production pull and build",
-      "env": {
-        "DEBUG": "api:*"
-      }
-    },
-    "coverage": {
-      "command": "nyc mocha",
-      "env": {
-        "NODE_ENV": "test"
-      }
-    }
   },
   "author": "Nick Hoffman",
   "license": "MIT",

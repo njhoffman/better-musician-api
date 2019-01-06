@@ -1,8 +1,10 @@
 const { filter } = require('lodash');
-const { login, setupServer } = require('../../utils');
+const { login, setupServer, getSeedData } = require('../../utils');
 
 module.exports = function fieldsAddE2E(routes) {
   describe('/fields/add', () => {
+    const { users, fields } = getSeedData();
+    const userFields = filter(fields, { user: users[0].id });
     let app;
 
     after(function() {
@@ -25,7 +27,7 @@ module.exports = function fieldsAddE2E(routes) {
     });
 
     it('Should add a field if required fields exist', (done) => {
-      const mockField = { type: 0, label: 'Mock Label' };
+      const mockField = { typeId: 0, label: 'Mock Label' };
       login(app)
         .then(headers => {
           request(app)
@@ -35,14 +37,14 @@ module.exports = function fieldsAddE2E(routes) {
             .then(res => {
               expect(res.statusCode).to.equal(200);
               expect(res.body.records).to.be.an('array').with.length(1);
-              expect(res.body.records[0]).to.be.an('object').that.contains.keys(['user', 'id', 'type', 'label']);
+              expect(res.body.records[0]).to.be.an('object').that.contains.keys(['user', 'id', 'typeId', 'label']);
               expect(res.body.records[0].user).to.not.be.an('object');
               return request(app).get('/admin/list/Field');
             })
             .then((res, err) => {
               expect(res.statusCode).to.equal(200);
-              const userFields = filter(res.body.records, { user: headers.uid });
-              expect(userFields).to.be.an('array').with.length(6);
+              const retUserFields = filter(res.body.records, { user: headers.uid });
+              expect(retUserFields).to.be.an('array').with.length(userFields.length + 1);
               done(err);
             })
             .catch(done);
