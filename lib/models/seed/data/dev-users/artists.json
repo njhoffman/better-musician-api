@@ -1,0 +1,11 @@
+[
+  {"id":"900a5436-5369-44c6-8734-e5d0b7069fdb","lastName":"Chopin","status":"private","user":"df62ae67-b4c1-4b7c-b460-d6f526069344","firstName":"Frederic","images":[{"file":"chopin.jpg","status":"public"}]},
+  {"id":"21b6b7c2-97a4-43fb-8374-2dd2876ec301","lastName":"Beethoven","status":"private","user":"df62ae67-b4c1-4b7c-b460-d6f526069344","firstName":"Ludwig van","images":[{"file":"beethoven.jpg","status":"public"}]},
+  {"id":"e433a5f7-a690-4b6b-9cae-ce9fc6e6e34f","lastName":"Rimsky-Korsakov","status":"private","user":"df62ae67-b4c1-4b7c-b460-d6f526069344","firstName":"Nikolai"},
+  {"id":"9e61275c-beb6-487a-8cb3-460ec1f9ce1e","lastName":"Pachelbel","status":"private","user":"df62ae67-b4c1-4b7c-b460-d6f526069344","firstName":"Johann"},
+  {"id":"49f54c7f-97d8-4d6f-86a4-11ab45e25801","lastName":"Mozart","status":"private","user":"df62ae67-b4c1-4b7c-b460-d6f526069344","firstName":"Wolfgang Amadeus","images":[{"file":"mozart.jpg","status":"public"}]},
+  {"id":"5cbd7052-0351-4873-86e6-81dbaa22f1a9","lastName":"Vivaldi","status":"private","user":"df62ae67-b4c1-4b7c-b460-d6f526069344","firstName":"Antonio"},
+  {"id":"537edd3d-162e-41c8-86c7-99ede910e0d8","lastName":"Bach","status":"private","user":"df62ae67-b4c1-4b7c-b460-d6f526069344","firstName":"Johann Sebastian","images":[{"file":"bach.jpg","status":"public"}]},
+  {"id":"564a8655-6dff-4dd7-b05a-bbc8495f3768","lastName":"Tchaikovsky","status":"private","user":"df62ae67-b4c1-4b7c-b460-d6f526069344","firstName":"Pyotr Ilyich","images":[{"file":"tchaikovsky.jpg","status":"public"}]},
+  {"id":"ead853b0-a7fe-45e6-b4b7-61e972bb30f0","lastName":"Debussy","status":"private","user":"df62ae67-b4c1-4b7c-b460-d6f526069344","firstName":"Claude","images":[{"file":"debussy.jpg","status":"public"}]}
+]

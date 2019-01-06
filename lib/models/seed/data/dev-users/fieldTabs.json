@@ -1,0 +1,6 @@
+[
+  {"id":"d5478fa5-f234-418d-9054-77c519c65984","name":"Extra Fields","user":"df62ae67-b4c1-4b7c-b460-d6f526069344","fields":["61feb121-4939-4bc9-98a6-9655ce3786e0","5dd9f6db-dafb-48ca-9d99-cd982ef1ace3"]},
+  {"id":"cc05a175-c77a-4150-b2cf-a9e4d66118e7","name":"My Media","user":"df62ae67-b4c1-4b7c-b460-d6f526069344","fields":["5a31b36c-32f5-4cec-b330-3f2906cc983e","218a3c54-b3c4-42ca-b38c-241119611fa4"]},
+  {"id":"9d7e6d47-ceef-43fd-b711-e59c48b10457","name":"My Other Silly Fields","user":"df62ae67-b4c1-4b7c-b460-d6f526069344","fields":["4326c59c-1d15-4851-a7cc-7a26628c938b","51652562-b6e5-4518-83ce-c4d0e47162bb","d459d064-e7f2-4b85-bc74-aa13b2065b84","c87a6aec-f840-4750-b1f2-1fabd69b4ace"]},
+  {"id":"4e29b4bc-0c03-4fe0-8ac7-97e051e60419","name":"Metronome","user":"df62ae67-b4c1-4b7c-b460-d6f526069344","fields":["77dfb5f3-119c-49c6-8d8d-26ad49c7fe15","d9f5a199-59b6-46ca-ab61-470bb0f66b98","a3433fe6-b90d-4f48-ab15-44515ace2ad6"]}
+]

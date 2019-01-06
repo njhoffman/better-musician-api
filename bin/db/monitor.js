@@ -10,10 +10,11 @@ const monitoredTables = [
 ];
 
 
-const dbName = 'better_musician_test';
+// const dbName = 'better_musician_test';
+const dbName = 'better_musician_dev';
 const indexSpacing = 15;
 const cols = process.env.TERM_COLWIDTH || 180;
-const oneLine = true;
+const oneLine = false;
 
 // echo '\e[38;2;255;50;180m\e[48;2;130;180;255mHello TruColors'
 // echo -ne '\e[1;10;255m BOLD GREEN' #

@@ -1,0 +1,13 @@
+[
+  {"id":"61feb121-4939-4bc9-98a6-9655ce3786e0","typeId":0,"label":"Year Composed","user":"df62ae67-b4c1-4b7c-b460-d6f526069344"},
+  {"id":"5dd9f6db-dafb-48ca-9d99-cd982ef1ace3","typeId":1,"label":"Sub-Genre","user":"df62ae67-b4c1-4b7c-b460-d6f526069344","options":[]},
+  {"id":"5a31b36c-32f5-4cec-b330-3f2906cc983e","typeId":2,"label":"Composition Key","user":"df62ae67-b4c1-4b7c-b460-d6f526069344","options":["C Major","C Minor","C# Major","C# Minor","D Major","D Minor","Eb Major","Eb Minor","F Major","F Minor","F# Major","F# Minor","G Major","G Minor","Ab Major","G# Minor","A Major","A Minor","Bb Major","Bb Minor","B Major","B Minor"]},
+  {"id":"218a3c54-b3c4-42ca-b38c-241119611fa4","typeId":3,"label":"Moods","user":"df62ae67-b4c1-4b7c-b460-d6f526069344","options":["Aggressive","Cathartic","Cerebral","Energetic","Gloomy","Intense","Marching","Melancholy","Mellow","Playful","Reflective","Sensual","Sentimental","Spooky","Theatrical","Triumphant","Turbulent","Upbeat","Uplifting"]},
+  {"id":"4326c59c-1d15-4851-a7cc-7a26628c938b","typeId":4,"label":"Is Copyrighted","user":"df62ae67-b4c1-4b7c-b460-d6f526069344"},
+  {"id":"51652562-b6e5-4518-83ce-c4d0e47162bb","typeId":5,"label":"Record Certification","user":"df62ae67-b4c1-4b7c-b460-d6f526069344","options":["None","Gold","Platinum","Diamond"]},
+  {"id":"d459d064-e7f2-4b85-bc74-aa13b2065b84","typeId":7,"label":"Live Performance","user":"df62ae67-b4c1-4b7c-b460-d6f526069344"},
+  {"id":"c87a6aec-f840-4750-b1f2-1fabd69b4ace","typeId":8,"label":"Sheet Music","user":"df62ae67-b4c1-4b7c-b460-d6f526069344"},
+  {"id":"77dfb5f3-119c-49c6-8d8d-26ad49c7fe15","typeId":9,"label":"Average dB","user":"df62ae67-b4c1-4b7c-b460-d6f526069344","min":0,"max":60,"unit":"dB"},
+  {"id":"d9f5a199-59b6-46ca-ab61-470bb0f66b98","typeId":9,"label":"Speed Progress","user":"df62ae67-b4c1-4b7c-b460-d6f526069344","min":90,"max":130,"unit":"BPM"},
+  {"id":"a3433fe6-b90d-4f48-ab15-44515ace2ad6","typeId":9,"label":"Dance Floor Response","user":"df62ae67-b4c1-4b7c-b460-d6f526069344","min":0,"max":100}
+]
