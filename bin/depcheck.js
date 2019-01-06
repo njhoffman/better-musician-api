@@ -2,9 +2,7 @@ const chalk = require('chalk');
 const depcheck = require('depcheck');
 const appRoot = require('app-root-path');
 
-/* eslint-disable import/no-dynamic-require */
 const pkgJson = require(`${appRoot}/package.json`);
-/* eslint-enable import/no-dynamic-require */
 
 const verbosity = 1; // 0, 1, or 2 (most verbose)
 

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - lib/utils/passport.strategies.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="https://github.com/the-simian/es6-plato">ES6 Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+      <li class="active">
+        <a href="display.html">Summary Display</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>lib/utils/passport.strategies.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">64.26</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">124</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">26.11</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.10</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">const StatsD = require(&#039;node-statsd&#039;);
+const _ = require(&#039;lodash&#039;);
+
+const sdc = new StatsD();
+
+// auth strategies return success to first defined route if done is passed truthy value in 2nd parameter
+//   -expects 2nd parameter success value to be an object to be assigned to req.user
+//   -will return error to 2nd defined route
+
+const jwtStrategy = (req, payload, done) =&gt; {
+  const ReqModels = req._models_;
+  const { User } = ReqModels;
+  if (!_.has(payload, &#039;id&#039;)) {
+    req.logger.warn({ payload }, &#039;JWT authentication failure: missing payload.id&#039;);
+    return done(null, false);
+  }
+  return User.findById(payload.id)
+    .then(fields =&gt; {
+      if (_.isObject(fields)) {
+        sdc.increment(&#039;api_auth_jwt_success&#039;);
+        req._metadata_ = {
+          ...req._metadata_,
+          userId:    fields.id,
+          userEmail: fields.email,
+          userRoles: fields.roles
+        };
+
+        req.logger = req.logger.child({ _requestUser: fields.email, subsystem: &#039;passport:strategies&#039; });
+        req.logger.info({ _debug: { id: payload.id } },
+          `JWT authentication success for user: ${fields.email}`);
+
+        // TODO: put in utils
+        Object.keys(ReqModels).forEach(modelKey =&gt; {
+          ReqModels[modelKey].request = req._metadata_;
+        });
+        return done(null, fields);
+      }
+      sdc.increment(&#039;api_auth_jwt_failed&#039;);
+      req.logger.warn(`JWT authentication failed, account for id:${payload.id} not found`);
+      return done(null);
+    });
+};
+
+const loginStrategy = (req, email, password, done) =&gt; {
+  // TODO: switch this to findModelByField
+  const ReqModels = req._models_;
+  const { User } = ReqModels;
+
+  // const reqUserKeys = [
+  //   &#039;_requestId&#039;, &#039;_requestIp&#039;, &#039;_requestLocation&#039;, &#039;_requestUser&#039;, &#039;_requestUserAgent&#039;
+  // ];
+  // const reqFields = req.logger.parent.fields;
+  // const requestParams = _.pick(reqFields, reqUserKeys);
+  const { debug, info } = req.logger.child({ subsystem: &#039;passport:strategies&#039; });
+
+  User.modelByField({ email })
+    .then(foundUser =&gt; {
+      if (foundUser.length === 0) {
+        debug(`No found user: ${email}`);
+        sdc.increment(&#039;api_login_failed&#039;);
+        return done(null, false);
+      }
+
+      info(
+        { _trace: { userFields: foundUser.fields } },
+        `Login attempt - found user ${email}, trying password: ${password}`
+      );
+
+      if (!foundUser.validPassword(password)) {
+        info(`Invalid password: ${password}`);
+        sdc.increment(&#039;api_login_failed&#039;);
+        // TODO: save event
+        // return foundUser.saveEvent(&#039;login_failure&#039;, requestParams);
+        return done(null, false);
+      }
+      sdc.increment(&#039;api_login_success&#039;);
+
+      req._metadata_ = {
+        ...req._metadata_,
+        userId:     foundUser.fields.id,
+        userEmail: foundUser.fields.email,
+        userRoles: foundUser.fields.roles
+      };
+
+      // TODO: put in utils
+      Object.keys(ReqModels).forEach(modelKey =&gt; {
+        ReqModels[modelKey].request = req._metadata_;
+      });
+
+      req.logger = req.logger.child({ _requestUser: email, subsystem: &#039;passport:strategies&#039; });
+      req.logger.info({ _debug: foundUser.fields }, `Login authentication success for user: ${email}`);
+      return done(null, foundUser._fields);
+      // TODO: save event
+      // return foundUser.saveEvent(&#039;login_success&#039;, requestParams);
+    });
+};
+
+const signupStrategy = (req, email, password, done) =&gt; {
+  // TODO: refactor this
+  const { User } = req._models_;
+  const { info } = req.logger.child({ subsystem: &#039;passport:strategies&#039; });
+  User.modelByField({ email })
+    .then(existingUser =&gt; {
+      if (existingUser.length !== 0) {
+        info(`local signup failed for: ${email}, email already exists`);
+        sdc.increment(&#039;api_signup_failed&#039;);
+        return done(null, false);
+      }
+      info(`local signup successful: ${email}`);
+      sdc.increment(&#039;api_signup&#039;);
+      return User.save({ email, password: User.generateHash(password) });
+    })
+    .then((results = {}) =&gt; {
+      const { records } = results;
+      return done(null, records);
+    });
+};
+
+module.exports = {
+  jwtStrategy,
+  loginStrategy,
+  signupStrategy
+};
+</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

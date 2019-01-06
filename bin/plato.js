@@ -22,7 +22,8 @@ const reportsDir = `${appRoot}/reports/plato`;
 const targetDirs = [
   `${appRoot}/bin`,
   `${appRoot}/config`,
-  `${appRoot}/lib`
+  `${appRoot}/lib`,
+  `${appRoot}/test`
 ];
 
 const ignoredFiles = [
@@ -55,7 +56,7 @@ const walkSync = (dir, files = []) => {
 const prepareOptions = (done) => {
   const startTime = new Date().getTime();
   const outputDir = !outputFiles ? '/tmp/plato' : path.join(reportsDir, `${Date.now()}`);
-  const lintRules = JSON.parse(readFileSync(`${appRoot}/.eslintrc`, { encoding: 'utf8' }));
+  const lintRules = JSON.parse(readFileSync(`${appRoot}/bin/.eslintrc`, { encoding: 'utf8' }));
 
   const parsedRules = {
     ...lintRules,

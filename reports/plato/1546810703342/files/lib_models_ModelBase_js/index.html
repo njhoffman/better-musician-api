@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - lib/models/ModelBase.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="https://github.com/the-simian/es6-plato">ES6 Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+      <li class="active">
+        <a href="display.html">Summary Display</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>lib/models/ModelBase.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">78.81</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">401</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">51.93</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">4.24</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">const {
+  get, intersection, omit, find, isFunction,
+  isEmpty, pickBy, has, keys, isArray, isObject
+}  = require(&#039;lodash&#039;);
+
+const deep = require(&#039;deep-diff&#039;);
+
+const { AuthLockError } = require(&#039;../Errors&#039;);
+const { getDbModule } = require(&#039;../utils/db&#039;);
+const baseLogger = require(&#039;../utils/logger&#039;)(&#039;model:base&#039;);
+
+const validator = require(&#039;./ModelBase/validator&#039;);
+const seed = require(&#039;./ModelBase/seed&#039;);
+const updater = require(&#039;./ModelBase/updater&#039;);
+const queries = require(&#039;./ModelBase/queries&#039;);
+
+/* ModelBase
+ *   static methods/properties are generic table attributes and operations
+ *   instantiated children refer to a single existing record of model from a query or create/update operation
+ *   fields are non-sensitive, sanitized fields that should be used for server response
+ *   setting fields with data object performs validation on data before assigning to fields
+ *   TODO: come up with better terminology to differentiate between reverse/non-reverse foreign key relationships
+ *   TODO : write better assertions with descriptive messages
+ *   TODO: replace cleanFields with fields, use _fields private accessor, _password private accessor
+*/
+
+
+class ModelBase {
+  static get args() { return getDbModule().r.args; }
+
+  static get row() { return getDbModule().r.row; }
+
+  static get db() { return getDbModule().db; }
+
+  static get conn() { return getDbModule().conn; }
+
+  static get userId() { return get(this, &#039;_request.userId&#039;); }
+
+  static get userRoles() { return get(this, &#039;_request.userRoles&#039;); }
+
+  static set request(metadata) { this._request = { ...this._request, ...metadata }; }
+
+  static get request() { return this._request; }
+
+  static get foreignKeys() {
+    return pickBy(this.tableKeys, (field) =&gt; field.relation !== undefined);
+  }
+
+  static get logger() {
+    const meta = this.request ? this.request.loggerFields() : {};
+    return baseLogger.child({ subsystem: &#039;modelBase&#039;, ...meta });
+  }
+
+  static set fields(args) {
+    throw new Error(&#039;Cannot set field values directly to the model&#039;);
+  }
+
+
+  static get count() {
+    return this.db
+      .table(this.tableName)
+      .count()
+      .run(this.conn);
+  }
+
+  // TODO: find consolidated solution for instance/static changed / cleanFields parsing
+  static changedFields(changes) {
+    const changed = [];
+    [].concat(changes).filter(Boolean)
+      .forEach(change =&gt; {
+        changed.push({
+          new: change.new_val,
+          old: change.old_val,
+          delta: deep.diff(change.old_val, change.new_val)
+        });
+      });
+
+    return changed;
+  }
+
+
+  static createTable() {
+    return this.db
+      .tableCreate(this.tableName)
+      .run(this.conn)
+      .then(() =&gt; this.logger.info(`Created ${this.tableName} table`));
+  }
+
+
+  static empty() {
+    return this.db
+      .table(this.tableName)
+      .delete({ returnChanges: true })
+      .run(this.conn)
+      .then(results =&gt; {
+        if (results.errors === 0) {
+          this.logger.debug({
+            _dbOp: {
+              operation: &#039;delete&#039;,
+              table: this.tableName,
+              resultCount: results.deleted
+            }
+          }, `Emptied ${results.deleted} records for model ${this.modelName}`);
+
+          return {
+            ...omit(results, &#039;changes&#039;),
+            changed: this.changedFields(results.changes)
+          };
+        }
+        throw new Error(`ERROR Emptying ${this.modelName}: ${results.first_error}`);
+      });
+  }
+
+  static reset(seedGroup) {
+    return this.empty()
+      .then(() =&gt; this.seed(0, seedGroup));
+  }
+
+  static verifyAuthLock(fieldIds) {
+    /* eslint-disable prefer-arrow-callback */
+    return new Promise(function verifyAuthLock(resolve, reject) {
+      // currently only works if &quot;id&quot; used as primary key
+      // const userRoles = this.userRoles;
+      const userRoles = [&#039;user&#039;];
+      const { userId } = this;
+      const authLocks = pickBy(this.tableKeys, &#039;authLock&#039;);
+      const authVerifyFields = [];
+      keys(authLocks).forEach((fieldName) =&gt; {
+        const lockRoles = isArray(authLocks[fieldName].authLock)
+          ? authLocks[fieldName].authLock : [&#039;admin&#039;];
+
+        if (intersection(userRoles, lockRoles).length === 0) {
+          authVerifyFields.push(fieldName);
+        }
+      });
+      if (authVerifyFields.length === 0) {
+        return resolve(true);
+      }
+      const fieldName = authVerifyFields.pop();
+      const ids = isArray(fieldIds) ? fieldIds : [fieldIds.id];
+
+      let authError = false;
+      return this.findByIds(ids)
+        .then(results =&gt; {
+          results.forEach(result =&gt; {
+            if ((result[fieldName]) !== userId) {
+              authError = [
+                `Not authorized removing record (${userId} !== ${result[fieldName]})`,
+                `from ${this.modelName} with authLock setting and user role`
+              ].join(&#039; &#039;);
+            }
+          });
+
+          if (authError) {
+            return reject(new AuthLockError(authError));
+          }
+          return resolve(true);
+        });
+    }.bind(this));
+    /* eslint-enable prefer-arrow-callback */
+  }
+
+  static delete(id) {
+    // accepts an object with unique fields to filter or a string to filter by id
+    // TODO: handle deleting arrays of ids, arrays of objects
+    const uniqueFields = isObject(id) ? id : { id };
+    const self = this;
+    return this.verifyAuthLock(uniqueFields)
+      .then(() =&gt; (
+        self.db.table(self.tableName)
+          .filter(uniqueFields)
+          .delete({ returnChanges: true })
+          .run(self.conn)
+          .then(results =&gt; {
+            if (results.errors === 0) {
+              const resultCount = results.changes ? results.changes.length : 0;
+              self.logger.debug({
+                _trace: { params: uniqueFields, changes: results.changes },
+                _dbOp: {
+                  data: uniqueFields,
+                  operation: &#039;delete&#039;,
+                  table: self.tableName,
+                  resultCount
+                }
+              }, `Deleted ${results.deleted} records for model ${self.modelName}`);
+              return {
+                ...omit(results, &#039;changes&#039;),
+                changed: self.changedFields(results.changes)
+              };
+            }
+            throw new Error(`ERROR deleting ${self.modelName}: ${results.first_error}`);
+          })
+      ));
+  }
+
+  static testUnique(fields) {
+    const uniqueFields = pickBy(this.tableKeys, (tk, name) =&gt; (tk.unique));
+    keys(uniqueFields).forEach(uf =&gt; {
+      if (fields[uf] !== undefined) {
+        uniqueFields[uf] = fields[uf];
+      }
+    });
+
+    if (has(fields, &#039;id&#039;) &amp;&amp; !isEmpty(fields.id)) {
+      uniqueFields.id = fields.id;
+    }
+
+    return (
+      keys(uniqueFields).length === 0
+        ? Promise.resolve(true)
+        : this.modelByField(uniqueFields)
+    );
+  }
+
+  static save(data) {
+    // search for existing records identified by unique field tags or &#039;id&#039; field
+    return this.testUnique(data)
+      .then(existingModel =&gt; {
+        if (!isEmpty(existingModel)) {
+          return existingModel.save(data);
+        }
+        // instantiates new model for creating
+        return new this(data).save();
+      });
+  }
+
+  constructor({ tableName, tableKeys, modelName }, data = null, recordExists) {
+    // model is instantiated when returning a query or when populating with data to perform save operation
+    // TODO: expand functionality to not depend on each table having ID prop to determine uniqueness
+    // this.warnings = [];
+    // this.errors = [];
+    const fieldData = [].concat(data)[0];
+
+    this.tableName = tableName;
+    this.tableKeys = tableKeys;
+    this.modelName = modelName;
+    //
+    // const newFields = this.populateDefaults(fieldData);
+    // if data is from existing record, just assign to field and skip validation/processing
+    if (recordExists) {
+      this.existingFields = fieldData;
+    } else {
+      this.validate(this.populateDefaults(fieldData));
+    }
+  }
+
+  get changedFields() { return this.constructor.changedFields; }
+
+  get foreignKeys() { return this.constructor.foreignKeys; }
+
+  get logger() { return this.constructor.logger; }
+
+  get userId() { return this.constructor.userId; }
+
+  get userRoles() { return this.constructor.userRoles; }
+
+  get db() { return this.constructor.db; }
+
+  get conn() { return this.constructor.conn; }
+
+  get row() { return this.constructor.row; }
+
+  get fields() {
+    const hiddenFields = pickBy(this.tableKeys, (field) =&gt; field.hidden === true);
+    return omit(this._fields, keys(hiddenFields));
+  }
+
+  set fields(newFields) { this.constructor.fields = newFields; }
+
+  // should only be set in constructor
+  get validatedFields() { return this._validatedFields; }
+
+  set warnings(warnings) { this._warnings = warnings; }
+
+  get warnings() { return this._warnings; }
+
+  set errors(errors) { this._errors = errors; }
+
+  get errors() { return this._errors; }
+
+  set existingFields(fields) {
+    // should only be set within ModelBase when field updated or constructed with existing record
+    this._existingFields = fields;
+    this._fields = fields;
+  }
+
+  get existingFields() { return this._existingFields; }
+
+  get deepFields() { return this._deepFields; }
+
+  set deepFields(fields) { this._deepFields = fields; }
+
+  get processedFields() { return this._processedFields; }
+
+  set processedFields(fields) { this._processedFields = fields; }
+
+  // should only be set in constructor
+  get rawFields() { return this._rawFields; }
+
+  get history() { return this._history; }
+
+  set history(data) {
+    this._history = this._history
+      ? this._history.push(data)
+      : [data];
+  }
+
+  get request() { return this.constructor.request; }
+
+  set request(reqData) { this.constructor.request = reqData; }
+
+  validate(fields) {
+    this._rawFields = fields;
+
+    this.logger.debug({ _trace: { fields } },
+      `Validating: ${this.tableName} (${keys(fields).length} fields)`);
+
+    const { validated, warnings, errors } =  this.validateFields(fields);
+
+    if (warnings.length &gt; 0) {
+      warnings.filter(Boolean).forEach(w =&gt; {
+        this.logger.warn(`Validation Warning: ${w.type} - &quot;${w.field}&quot;`);
+        this.logger.warn({ fields }, `  -- ${w.message}`);
+      });
+      this.warnings = [].concat(this.warnings, warnings);
+    }
+
+    if (errors.length &gt; 0) {
+      errors.filter(Boolean).forEach(e =&gt; {
+        this.logger.error(`Validation Error: ${e.type} - &quot;${e.field}&quot;`);
+        this.logger.error({ fields }, `  -- ${e.message}`);
+      });
+      this.errors = [].concat(this.errors, errors);
+    }
+
+    this._validatedFields = validated;
+
+    this.logger.trace({ warnings, errors, validated },
+      `Finished validating ${keys(validated).length} fields for &quot;${this.tableName}&quot;`);
+  }
+
+  resetFields(newFields) {
+    delete this._rawFields;
+    delete this._validatedFields;
+    delete this._processedFields;
+    this._fields = newFields;
+  }
+
+  updateSavedData(response) {
+    this.history = pickBy({
+      existingFields:  this.existingFields,
+      processedFields: this.processedFields,
+      rawFields:       this.rawFields,
+      deepFields:      this.deepFields,
+      ...response
+    });
+    this.resetFields(response.records);
+    return this.deep();
+  }
+
+  deep() {
+    const { id } = this.fields;
+    const self = this;
+    return this.constructor.allDeep()
+      .then(deepModelData =&gt; find(deepModelData, { id }))
+      .then(deepFields =&gt; {
+        self.deepFields = deepFields;
+        return deepFields;
+      });
+  }
+
+  populateDefaults(fields) {
+    const defaultValues = {};
+    keys(pickBy(this.tableKeys, &#039;default&#039;)).forEach(tKey =&gt; {
+      const field = this.tableKeys[tKey];
+      if (!has(fields, tKey) &amp;&amp; !has(fields, tKey)) {
+        defaultValues[tKey] = isFunction(field.default)
+          ? field.default() : field.default;
+      }
+    });
+    return { ...fields, ...defaultValues };
+  }
+
+  delete(id) {
+    this.logger.info(&#039;deleting model %O&#039;, this);
+    return this.db
+      .table(this.tableName)
+      .get(id || this.fields.id)
+      .delete()
+      .run(this.conn);
+  }
+}
+
+ModelBase.prototype.validateFields = validator;
+ModelBase.prototype.save = updater;
+Object.assign(ModelBase, seed);
+Object.assign(ModelBase, queries);
+// ModelBase.all = queries.all;
+
+module.exports = ModelBase;
+</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - lib/utils/server.utils.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="https://github.com/the-simian/es6-plato">ES6 Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+      <li class="active">
+        <a href="display.html">Summary Display</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>lib/utils/server.utils.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">64.41</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">259</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">38.94</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">2.76</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">const { lstatSync, readdirSync } = require(&#039;fs&#039;);
+const { join } = require(&#039;path&#039;);
+const url = require(&#039;url&#039;);
+const uuid = require(&#039;uuid/v4&#039;);
+const _ = require(&#039;lodash&#039;);
+const StatsD = require(&#039;node-statsd&#039;);
+const useragent = require(&#039;useragent&#039;);
+const geoip = require(&#039;geoip-lite&#039;);
+const initLogger = require(&#039;lib/utils/logger&#039;);
+
+const sdc = new StatsD();
+
+const padLeft = (str, len) =&gt; (
+  len &gt; str.length
+    ? (new Array(len - str.length + 1)).join(&#039; &#039;) + str
+    : str
+);
+
+const padRight = (str, len) =&gt; (
+  len &gt; str.length
+    ? str + (new Array(len - str.length + 1)).join(&#039; &#039;)
+    : str
+);
+
+const isJson = (str) =&gt; {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+};
+
+// const getMethodTag = (method) =&gt; {
+//   if (method === &#039;POST&#039; || method === &#039;PUT&#039;) {
+//     return &#039;Post&#039;;
+//   } else if (method === &#039;GET&#039;) {
+//     return &#039;Get&#039;;
+//   } else if (method === &#039;DELETE&#039;) {
+//     return &#039;Delete&#039;;
+//   }
+//   return &#039;Other&#039;;
+// };
+
+// const getStatusTag = (status) =&gt; {
+//   if (status &gt;= 500) {
+//     return &#039;Error&#039;;
+//   } else if (status &gt;= 400) {
+//     return &#039;Warn&#039;;
+//   } else if (status &gt;= 300) {
+//     return &#039;Info&#039;;
+//   }
+//   return &#039;Ok&#039;;
+// };
+
+const parseBody = (data) =&gt; {
+  const result = { message: null, parsedBody: data };
+  if (!_.isObject(data) &amp;&amp; isJson(data)) {
+    result.parsedBody = JSON.parse(data);
+  }
+
+  if (_.isObject(result.parsedBody) &amp;&amp; _.keys(result.parsedBody).length &gt; 0) {
+    result.message = &#039;  --body (JSON)&#039;;
+  } else if (!_.isEmpty(data)) {
+    result.message = &#039;  --body (non-JSON)&#039;;
+  }
+  return result;
+};
+
+const initRequestMetadata = (req, res, next) =&gt; {
+  // other headers: content-length, accept, accept-encoding, cookie,
+  const reqId = req.id || req.headers[&#039;X-Amx-Request-Id&#039;] || uuid.v4();
+  const method = req.method.toLowerCase();
+  const pUrl = url.parse(req.url);
+  const reqObj = { method };
+
+  if (req.params) reqObj.data = _.omit(req.params, [&#039;0&#039;, &#039;1&#039;]);
+  if (req.session &amp;&amp; req.session.user) reqObj.user = req.session.user;
+  if (req.sessionID) reqObj.sessionId = req.sessionID;
+  reqObj.sourceIp = (
+    (req.headers[&#039;x-forwarded-for&#039;] || req.connection.remoteAddress)
+      .split(&#039;,&#039;)
+      .shift()
+      .replace(&#039;::ffff:&#039;, &#039;&#039;)
+  );
+
+  reqObj.userAgent = req[&#039;user-agent&#039;];
+  reqObj.url = `${pUrl.href.replace(pUrl.query, &#039;&#039;).replace(pUrl.hash, &#039;&#039;)}`;
+  const geoLocation = geoip.lookup(reqObj.sourceIp) || {};
+  const { city = &#039;&#039;, region = &#039;&#039;, country = &#039;&#039; } = geoLocation;
+
+  let locDesc = [
+    `${city}${city.length &gt; 0 ? &#039;, &#039; : &#039;&#039;}`,
+    `${region}${region.length &gt; 0 ? &#039; &#039; : &#039;&#039;}`,
+    `${country &amp;&amp; country !== &#039;US&#039; ? country : &#039;&#039;}`
+  ].join(&#039;&#039;);
+
+  if (/^192.168|^172||127.0.0.1|^10/.test(reqObj.sourceIp)) {
+    locDesc = &#039;RSV&#039;;
+  }
+
+  const agent = useragent.parse(req.headers[&#039;user-agent&#039;]);
+
+  const _metadata_ = {
+    requestIp: reqObj.sourceIp,
+    requestId: reqId,
+    location:  locDesc.trim(),
+    start:     new Date().getTime(),
+    time:      req.headers[&#039;X-Response-Time&#039;],
+    userAgent: agent.toString().replace(&#039;Other 0.0.0 / Other 0.0.0&#039;, &#039;0/0&#039;),
+    urlPath:   reqObj.url,
+    urlMethod: reqObj.method.toUpperCase()
+  };
+
+  req._metadata_ = {
+    ..._metadata_,
+    loggerFields: () =&gt; ({
+      _requestId:        _metadata_.requestId,
+      _requestIp:        _metadata_.requestIp,
+      _requestLocation:  _metadata_.location,
+      _requestUser:      _metadata_.userEmail,
+      _requestStart:     _metadata_.start,
+      _responseTime:     _metadata_.time,
+      _requestUserAgent: _metadata_.userAgent,
+      _requestUrl:       _metadata_.urlPath,
+      _requestMethod:    _metadata_.urlMethod
+    })
+  };
+
+  next();
+};
+
+const initModelMetadata = (models) =&gt; (req, res, next) =&gt; {
+  const { _metadata_ }  = req;
+  const reqModels = { ...models };
+  Object.keys(models).forEach(modelKey =&gt; {
+    reqModels[modelKey].request = _metadata_;
+  });
+  req._models_ = models;
+  next();
+};
+
+const requestLog = (req, res, next) =&gt; {
+  const logger = initLogger(&#039;request&#039;);
+  const { urlPath, ip, urlMethod } = req._metadata_;
+  // other headers: content-length, accept, accept-encoding, cookie,
+  req.logger = logger.child({
+    subsystem:         &#039;request&#039;,
+    ...req._metadata_.loggerFields()
+  });
+
+  const body = req.body || {};
+
+  const reqParams = [&#039;url&#039;, &#039;headers&#039;, &#039;body&#039;, &#039;cookies&#039;, &#039;params&#039;, &#039;method&#039;];
+  if (urlPath === &#039;/health&#039;) {
+    req.logger.debug(`❤ ${ip}`);
+  } else {
+    req.logger.info(
+      { _trace: { _request: _.pick(req, reqParams) } },
+      `${urlMethod} - ${urlPath}`
+    );
+  }
+  const { message, parsedBody } = parseBody(body);
+  if (message) {
+    req.logger.debug({ parsedBody }, message);
+  }
+  sdc.increment(&#039;app_request&#039;);
+  next();
+};
+
+const responseLog = (req, res, time) =&gt; {
+  const logger =  req.logger.child({ subsystem: &#039;response&#039; });
+
+  const fmtTime = `${time.toFixed(2)}ms`;
+  if (req.url === &#039;/health&#039;) {
+    logger.debug(`❤ ${req._requestIp}`);
+  } else {
+    // res.locals?
+    // logger.info({ _response: { url: req.url, code: res.statusCode, time: fmtTime } },
+    //   `Response to ${req.url}: ${res.statusCode} in ${fmtTime}`);
+  }
+  res.setHeader(&#039;X-Response-Time&#039;, fmtTime);
+};
+
+const morganOutput = (tokens, req, res, next) =&gt; {
+  const logger =  req.logger.child({ subsystem: &#039;response&#039; });
+  let body = [];
+  res.on(&#039;data&#039;, (chunk) =&gt; {
+    body += chunk;
+  });
+
+  res.on(&#039;end&#039;, (chunk) =&gt; {
+    if (chunk) {
+      body += chunk;
+    }
+
+    const { message, parsedBody } = parseBody(body);
+    if (message) {
+      logger.debug({ parsedBody }, message);
+    }
+  });
+
+  // const status = tokens.status(req, res);
+  // const statusColorTag = &#039;requestStatus&#039; + getStatusTag(status);
+  // const method = `&lt;&lt;&lt; ${tokens.method(req, res)}`;
+  // const methodColorTag = &#039;response&#039; + getMethodTag(req.method);
+
+  // const contentLength = res[&#039;_contentLength&#039;]
+  //   ? `${res[&#039;_contentLength&#039;]} Bytes`
+  //   : &#039;-&#039;;
+  const responseTime = tokens[&#039;response-time&#039;](req, res);
+
+  const fmtTime = `${Number(responseTime).toFixed(2)}ms`;
+
+  logger.info({
+    _response: { url: req.url, code: res.statusCode, time: fmtTime }
+  }, `Response to ${req.url}: ${res.statusCode} in ${fmtTime}`);
+
+  logger.trace({ headers: res.headers || req.headers }, &#039;Headers&#039;);
+  if (req.session) {
+    logger.trace({ session: req.session }, &#039;Session&#039;);
+  }
+
+  if (res.locals &amp;&amp; Object.keys(res.locals).length &gt; 0) {
+    logger.trace(res.locals);
+  }
+};
+
+const allowCrossDomain = (req, res, next) =&gt; {
+  res.header(&#039;Access-Control-Allow-Credentials&#039;, true);
+  // res.header(&#039;Access-Control-Allow-Origin&#039;, req.headers.origin);
+  res.header(&#039;Access-Control-Allow-Origin&#039;, &#039;*&#039;);
+  res.header(&#039;Access-Control-Allow-Methods&#039;, &#039;GET,PUT,POST,DELETE&#039;);
+  res.header(&#039;Access-Control-Allow-Headers&#039;, &#039;X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept&#039;);
+  if (req.method === &#039;OPTIONS&#039;) {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+};
+
+const isDirectory = source =&gt; lstatSync(source).isDirectory();
+
+const getDirectories = source =&gt; readdirSync(source)
+  .map(name =&gt; join(source, name))
+  .filter(isDirectory);
+
+module.exports = {
+  padRight,
+  padLeft,
+  initRequestMetadata,
+  initModelMetadata,
+  requestLog,
+  responseLog,
+  morganOutput,
+  allowCrossDomain,
+  getDirectories
+};
+</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

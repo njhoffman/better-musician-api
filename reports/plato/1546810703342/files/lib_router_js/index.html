@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - lib/router.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="https://github.com/the-simian/es6-plato">ES6 Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+      <li class="active">
+        <a href="display.html">Summary Display</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>lib/router.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">71.56</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">69</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">21.76</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">0.81</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">const StatsD = require(&#039;node-statsd&#039;);
+const morgan = require(&#039;morgan&#039;);
+const passport = require(&#039;passport&#039;);
+
+const { morganOutput, padRight, getDirectories } = require(&#039;lib/utils/server.utils&#039;);
+const { routeError: unexpectedRouteError } = require(&#039;lib/utils/error&#039;);
+const { respondSuccess, respondError } = require(&#039;lib/utils/router.utils&#039;);
+const { info, debug } = require(&#039;lib/utils/logger&#039;)(&#039;router&#039;);
+const { version } = require(&#039;../package.json&#039;);
+
+const sdc = new StatsD();
+
+/* eslint-disable global-require, import/no-dynamic-require */
+const baseNames = getDirectories(`${__dirname}/routes`)
+  .map(dir =&gt; dir.split(&#039;/&#039;).pop());
+
+const baseRoutes = baseNames
+  .map(basePath =&gt; {
+    const loc = `./routes/${basePath}`;
+    delete require.cache[require.resolve(loc)];
+    const initRoute = require(loc);
+    return ({ basePath, initRoute });
+  });
+/* eslint-enable global-require, import/no-dynamic-require */
+
+const initRouting = (app) =&gt; {
+  info(`Initializing routing for base routes: ${baseNames.join(&#039;, &#039;)}`);
+  const initBaseRoute = ({ initRoute, basePath }) =&gt; {
+    const route = initRoute(passport, respondSuccess, respondError);
+    const subRoutes = {};
+    route.stack.forEach(stack =&gt; {
+      const { path } = stack.route;
+      Object.keys(stack.route.methods).forEach(method =&gt; {
+        if (!subRoutes[path] || subRoutes[path].indexOf(method) === -1) {
+          debug(`  ${padRight(method.toUpperCase(), 5)} /${basePath}${stack.route.path}`);
+          subRoutes[path] = [].concat(subRoutes[path]).push(method);
+        }
+      });
+    });
+    info(`/${basePath}: ${Object.keys(subRoutes).length} sub-routes loaded`);
+    app.use(`/${basePath}`, route);
+  };
+
+  // any response/header rewriting that happens after here won&#039;t get logged
+  app.use(morgan(morganOutput));
+
+  app.use((req, res, next) =&gt; {
+    const ua = req.headers[&#039;user-agent&#039;] ? req.headers[&#039;user-agent&#039;] : &#039;&#039;;
+    req._ctx = &#039;html&#039;;
+    if (ua.indexOf(&#039;curl&#039;) !== -1) {
+      req._ctx = &#039;text&#039;;
+    } else if (ua.indexOf(&#039;superagent&#039;) !== -1) {
+      req._ctx = &#039;json&#039;;
+    }
+    sdc.increment(&#039;api_request&#039;);
+    next();
+  });
+
+  app.use(&#039;/version&#039;, (req, res) =&gt; {
+    res.send({ version });
+  });
+
+  baseRoutes.forEach(initBaseRoute);
+
+  app.use(unexpectedRouteError);
+};
+
+module.exports = initRouting;
+</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

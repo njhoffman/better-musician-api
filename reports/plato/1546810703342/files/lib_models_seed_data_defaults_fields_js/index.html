@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - lib/models/seed/data/defaults/fields.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="https://github.com/the-simian/es6-plato">ES6 Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+      <li class="active">
+        <a href="display.html">Summary Display</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>lib/models/seed/data/defaults/fields.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">34.37</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">243</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">10.44</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.28</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">const exampleFields = [{
+  id: &#039;60000000-0000-0000-0000-000000000000&#039;,
+  user: &#039;30000000-0000-0000-0000-000000000000&#039;,
+  typeId: 0,
+  label: &#039;My Year Composed&#039;,
+  updatedAt: []
+}, {
+  id: &#039;60000000-0000-0000-0000-000000000001&#039;,
+  user: &#039;30000000-0000-0000-0000-000000000000&#039;,
+  typeId: 2,
+  label: &#039;My Composition Key&#039;,
+  options: [
+    &#039;C Major&#039;,
+    &#039;C Minor&#039;,
+    &#039;C# Major&#039;,
+    &#039;C# Minor&#039;,
+    &#039;D Major&#039;,
+    &#039;D Minor&#039;,
+    &#039;Eb Major&#039;,
+    &#039;Eb Minor&#039;,
+    &#039;F Major&#039;,
+    &#039;F Minor&#039;,
+    &#039;F# Major&#039;,
+    &#039;F# Minor&#039;,
+    &#039;G Major&#039;,
+    &#039;G Minor&#039;,
+    &#039;Ab Major&#039;,
+    &#039;G# Minor&#039;,
+    &#039;A Major&#039;,
+    &#039;A Minor&#039;,
+    &#039;Bb Major&#039;,
+    &#039;Bb Minor&#039;,
+    &#039;B Major&#039;,
+    &#039;B Minor&#039;
+  ],
+  updatedAt: []
+}, {
+  id: &#039;60000000-0000-0000-0000-000000000002&#039;,
+  user: &#039;30000000-0000-0000-0000-000000000000&#039;,
+  typeId: 3,
+  label: &#039;My Associated Moods&#039;,
+  options: [
+    &#039;Aggressive&#039;,
+    &#039;Cathartic&#039;,
+    &#039;Cerebral&#039;,
+    &#039;Energetic&#039;,
+    &#039;Gloomy&#039;,
+    &#039;Intense&#039;,
+    &#039;Marching&#039;,
+    &#039;Melancholy&#039;,
+    &#039;Mellow&#039;,
+    &#039;Playful&#039;,
+    &#039;Reflective&#039;,
+    &#039;Sensual&#039;,
+    &#039;Sentimental&#039;,
+    &#039;Spooky&#039;,
+    &#039;Theatrical&#039;,
+    &#039;Triumphant&#039;,
+    &#039;Turbulent&#039;,
+    &#039;Upbeat&#039;,
+    &#039;Uplifting&#039;
+  ],
+  updatedAt: []
+}, {
+  id: &#039;60000000-0000-0000-0000-000000000003&#039;,
+  user: &#039;30000000-0000-0000-0000-000000000000&#039;,
+  typeId: 7,
+  label: &#039;My Youtube Video&#039;,
+  updatedAt: []
+}, {
+  id: &#039;60000000-0000-0000-0000-000000000004&#039;,
+  user: &#039;30000000-0000-0000-0000-000000000000&#039;,
+  typeId: 9,
+  label: &#039;My Example Slider&#039;,
+  updatedAt: []
+}, {
+  id: &#039;60000000-0000-0000-0000-000000000005&#039;,
+  user: &#039;30000000-0000-0000-0000-000000000000&#039;,
+  typeId: 3,
+  label: &#039;My Multi-Select&#039;,
+  options: [
+    &#039;Theatrical&#039;,
+    &#039;Triumphant&#039;,
+    &#039;Turbulent&#039;,
+    &#039;Upbeat&#039;,
+    &#039;Uplifting&#039;
+  ],
+  updatedAt: []
+}, {
+  id: &#039;60000000-0000-0000-0000-000000000006&#039;,
+  user: &#039;30000000-0000-0000-0000-000000000000&#039;,
+  typeId: 5,
+  label: &#039;My Radio Buttons&#039;,
+  updatedAt: [],
+  options: [
+    &#039;Silver&#039;,
+    &#039;Gold&#039;,
+    &#039;Platinum&#039;,
+    &#039;Jimmmy Buffet&#039;,
+  ]
+}, {
+  id: &#039;60000000-0000-0000-0000-000000000007&#039;,
+  user: &#039;30000000-0000-0000-0000-000000000000&#039;,
+  typeId: 4,
+  label: &#039;My Checkbox&#039;,
+  updatedAt: []
+}, {
+  id: &#039;60000000-0000-0000-0000-000000000008&#039;,
+  user: &#039;30000000-0000-0000-0000-000000000000&#039;,
+  typeId: 4,
+  label: &#039;My Checkbox 2&#039;,
+  updatedAt: []
+}, {
+  id: &#039;60000000-0000-0000-0000-000000000009&#039;,
+  user: &#039;30000000-0000-0000-0000-000000000000&#039;,
+  typeId: 8,
+  label: &#039;My PDF Link&#039;,
+  updatedAt: []
+}, {
+  id: &#039;60000000-0000-0000-0000-000000000010&#039;,
+  user: &#039;30000000-0000-0000-0000-000000000000&#039;,
+  typeId: 10,
+  label: &#039;My Metronome&#039;,
+  updatedAt: []
+}, {
+  id: &#039;60000000-0000-0000-0000-000000000011&#039;,
+  user: &#039;30000000-0000-0000-0000-000000000000&#039;,
+  typeId: 11,
+  label: &#039;My Metronome Goal&#039;,
+  updatedAt: []
+
+  /* other user */
+
+}, {
+  id: &#039;60000000-1000-0000-0000-000000000000&#039;,
+  user: &#039;30000000-0000-0000-0000-000000000002&#039;,
+  typeId: 2,
+  label: &#039;User2 Composition Key&#039;,
+  options: [
+    &#039;Bb Minor&#039;,
+    &#039;B Major&#039;,
+    &#039;B Minor&#039;
+  ],
+  updatedAt: []
+}, {
+  id: &#039;60000000-1000-0000-0000-000000000001&#039;,
+  user: &#039;30000000-0000-0000-0000-000000000002&#039;,
+  typeId: 3,
+  label: &#039;User2 Associated Moods&#039;,
+  options: [
+    &#039;Playful&#039;,
+    &#039;Upbeat&#039;,
+    &#039;Uplifting&#039;
+  ],
+  updatedAt: []
+}, {
+  id: &#039;60000000-1000-0000-0000-000000000002&#039;,
+  user: &#039;30000000-0000-0000-0000-000000000002&#039;,
+  typeId: 7,
+  label: &#039;User2 Youtube Video&#039;,
+  updatedAt: []
+
+  /* has refId which is used to populate default user accounts on regbister */
+
+}, {
+  refId: &#039;cfield-0&#039;,
+  id: &#039;60000000-2000-0000-0000-000000000000&#039;,
+  typeId: 0,
+  label: &#039;Year Composed&#039;,
+  updatedAt: []
+}, {
+  refId: &#039;cfield-1&#039;,
+  id: &#039;60000000-2000-0000-0000-000000000001&#039;,
+  typeId: 2,
+  label: &#039;Composition Key&#039;,
+  options: [
+    &#039;C Major&#039;,
+    &#039;C Minor&#039;,
+    &#039;C# Major&#039;,
+    &#039;C# Minor&#039;,
+    &#039;D Major&#039;,
+    &#039;D Minor&#039;,
+    &#039;Eb Major&#039;,
+    &#039;Eb Minor&#039;,
+    &#039;F Major&#039;,
+    &#039;F Minor&#039;,
+    &#039;F# Major&#039;,
+    &#039;F# Minor&#039;,
+    &#039;G Major&#039;,
+    &#039;G Minor&#039;,
+    &#039;Ab Major&#039;,
+    &#039;G# Minor&#039;,
+    &#039;A Major&#039;,
+    &#039;A Minor&#039;,
+    &#039;Bb Major&#039;,
+    &#039;Bb Minor&#039;,
+    &#039;B Major&#039;,
+    &#039;B Minor&#039;
+  ],
+  updatedAt: []
+}, {
+  refId: &#039;cfield-2&#039;,
+  id: &#039;60000000-2000-0000-0000-0000000000003&#039;,
+  typeId: 3,
+  label: &#039;Associated Moods&#039;,
+  options: [
+    &#039;Aggressive&#039;,
+    &#039;Cathartic&#039;,
+    &#039;Cerebral&#039;,
+    &#039;Energetic&#039;,
+    &#039;Gloomy&#039;,
+    &#039;Intense&#039;,
+    &#039;Marching&#039;,
+    &#039;Melancholy&#039;,
+    &#039;Mellow&#039;,
+    &#039;Playful&#039;,
+    &#039;Reflective&#039;,
+    &#039;Sensual&#039;,
+    &#039;Sentimental&#039;,
+    &#039;Spooky&#039;,
+    &#039;Theatrical&#039;,
+    &#039;Triumphant&#039;,
+    &#039;Turbulent&#039;,
+    &#039;Upbeat&#039;,
+    &#039;Uplifting&#039;
+  ],
+  updatedAt: []
+}, {
+  refId: &#039;cfield-3&#039;,
+  id: &#039;60000000-2000-0000-0000-000000000004&#039;,
+  typeId: 7,
+  label: &#039;Youtube Video&#039;,
+  updatedAt: []
+}, {
+  refId: &#039;cfield-4&#039;,
+  id: &#039;60000000-1000-0000-0000-000000000005&#039;,
+  typeId: 9,
+  label: &#039;Example Slider&#039;,
+  updatedAt: []
+}];
+
+export default exampleFields;
+</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

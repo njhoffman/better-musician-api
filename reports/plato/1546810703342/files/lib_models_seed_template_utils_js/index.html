@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - lib/models/seed/template.utils.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="https://github.com/the-simian/es6-plato">ES6 Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+      <li class="active">
+        <a href="display.html">Summary Display</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>lib/models/seed/template.utils.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">77.09</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">115</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">31.67</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.24</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">const _ = require(&#039;lodash&#039;);
+const faker = require(&#039;faker&#039;);
+
+const fakerMap = {
+  firstName: faker.name.firstName,
+  lastName: faker.name.lastName,
+  email: faker.internet.email,
+  url: faker.internet.url,
+  password: faker.internet.password,
+  bool: faker.random.boolean,
+  string: faker.lorem.words,
+  uuid: faker.random.uuid,
+  word: faker.random.word
+};
+
+const customMap = {
+  number: ({ max = 0, min = 100 }) =&gt; parseInt(Math.random() * max, 10)
+};
+
+const loadField = (fieldDef, seedMeta = {}, key) =&gt; {
+  // if (key === &#039;id&#039;) {
+  //   _.merge(seedMeta, { seedType: &#039;uuid&#039; });
+  // }
+  const { validate, default: defaultValue } = fieldDef;
+  const { seedType } = seedMeta;
+
+  const dataType = seedType || validate;
+
+  if (_.isArray(seedMeta)) {
+    return seedMeta[Math.floor(Math.random() * seedMeta.length)];
+  } else if (_.isFunction(customMap[dataType])) {
+    return customMap[dataType](seedMeta);
+  } else if (_.isFunction(fakerMap[dataType])) {
+    const fakeData = fakerMap[dataType]();
+    return fakeData;
+  } else if (defaultValue) {
+    return defaultValue;
+  }
+  return null;
+};
+
+const filterFields = (tableKeys, seedMeta) =&gt; (
+  _.keys(tableKeys)
+    .filter(tKey =&gt; seedMeta[tKey] || tableKeys[tKey].required || tableKeys[tKey].default)
+    .filter(tKey =&gt; !tableKeys[tKey].relation)
+);
+
+const loadFields = (tableKeys, seedMeta) =&gt; {
+  const newFields = {};
+  filterFields(tableKeys, seedMeta).forEach(tKey =&gt; {
+    newFields[tKey] = loadField(tableKeys[tKey], seedMeta[tKey], tKey);
+  });
+  return newFields;
+};
+
+const cleanData = (data) =&gt; {
+  const cleanedData = {};
+  const stripKeys = [&#039;refs&#039;, &#039;refId&#039;, &#039;ref&#039;];
+  _.keys(data).forEach(tableKey =&gt; {
+    const cleanedTable =  _.map(data[tableKey], record =&gt; {
+      _.keys(record)
+        .filter(recordKey =&gt; _.isArray(record[recordKey]) &amp;&amp; _.isObject(record[recordKey][0]))
+        .forEach(recordKey =&gt; {
+          /* eslint-disable no-param-reassign */
+          record[recordKey] = _.map(record[recordKey], multiple =&gt; (
+            _.omit(multiple, stripKeys)
+          ));
+          /* eslint-enable no-param-reassign */
+        });
+      return _.omit(record, stripKeys);
+    });
+    cleanedData[tableKey] = cleanedTable;
+  });
+
+  return cleanedData;
+};
+
+
+// 1 user: multiple instruments, genres, artists, fields, songs
+const loadData = ({ model, records, relations, refs }, num = 0) =&gt; {
+  const { tableKeys, seedMeta = {} } = model;
+
+  // pre-defined ids (maybe not necessary, only use refIds?)
+  const newRecords = records
+    .filter(record =&gt; !_.isUndefined(record.id))
+    .map(record =&gt; {
+      const newFields = loadFields(tableKeys, seedMeta);
+      return _.merge(newFields, relations, record);
+    });
+
+  // add refIds (load all if not defined)
+  records
+    .filter(record =&gt; _.isUndefined(record.id))
+    .filter(record =&gt; [].concat(refs).indexOf(record.refId) !== -1 || !refs)
+    .forEach(record =&gt; {
+      const newFields = loadFields(tableKeys, { ...seedMeta, id: { seedType: &#039;uuid&#039; } });
+      newRecords.push(_.merge(newFields, relations, record));
+    });
+
+  // build additional related fields
+  if (num &gt; 0) {
+    _.times(num, (i) =&gt; {
+      const newFields = loadFields(tableKeys, { ...seedMeta, id: { seedType: &#039;uuid&#039; } });
+      _.merge(newFields, relations);
+      newRecords.push(newFields);
+    });
+  }
+  return newRecords;
+};
+
+module.exports = {
+  loadData,
+  cleanData
+};
+</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

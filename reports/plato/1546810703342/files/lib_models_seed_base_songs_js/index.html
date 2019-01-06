@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - lib/models/seed/base/songs.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="https://github.com/the-simian/es6-plato">ES6 Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+      <li class="active">
+        <a href="display.html">Summary Display</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>lib/models/seed/base/songs.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">23.86</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">226</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">18.96</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">2.26</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">const exampleSongs = [{
+  title: &#039;Nocturne in B-flat minor Op.9 No.1&#039;,
+  artist: 0,
+  instrument: 0,
+  genre: 0,
+  difficulty: 6,
+  progress: 4,
+  userFields: [
+    { ref: 0.1, value: 1838 },
+    { ref: 2.1, value: &#039;Bb Major&#039; },
+    { ref: 3.1, value: [&#039;Intense&#039;, &#039;Theatrical&#039;] },
+    { ref: 7.1, value: &#039;gxXSlhO4a5A&#039; }
+  ],
+}, {
+  title: &#039;Nocturne in E-flat major Op.9 No.2&#039;,
+  artist: 0,
+  instrument: 0,
+  genre: 0,
+  difficulty: 6,
+  progress: 1,
+  userFields: [
+    { ref: 0.1, value: 1830 },
+    { ref: 2.1, value: &#039;Eb Major&#039; },
+    { ref: 3.1, value: [&#039;Reflective&#039;, &#039;Sentimental&#039;] },
+    { ref: 7.1, value: &#039;tV5U8kVYS88&#039; }
+  ],
+}, {
+  title: &#039;12 Études Op. 10 No.1 in C major &quot;Waterfall&quot;&#039;,
+  artist: 0,
+  instrument: 0,
+  genre: 0,
+  difficulty: 10,
+  progress: 1,
+  userFields: [
+    { ref: 0.1, value: 1830 },
+    { ref: 2.1, value: &#039;C Major&#039; },
+    { ref: 3.1, value: [&#039;Intense&#039;] },
+    { ref: 7.1, value: &#039;9E82wwNc7r8&#039; }
+  ],
+}, {
+  title: &#039;12 Études Op. 10 No.4 in C-sharp minor &quot;Torrent&quot;&#039;,
+  artist: 0,
+  instrument: 0,
+  genre: 0,
+  difficulty: 10,
+  progress: 4,
+  userFields: [
+    { ref: 0.1, value: 1832 },
+    { ref: 2.1, value: &#039;C# Minor&#039; },
+    { ref: 3.1, value: [&#039;Cathartic&#039;, &#039;Turbulent&#039;, &#039;Intense&#039;] },
+    { ref: 7.1, value: &#039;mUVCGsWhwHU&#039; }
+  ],
+}, {
+  title: &#039;12 Études Op.10 No.12 in C minor &quot;Revolutionary&quot;&#039;,
+  artist: 0,
+  instrument: 0,
+  genre: 0,
+  year: 1831,
+  difficulty: 10,
+  progress: 4,
+  userFields: [
+    { ref: 0.1, value: 1838 },
+    { ref: 2.1, value: &#039;C Minor&#039; },
+    { ref: 3.1, value: [&#039;Cerebral&#039;, &#039;Energetic&#039;, &#039;Intense&#039;, &#039;Marching&#039;] },
+    { ref: 7.1, value: &#039;Gi5VTBdKbFM&#039; }
+  ],
+}, {
+  title: &#039;Prelude in E minor Op.28 No.4&#039;,
+  artist: 0,
+  instrument: 0,
+  genre: 0,
+  difficulty: 4,
+  progress: 3,
+  userFields: [
+    { ref: 0.1, value: 1838 },
+    { ref: 2.1, value: &#039;E Minor&#039; },
+    { ref: 3.1, value: [&#039;Cerebral&#039;, &#039;Energetic&#039;, &#039;Intense&#039;, &#039;Marching&#039;] },
+    { ref: 7.1, value: &#039;https://www.youtube.com/watch?v=vYZS05S9qeI&#039; }
+  ],
+}, {
+  title: &#039;Piano Sonata No.1 Op.2 in F minor&#039;,
+  artist: 1,
+  instrument: 0,
+  genre: 0,
+  difficulty: 7,
+  progress: 2,
+  userFields: [
+    { ref: 0.1, value: 1795 },
+    { ref: 2.1, value: &#039;F Minor&#039; },
+    { ref: 3.1, value: [&#039;Cathartic&#039;, &#039;Turbulent&#039;, &#039;Intense&#039;] },
+    { ref: 7.1, value: &#039;9oIdtq9E2ZU&#039; }
+  ],
+}, {
+  title: &#039;Bagatelle in A minor (Fur Elise)&#039;,
+  artist: 1,
+  instrument: 0,
+  genre: 0,
+  difficulty: 5,
+  progress: 2,
+  userFields: [
+    { ref: 0.1, value: 1810 },
+    { ref: 2.1, value: &#039;A Minor&#039; },
+    { ref: 3.1, value: [&#039;Cathartic&#039;, &#039;Turbulent&#039;, &#039;Intense&#039;] },
+    { ref: 7.1, value: &#039;yAsDLGjMhFI&#039; }
+  ],
+}, {
+  title: &#039;Piano Sonata No.14 Op.27 (Moonlight) in C# Minor&#039;,
+  artist: 1,
+  instrument: 0,
+  genre: 0,
+  difficulty: 2,
+  progress: 4,
+  userFields: [
+    { ref: 0.1, value: 1801 },
+    { ref: 2.1, value: &#039;C# Minor&#039; },
+    { ref: 3.1, value: [&#039;Cathartic&#039;, &#039;Turbulent&#039;, &#039;Intense&#039;] },
+    { ref: 7.1, value: &#039;SqciMXaABjA&#039; }
+  ],
+}, {
+  title: &#039;The Flight of the Bumblebee (The Tale of Tsar Saltan Act III)&#039;,
+  artist: 2,
+  instrument: 0,
+  genre: 0,
+  difficulty: 14,
+  progress: 0,
+  userFields: [
+    { ref: 0.1, value: 1899 },
+    { ref: 2.1, value: &#039;A Minor&#039; },
+    { ref: 3.1, value: [&#039;Cathartic&#039;, &#039;Turbulent&#039;, &#039;Intense&#039;] },
+    { ref: 7.1, value: &#039;8alxBofd_eQ&#039; }
+  ],
+}, {
+  title: &#039;Canon in D&#039;,
+  artist: 3,
+  instrument: 0,
+  genre: 0,
+  difficulty: 3,
+  progress: 1,
+  userFields: [
+    { ref: 0.1, value: 1680 },
+    { ref: 2.1, value: &#039;D Major&#039; },
+    { ref: 3.1, value: [&#039;Cathartic&#039;, &#039;Turbulent&#039;, &#039;Intense&#039;] },
+    { ref: 7.1, value: &#039;pnpgDzDeTjc&#039; }
+  ],
+}, {
+  title: &#039;Eine Kleine Nachtmusik (Serenade for Strings in G Major)&#039;,
+  artist: 4,
+  instrument: 0,
+  genre: 0,
+  difficulty: 5,
+  progress: 1,
+  userFields: [
+    { ref: 0.1, value: 1787 },
+    { ref: 2.1, value: &#039;G Major&#039; },
+    { ref: 3.1, value: [&#039;Cathartic&#039;, &#039;Turbulent&#039;, &#039;Intense&#039;] },
+    { ref: 7.1, value: &#039;ElCb0Ar1ee4&#039; }
+  ],
+}, {
+  title: &#039;Piano Sonata No.11 in A major (Turkish March)&#039;,
+  artist: 4,
+  instrument: 0,
+  genre: 0,
+  difficulty: 8,
+  progress: 3,
+  userFields: [
+    { ref: 0.1, value: 1783 },
+    { ref: 2.1, value: &#039;A Major&#039; },
+    { ref: 3.1, value: [&#039;Cathartic&#039;, &#039;Turbulent&#039;, &#039;Intense&#039;] },
+    { ref: 7.1, value: &#039;uWYmUZTYE78&#039; }
+  ],
+}, {
+  title: &#039;Concerto No.1 in E major Spring from &quot;The Four Seasons&quot;&#039;,
+  artist: 5,
+  instrument: 0,
+  genre: 0,
+  difficulty: 6,
+  progress: 0,
+  userFields: [
+    { ref: 0.1, value: 1723 },
+    { ref: 2.1, value: &#039;E Major&#039; },
+    { ref: 3.1, value: [&#039;Cathartic&#039;, &#039;Turbulent&#039;, &#039;Intense&#039;] },
+    { ref: 7.1, value: &#039;Ocd5MWydCzU&#039; }
+  ]
+}, {
+  title: &#039;Orchestral Suite No.3 in D Major (Air on the G String)&#039;,
+  artist: 6,
+  instrument: 0,
+  genre: 0,
+  difficulty: 5,
+  progress: 2,
+  userFields: [
+    { ref: 0.1, value: 1730 },
+    { ref: 2.1, value: &#039;D Major&#039; },
+    { ref: 3.1, value: [&#039;Cathartic&#039;, &#039;Turbulent&#039;, &#039;Intense&#039;] },
+    { ref: 7.1, value: &#039;vNkIj_BhHvY&#039; }
+  ],
+}, {
+  title: &#039;Dance of the Sugar Plum Fairy from &quot;The Nutcracker&quot;&#039;,
+  artist: 7,
+  instrument: 0,
+  genre: 0,
+  difficulty: 10,
+  progress: 1,
+  userFields: [
+    { ref: 0.1, value: 1892 },
+    { ref: 2.1, value: &#039;D Minor&#039; },
+    { ref: 3.1, value: [&#039;Cathartic&#039;, &#039;Turbulent&#039;, &#039;Intense&#039;] },
+    { ref: 7.1, value: &#039;TPFFx3KRwEQ&#039; }
+  ],
+}, {
+  title: &#039;Rêverie&#039;,
+  artist: 20,
+  instrument: 0,
+  genre: 0,
+  difficulty: 10,
+  progress: 1,
+  userFields: [
+    { ref: 0.1, value: 1892 },
+    { ref: 2.1, value: &#039;D Minor&#039; },
+    { ref: 3.1, value: [&#039;Cathartic&#039;, &#039;Turbulent&#039;, &#039;Intense&#039;] },
+    { ref: 7.1, value: &#039;TPFFx3KRwEQ&#039; }
+  ]
+}];
+
+module.exports = exampleSongs;
+</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>
