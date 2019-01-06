@@ -2,6 +2,7 @@
   "verbose" : true,
   "ignore" : [
     ".git",
+    "lib/models/seed/data/**/*.*",
     "node_modules/**/node_modules",
     "rethinkdb_data",
     "src"
@@ -10,7 +11,9 @@
     "js": "node bin/seeder.js"
   },
   "watch" : [
+    "_seeder",
     "bin/**/*.js",
+    "config/**/*.json",
     "lib/**/*.js"
   ],
   "env" : {
