@@ -3,9 +3,9 @@
 # run npm notes to list TODOs
 npm run notes
 
-# run tests and coverage for good measure
-npm run test:quiet
-npm run test:coverage
-
 # unused dependency check
 npm run depcheck
+
+# run tests and coverage for good measure
+npm run test:quiet
+npm run coverage

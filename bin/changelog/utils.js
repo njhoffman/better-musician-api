@@ -1,4 +1,3 @@
-const path = require('path');
 const npm = require('npm');
 
 const incrementVersion = (baseVersion, isMajorVersion) => (
@@ -12,9 +11,6 @@ const incrementVersion = (baseVersion, isMajorVersion) => (
     '0'
   ]
 ).join('.');
-
-// TODO: make this configurable
-const getMdPath = (name) => path.resolve(__dirname, `../../docs/changelogs/${name}.md`);
 
 const outdatedDeps = (done) => npm.load(() => {
   npm.commands.outdated((err, rawOutdated) => {
@@ -31,6 +27,5 @@ const outdatedDeps = (done) => npm.load(() => {
 
 module.exports = {
   outdatedDeps,
-  incrementVersion,
-  getMdPath
+  incrementVersion
 };

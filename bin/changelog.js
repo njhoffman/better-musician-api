@@ -1,7 +1,9 @@
 /* eslint-disable no-console */
 
 const async = require('async');
+const appRoot = require('app-root-path');
 const chalk = require('chalk');
+const path = require('path');
 const { argv } = require('yargs');
 // const { writeFileSync } = require('fs');
 
@@ -11,7 +13,7 @@ const {
   commitSummary,
   fileDiff,
   depDiff
-} = require('./git');
+} = require('./changelog/git');
 
 const {
   mdHeader,
@@ -25,24 +27,25 @@ const {
 
 const {
   incrementVersion,
-  getMdPath,
   outdatedDeps
 } = require('./changelog/utils');
 
-const { version: currVersion, dependencies, devDependencies }  = require('../package.json');
+const { version: currVersion, dependencies, devDependencies }  = require(`${appRoot}/package.json`);
 
-const trunkPath = getMdPath('trunk');
+const trunkPath = `${appRoot}/docs/changelogs/trunk.md`;
 
-const getVersionInfo = (done) => {
+const getOptions = (done) => {
   const isMajorVersion = Object.keys(argv).some(arg => /major|--major/i.test(arg));
-  const lastVersion = currVersion.replace(/\.\d+$/, '.0');
-  const newVersion = incrementVersion(lastVersion, isMajorVersion);
+  const lastVersion = argv.lastversion || argv.last || currVersion.replace(/\.\d+$/, '.0');
+  const newVersion = argv.newversion || argv.new || incrementVersion(lastVersion, isMajorVersion);
+  const outputDir = argv.output || argv.out || `${appRoot}/docs/changelogs`;
   const nextVersion = incrementVersion(newVersion, false);
 
-  done(null, { lastVersion, newVersion, nextVersion });
+  done(null, { lastVersion, newVersion, nextVersion, outputDir });
 };
 
-const getData = ({ lastVersion, newVersion, nextVersion }, allDone) => {
+const getData = (options, allDone) => {
+  const { lastVersion, newVersion } = options;
   console.log(
     `\nProcessing changes from ${chalk.cyan(lastVersion)} to ${chalk.cyan(newVersion)}`
   );
@@ -52,7 +55,7 @@ const getData = ({ lastVersion, newVersion, nextVersion }, allDone) => {
     depsOutdated: (done) => outdatedDeps(done),
     depsDiff: (done) => depDiff(lastVersion, done),
     plato: (done) => platoReports(done),
-    versions: (done) => done(null, { lastVersion, newVersion, nextVersion })
+    options: (done) => done(null, options)
   }, allDone);
 };
 
@@ -62,9 +65,9 @@ const generateMarkdown = ({
   depsOutdated,
   depsDiff,
   plato,
-  versions
+  options
 }, allDone) => {
-  const { newVersion, lastVersion, nextVersion } = versions;
+  const { newVersion, lastVersion } = options;
   console.log([
     '  -- Got results with',
     `${chalk.bold(commits.total)} commits,`,
@@ -87,18 +90,19 @@ const generateMarkdown = ({
   ].join('\n\n');
 
   console.log(`  -- Generated ${chalk.bold(markdown.length)} lines of markdown`);
-  allDone(null, { markdown, newVersion, nextVersion });
+  allDone(null, { ...options, markdown });
 };
 
-const writeFiles = ({ markdown, nextVersion, newVersion }, allDone) => {
-  const mdPath = getMdPath(newVersion);
+const writeFiles = ({ markdown, nextVersion, newVersion, outputDir }, allDone) => {
+  const mdPath = path.resolve(outputDir, `${newVersion}.md`);
+
   console.log(`  -- Writing markdown to file: \t\t${mdPath}`);
   console.log(`  -- Resetting trunk file for v${chalk.bold(nextVersion)}: \t${trunkPath}`);
   allDone(null, markdown);
 };
 
 async.waterfall([
-  getVersionInfo,
+  getOptions,
   getData,
   generateMarkdown,
   writeFiles
