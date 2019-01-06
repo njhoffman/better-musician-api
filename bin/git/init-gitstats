@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# keep in mind adds a post-commit hook in case we add our own post-commit hook
+./node_modules/.bin/git-stats-importer -e njhoffman1982@gmail.com && curl -s https://raw.githubusercontent.com/IonicaBizau/git-stats/master/scripts/init-git-post-commit | bash
