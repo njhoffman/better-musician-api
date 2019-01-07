@@ -3,14 +3,16 @@
 
 _*
 .nyc_output/
-node_modules
-rethinkdb_data
+node_modules/
+rethinkdb_data/
 .eslintcache
 
 nodemon-*.json
 lib/**/*.json
 
-coverage
+reports/coverage/**
+reports/plato/**
+
 .coveralls.yml
 
 .idea/

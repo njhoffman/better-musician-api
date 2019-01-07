@@ -1,0 +1,12 @@
+{
+  "reporter" : [
+    "lcov",
+    "json",
+    "json-summary"
+  ],
+  "require": [
+    "@babel/register"
+  ],
+  "cache" : false,
+  "report-dir": "./reports/coverage"
+}

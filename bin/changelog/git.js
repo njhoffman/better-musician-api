@@ -1,8 +1,12 @@
 const simpleGit = require('simple-git')();
 
-const depDiff = (baseVersion, done) => {
+const depDiff = (baseVersion, targetVersion, done) => {
+  console.log(
+    `\n** Calculating dependency differences between v${baseVersion} and v${targetVersion} **\n`
+  );
   simpleGit.diff([
     `v${baseVersion}`,
+    `v${targetVersion}`,
     '--',
     'package.json'
   ], (err, results) => {
@@ -30,15 +34,19 @@ const depDiff = (baseVersion, done) => {
   });
 };
 
-const fileDiff = (baseVersion, done) => {
-  simpleGit.diffSummary([`v${baseVersion}`], (err, results) => {
-    // const { insertions, deletions, files } = results;
-    // const { file: name, changes, insertions, deletions, binary } = file;
+const fileDiff = (baseVersion, targetVersion, done) => {
+  console.log(
+    `\n** Calculating file differences between v${baseVersion} and v${targetVersion} **\n`
+  );
+  simpleGit.diffSummary([`v${baseVersion}`, `v${targetVersion}`], (err, results) => {
     done(null, results);
   });
 };
 
 const commitSummary = (baseVersion, targetVersion, done) => {
+  console.log(
+    `\n** Generating commit summary between v${baseVersion} and v${targetVersion} **\n`
+  );
   simpleGit.log({
     from: `v${baseVersion}`,
     to: `v${targetVersion}`
