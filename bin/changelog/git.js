@@ -1,9 +1,12 @@
 const simpleGit = require('simple-git')();
+const chalk = require('chalk');
+const { numCommas: nc } = require('./utils');
 
 const depDiff = (baseVersion, targetVersion, done) => {
   console.log(
     `\n** Calculating dependency differences between v${baseVersion} and v${targetVersion} **\n`
   );
+
   simpleGit.diff([
     `v${baseVersion}`,
     `v${targetVersion}`,
@@ -30,6 +33,13 @@ const depDiff = (baseVersion, targetVersion, done) => {
         }
       }
     });
+
+    const { dev, prod } = deps;
+    console.log([
+      `  ${chalk.bold(Object.keys(prod).length)} production and`,
+      `${chalk.bold(Object.keys(dev).length)} development dependency changes`
+    ].join(' '));
+
     done(null, deps);
   });
 };
@@ -38,7 +48,15 @@ const fileDiff = (baseVersion, targetVersion, done) => {
   console.log(
     `\n** Calculating file differences between v${baseVersion} and v${targetVersion} **\n`
   );
+
   simpleGit.diffSummary([`v${baseVersion}`, `v${targetVersion}`], (err, results) => {
+    const { files, insertions, deletions } = results;
+    console.log([
+      `  ${chalk.bold(nc(files.length))} files changed with`,
+      `${chalk.green(nc(insertions))} insertions and`,
+      `${chalk.red(nc(deletions))} deletions`
+    ].join(' '));
+
     done(null, results);
   });
 };
@@ -47,12 +65,18 @@ const commitSummary = (baseVersion, targetVersion, done) => {
   console.log(
     `\n** Generating commit summary between v${baseVersion} and v${targetVersion} **\n`
   );
+
   simpleGit.log({
     from: `v${baseVersion}`,
     to: `v${targetVersion}`
   }, (err, results) => {
-    // const { all, latest, total } = results;
+    const { all, latest, total } = results;
     // const { hash, date, message, author_name, author_email } = commit;
+    console.log([
+      `  Commit Summary: ${chalk.bold(total)} commits,`,
+      `${chalk.bold(Object.keys(all).length)} ~ all`,
+      `${chalk.bold(Object.keys(latest).length)} ~ latest`
+    ].join(' '));
     done(null, results);
   });
 };

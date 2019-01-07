@@ -53,8 +53,7 @@ const getData = (options, allDone) => {
     commits: (done) => commitSummary(lastVersion, targetVersion, done),
     files: (done) => fileDiff(lastVersion, targetVersion, done),
     depsDiff: (done) => depDiff(lastVersion, targetVersion, done),
-    // below cannot be ran with a custom targetVersion, must be currVersion
-    // only fields of interest for tag file data
+    // the following cannot be ran with a custom targetVersion, must be currentVersion
     tests: (done) => mochaTests(done),
     coverage: (done) => coverageData(done),
     annotations: (done) => annotationsData(done),
@@ -66,27 +65,23 @@ const getData = (options, allDone) => {
   async.series(_.pick(dataFuncs, dataKeys), allDone);
 };
 
-const writeTagFile = (data, done) => {
-  const { options: { createTag, targetVersion } } = data;
-  const tagDataKeys = ['tests', 'coverage', 'annotations', 'depsOutdated', 'summary'];
-  const tagData = _.pick(data, tagDataKeys);
-  if (createTag) {
-    console.log(`\n-- Creating tag file ${createTag}`);
-    fs.writeFileSync(`${createTag}`, JSON.stringify(tagData));
-  } else {
-    console.log(`\n-- Tag file exists for v${targetVersion}, skipping write`);
-  }
-  done(null, data);
-};
-
-
-const generateMarkdown = (data, allDone) => {
+const generateMarkdown = ({
+  options,
+  commits,
+  files,
+  depsOutdated,
+  depsDiff,
+  tests,
+  coverage,
+  annotations,
+  summary
+}, allDone) => {
   const {
-    options, commits, files, depsOutdated,
-    depsDiff, tests, coverage, annotations, summary
-  } = data;
-
-  const { targetVersion, lastVersion, sections, trunkPath } = options;
+    targetVersion,
+    lastVersion,
+    sections,
+    trunkPath
+  } = options;
 
   const markdown = [
     mdHeader(targetVersion),
@@ -107,7 +102,7 @@ const generateMarkdown = (data, allDone) => {
   allDone(null, { ...options, markdown });
 };
 
-const writeMdFiles = ({
+const writeFiles = ({
   markdown,
   nextVersion,
   targetVersion,
@@ -116,32 +111,28 @@ const writeMdFiles = ({
 }, allDone) => {
   const mdPath = path.resolve(outputDir, `${targetVersion}.md`);
 
-  if (fs.existsSync(`${mdPath}`)) {
-    console.log(chalk.red(`Markdown file "${mdPath}" exists, skipping write`));
-  } else {
-    console.log(`-- Writing markdown to file: \t\t${mdPath}`);
-    fs.writeFileSync(`${mdPath}`, markdown);
-    console.log(`-- Resetting trunk file for v${chalk.bold(nextVersion)}: \t${trunkPath}`);
-  }
+  console.log(`-- Writing markdown to file: \t\t${mdPath}`);
+  console.log(`-- Resetting trunk file for v${chalk.bold(nextVersion)}: \t${trunkPath}`);
+
   allDone(null, markdown);
 };
 
 
 const checkTagFile = ({ tagsDir, currVersion }, done) => {
   const tagPath = path.join(`${tagsDir}`, `${currVersion}.json`);
-  done(null, !fs.existsSync(tagPath) ? tagPath : false);
+  const stat = fs.statSync(tagPath);
+  console.log(`Checking tag file ${tagPath}`, stat);
 };
 
-initConfig().then(({ changeLog, appName }) => {
-  console.log(chalk.bold(`\n-- ${appName} changelog markdown generator --\n`));
+initConfig().then(({ changeLog }) => {
+  console.log(chalk.bold('\n-- BetterMusician-api changelog markdown generator --\n'));
   const opts = { ...changeLog, currVersion: version };
   async.waterfall([
     (done) => checkTagFile(opts, done),
-    (createTag, done) => getOptions({ ...opts, createTag }, done),
+    (exists, done) => getOptions({ ...opts, createTag: !exists }, done),
     getData,
-    writeTagFile,
     generateMarkdown,
-    writeMdFiles
+    writeFiles
   ], (err, results) => {
     console.log('\n\n** Generated Markdown **\n');
     console.log(results);

@@ -4,6 +4,11 @@ const fs = require('fs');
 const npm = require('npm');
 const chalk = require('chalk');
 const { spawn } = require('child_process');
+const { argv } = require('yargs');
+
+const { version: currVersion } = require(`${appRoot}/package.json`);
+
+const numCommas = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
 const incrementVersion = (baseVersion, isMajorVersion) => (
   isMajorVersion ? [
@@ -16,6 +21,56 @@ const incrementVersion = (baseVersion, isMajorVersion) => (
     '0'
   ]
 ).join('.');
+
+const getOptions = (opts, done) => {
+  // const isMajorVersion = argv.major || false;
+  const { sections, createTag } = opts;
+
+  const lastVersion = argv.lastversion
+    || argv.last
+    || currVersion.replace(/\.\d+$/, '.0');
+
+  const targetVersion = argv.targetversion
+    || argv.target
+    || currVersion;
+    // || incrementVersion(lastVersion, isMajorVersion);
+
+  const outputDir = argv.output
+    || argv.out
+    || opts.outputDir;
+
+  const nextVersion = incrementVersion(targetVersion, false);
+
+  const trunkPath = `${outputDir}/trunk.md`;
+
+  if (argv.targetversion || argv.target) {
+    console.log(chalk.bold.red([
+      `Target version overridden to ${targetVersion},`,
+      `instead of current version: ${currVersion},`,
+    ].join(' ')));
+
+    console.log(chalk.yellow(
+      '  **mocha tests, coverage, outdated dependencies`and plato summary disabled'
+    ));
+
+    _.unset(sections, 'summary');
+    _.unset(sections, 'tests');
+    _.unset(sections, 'coverage');
+    _.unset(sections, 'annotations');
+    _.unset(sections, 'depsOutdated');
+  }
+
+  done(null, {
+    lastVersion,
+    targetVersion,
+    nextVersion,
+    outputDir,
+    trunkPath,
+    sections,
+    createTag
+  });
+};
+
 
 const outdatedDeps = (done) => npm.load(() => {
   console.log('\n** Looking up outdated dependency information **\n');
@@ -128,9 +183,11 @@ const annotationsData = (done) => {
 };
 
 module.exports = {
+  getOptions,
   outdatedDeps,
   incrementVersion,
   mochaTests,
   coverageData,
-  annotationsData
+  annotationsData,
+  numCommas
 };

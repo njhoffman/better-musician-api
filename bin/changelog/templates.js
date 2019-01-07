@@ -1,4 +1,5 @@
 const { readFileSync } = require('fs');
+const { numCommas: nc } = require('./utils');
 
 const getDate = () => new Date().toLocaleDateString('en-US', {
   month: 'short', day: 'numeric', year: 'numeric'
@@ -9,21 +10,55 @@ const mdHeader = (nextVersion) => [
   `**${getDate()}**`,
 ].join('\n');
 
-const mdChanges = (lastVersion, { insertions, deletions, files }, commits) => [
+const mdFileChanges = (lastVersion, { insertions, deletions, files }, commits) => [
   `**Changes since ${lastVersion}**`,
   '',
   '| Commits | Files | Insertions | Deletions |',
   '|:-------:|:-----:|:----------:|:---------:|',
-  `| ${commits} | ${files.length} | ${insertions} | ${deletions} |`,
+  `| ${nc(commits)} | ${nc(files.length)} | ${nc(insertions)} | ${nc(deletions)} |`,
 ].join('\n');
 
-const mdSummary = ({ fileList, average, total }) => [
-  '**Project Summary**',
-  '',
-  '| Total Files | Total Lines | Lines / File | Maintainability |',
-  '|:-----------:|:-----------:|:------------:|:---------------:|',
-  `| ${fileList.length} | ${total.sloc} | ${average.sloc} | ${average.maintainability} |`,
-].join('\n');
+const mdSummary = ({ fileList, average, total }, { todo, fixme, optimize, note }) => {
+  const headers = [
+    todo > 0 ? '| TODOS ' : '',
+    fixme > 0 ? '| FIXME ' : '',
+    optimize > 0 ? '| OPTIMIZE ' : '',
+    note > 0 ? '| NOTE ' : '',
+  ].filter(Boolean);
+
+  const vals = [todo, fixme, optimize, note]
+    .filter(Boolean)
+    .join(' |');
+
+  return ([
+    '**Code Summary**',
+    '',
+    `| Total Files | Total Lines | Lines / File | Maintainability | ${headers.join(' ')}|`,
+    `${Array(6 + headers.length).join('|:-----------:')}|`,
+    `| ${nc(fileList.length)} | ${nc(total.sloc)} | ${average.sloc} | ${average.maintainability} | | ${vals} |`,
+  ].join('\n'));
+};
+
+const mdTestSummary = (tests, coverage) => {
+  const { passes, failures } = tests;
+  const { lines, statements, functions, branches } = coverage;
+
+  const cnt = {
+    passes: `${passes} / ${failures}`,
+    lines: `${nc(lines.covered)}/${nc(lines.total)}`,
+    statements: `${nc(statements.covered)}/${nc(statements.total)}`,
+    funcs: `${nc(functions.covered)}/${nc(functions.total)}`,
+    branches: `${nc(branches.covered)}/${nc(branches.total)}`,
+  };
+
+  return ([
+    '**Tests Summary**',
+    '',
+    '| P / F  | % Lines | # Lines | # Statements | # Functions | # Branches |',
+    '|:-----------:|:-----------:|:------------:|:---------------:|:---------------:|:---------------:|',
+    `| ${cnt.passes} | ${lines.pct} | ${cnt.lines} | ${cnt.statements} | ${cnt.funcs} | ${cnt.branches} |`,
+  ].join('\n'));
+};
 
 const mdBody = (mdFile) => {
   let bodyOut = '';
@@ -93,8 +128,9 @@ const mdDepOutdated = (outdated) => [
 
 module.exports = {
   mdHeader,
-  mdChanges,
+  mdFileChanges,
   mdSummary,
+  mdTestSummary,
   mdBody,
   mdDepSummary,
   mdDepOutdated,

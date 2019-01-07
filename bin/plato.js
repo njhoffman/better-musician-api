@@ -65,8 +65,9 @@ const prepareOptions = (done) => {
     globals: _.keys(lintRules.globals)
   };
 
-  info(`Initializing plato reports for output to: ${outputDir}`);
-  info(`Crawling ${targetDirs.length} directories for js/jsx files...`);
+  info(chalk.bold('\n** BetterMusician-api plato reports generator **\n'));
+  info(`  Initializing plato reports for output to: ${outputDir}`);
+  info(`  Crawling ${targetDirs.length} directories for js/jsx files...`);
 
   const fileList = [];
   targetDirs.forEach(targetDir => {
@@ -85,7 +86,7 @@ const prepareOptions = (done) => {
     return (!isIgnored && (ext === 'js' || ext === 'jsx'));
   });
 
-  info(`Found ${filteredFiles.length} files to process.`);
+  info(`  Found ${filteredFiles.length} files to process.`);
   // filteredFiles.forEach((file, idx) => console.log(`\t${idx}: ${file}`));
 
   const platoOptions = {
@@ -104,7 +105,7 @@ const prepareOptions = (done) => {
 };
 
 const startPlato = ({ fileList, startTime, outputDir, platoOptions }, done) => {
-  info(`Running reports on: ${fileList.length} files`);
+  info(`  Running reports on: ${fileList.length} files`);
   plato.inspect(fileList, outputDir, platoOptions, (reports) => (
     done(null, { reports, startTime, fileList })
   ));
@@ -112,8 +113,9 @@ const startPlato = ({ fileList, startTime, outputDir, platoOptions }, done) => {
 
 const processReports = ({ reports, startTime, fileList }, done) => {
   const elapsed = (new Date().getTime() - startTime) / 1000;
-  info('\n----------------------------\n');
-  info(`Generated plato reports for ${fileList.length} files in ${elapsed} seconds`);
+  info(
+    `  Generated plato reports for ${chalk.bold(fileList.length)} files in ${elapsed} s\n`
+  );
   //
   // complexity [ 'methodAggregate', 'settings', 'classes', 'dependencies', 'errors', 'filePath', 'lineEnd',
   //   'lineStart', 'maintainability', 'methods', 'methodAverage', 'srcPath', 'srcPathAlias',
