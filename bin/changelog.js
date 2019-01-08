@@ -91,9 +91,9 @@ const generateMarkdown = (data, allDone) => {
   const markdown = [
     mdHeader(targetVersion),
     sections.files ? mdFileChanges(lastVersion, files, commits.total) : '',
+    mdBody(trunkPath),
     sections.summary ? mdSummary(summary, annotations) : '',
     sections.tests ? mdTestSummary(tests, coverage) : '',
-    mdBody(trunkPath),
     sections.depsOutdated ? mdDepSummary({
       outdated: depsOutdated.length,
       prod: Object.keys(dependencies).length,
