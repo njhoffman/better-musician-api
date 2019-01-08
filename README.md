@@ -15,3 +15,15 @@
 TODO: Add badges for Uptime robot status, code climate maintainability, technical debt
 -->
 
+NodeJS RESTful API server for handling requests from [better-musician-api](https://github.com/njhoffman/better-musician-api).  
+
+**Core Technology Stack**
+* ExpressJS
+* RethinkDB
+
+Based on the [templates-api](https://github.com/njhoffman/templates-api) core framework. Will be eventually included as a submodule with an eject script to deploy core files.
+
+[Change Log](https://github.com/njhoffman/better-musician-api/CHANGELOG.md). 
+[Developer Notes](https://github.com/njhoffman/better-musician-api/docs/NOTES.md).
+[Road Map](https://github.com/njhoffman/better-musician-api/docs/ROADMAP.md).
+[templates-api wiki](https://github.com/njhoffman/templates-api/wiki).
