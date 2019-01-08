@@ -110,7 +110,15 @@ const mochaTests = (done) => {
 
   mocha.stdout.on('end', (data) => {
     testResults += data || '';
-    const jsonResults = JSON.parse(testResults);
+    let jsonResults;
+    try {
+      jsonResults = JSON.parse(testResults);
+    } catch (e) {
+      console.log(chalk.red('\n!! Error parsing JSON for mocha tests results'));
+      console.error(e);
+      return done(null, {});
+    }
+
     const { suites, tests, passes, failures, duration } = jsonResults.stats;
 
     console.log([
@@ -119,7 +127,7 @@ const mochaTests = (done) => {
       `\n  ${chalk.green(passes)} Passed  ${chalk.red(failures)} Failed\n`
     ].join(' '));
 
-    done(null, jsonResults.stats);
+    return done(null, jsonResults.stats);
   });
 };
 
@@ -127,8 +135,16 @@ const coverageData = (done) => {
   const jsonSummaryFile = `${appRoot}/reports/coverage/coverage-summary.json`;
   console.log(`\n** Loading coverage data: ${jsonSummaryFile} **\n`);
   const summaryData = fs.readFileSync(jsonSummaryFile);
-  const summaryJson = JSON.parse(summaryData);
-  // // total, covered, skipped, pct
+
+  let summaryJson;
+  try {
+    summaryJson = JSON.parse(summaryData);
+  } catch (e) {
+    console.log(chalk.red('\n!! Error parsing JSON for istanbul coverage results'));
+    console.error(e);
+    return done(null, {});
+  }
+
   Object.keys(summaryJson.total).forEach(key => {
     const { total, covered, pct } = summaryJson.total[key];
     console.log([
@@ -136,7 +152,7 @@ const coverageData = (done) => {
       `${chalk.cyan(pct)}%  \t${chalk.bold(covered)}/${chalk.bold(total)}`
     ].join(' '));
   });
-  done(null, summaryJson.total);
+  return done(null, summaryJson.total);
 };
 
 const annotationsData = (done) => {

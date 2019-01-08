@@ -7,8 +7,8 @@ const getDate = () => new Date().toLocaleDateString('en-US', {
 
 const mdHeader = (nextVersion) => [
   `## ${nextVersion}`,
-  `**${getDate()}**`,
-].join('\n');
+  `- ${getDate()}`,
+].join(' ');
 
 const mdFileChanges = (lastVersion, { insertions, deletions, files }, commits) => [
   `**Changes since ${lastVersion}**`,
@@ -31,11 +31,15 @@ const mdSummary = ({ fileList, average, total }, { todo, fixme, optimize, note }
     .join(' |');
 
   return ([
-    '**Code Summary**',
+    '<details>',
+    '<summary>Code Summary (click to expand)</summary>',
+    '<p>',
     '',
     `| Total Files | Total Lines | Lines / File | Maintainability | ${headers.join(' ')}|`,
     `${Array(6 + headers.length).join('|:-----------:')}|`,
     `| ${nc(fileList.length)} | ${nc(total.sloc)} | ${average.sloc} | ${average.maintainability} | | ${vals} |`,
+    '</p>',
+    '</details>'
   ].join('\n'));
 };
 
@@ -52,11 +56,15 @@ const mdTestSummary = (tests, coverage) => {
   };
 
   return ([
-    '**Tests Summary**',
+    '<details>',
+    '<summary>Tests Summary (click to expand)</summary>',
+    '<p>',
     '',
     '| P / F  | % Lines | # Lines | # Statements | # Functions | # Branches |',
     '|:-----------:|:-----------:|:------------:|:---------------:|:---------------:|:---------------:|',
     `| ${cnt.passes} | ${lines.pct} | ${cnt.lines} | ${cnt.statements} | ${cnt.funcs} | ${cnt.branches} |`,
+    '</p>',
+    '</details>'
   ].join('\n'));
 };
 
@@ -77,20 +85,23 @@ const mdBody = (mdFile) => {
   return bodyOut;
 };
 
-const mdDependency = (title, deps) => [
-  '<details>',
-  `<summary>${title} (click to see list)</summary>`,
-  '<p>',
-  '',
-  '| Package Name | Operation | Source Version | Target Version |',
-  '|:------------:|:---------:|:--------------:|:--------------:|',
-  Object.keys(deps)
-    .map(name => `| ${name} | ${deps[name].join(' | ')} |`)
-    .join('\n'),
-  '',
-  '</p>',
-  '</details>',
-].join('\n');
+const mdDependency = (title, deps) => (
+  Object.keys(deps).length === 0 ? `No ${title.toLowerCase()}`
+    : [
+      '<details>',
+      `<summary>${title} (click to see list)</summary>`,
+      '<p>',
+      '',
+      '| Package Name | Operation | Source Version | Target Version |',
+      '|:------------:|:---------:|:--------------:|:--------------:|',
+      Object.keys(deps)
+        .map(name => `| ${name} | ${deps[name].join(' | ')} |`)
+        .join('\n'),
+      '',
+      '</p>',
+      '</details>',
+    ].join('\n')
+);
 
 
 const mdDepDiff = (dependencies) => [
@@ -100,30 +111,34 @@ const mdDepDiff = (dependencies) => [
   mdDependency('Development Dependency Updates', dependencies.dev)
 ].join('\n');
 
-const mdDepSummary = ({ outdated, prod, dev }) => [
+const mdDepSummary = ({ outdated, prod, dev }) => ([
   '---',
   '',
-  '### Dependency Summary ',
+  '### Dependency Summary',
   '',
   '| Production | Development | Total | Outdated |',
   '|:-----------:|:-----------:|:------------:|:---------------:|',
   `| ${prod} | ${dev} | ${parseInt(prod + dev, 10)} | ${outdated} |`,
 
-].join('\n');
+].join('\n')
+);
 
-const mdDepOutdated = (outdated) => [
-  '',
-  '<details>',
-  '<summary>Outdated Dependencies (click to see list)</summary>',
-  '<p>',
-  '',
-  '| Name | Current | Wanted | Latest | Definition |',
-  '|:-----------:|:-----------:|:------------:|:---------------:|:---------------:|',
-  outdated.map(({ name, current, wanted, latest, definition }) => (
-    `| ${name} | ${current} | ${wanted} | ${latest} | ${definition}`
-  )).join('\n'),
-  '',
-].join('\n');
+const mdDepOutdated = (outdated) => (
+  outdated.length === 0 ? 'No outdated dependencies ...'
+    : [
+      '',
+      '<details>',
+      '<summary>Outdated Dependencies (click to see list)</summary>',
+      '<p>',
+      '',
+      '| Name | Current | Wanted | Latest | Definition |',
+      '|:-----------:|:-----------:|:------------:|:---------------:|:---------------:|',
+      outdated.map(({ name, current, wanted, latest, definition }) => (
+        `| ${name} | ${current} | ${wanted} | ${latest} | ${definition}`
+      )).join('\n'),
+      '',
+    ].join('\n')
+);
 
 
 module.exports = {

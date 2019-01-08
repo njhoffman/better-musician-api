@@ -23,10 +23,10 @@
     "reports:gitstats:report": "./node_modules/.bin/gitinspector -HTlrm -F text -x reports ./",
     "reports:gitstats:report:html": "./node_modules/.bin/gitinspector -HTlrm -F html -x reports ./",
     "reports:coveralls": "npm run test:coverage && cat ./reports/coverage/lcov.info | coveralls",
-    "test": "NODE_ENV=test ./node_modules/.bin/mocha",
-    "test:mochista": "NODE_ENV=test mochista --reporter spec --opts ./test/mochista.opts",
+    "test": "NODE_TEST_QUIET=1 npm run test",
     "test:watch": "NODE_ENV=test ./node_modules/.bin/mocha --watch --reporter spec",
-    "test:quiet": "NODE_TEST_QUIET=1 npm run test",
+    "test:mochista": "NODE_ENV=test mochista --reporter spec --opts ./test/mochista.opts",
+    "test:verbose": "NODE_ENV=test ./node_modules/.bin/mocha",
     "test:coverage": "NODE_ENV=test NODE_TEST_QUIET=1 nyc --reporter=text --reporter=text-summary mocha",
     "test:coverage:watch": "npm run test:mochista -- --watch"
   },

@@ -26,7 +26,7 @@ const {
   mdDepSummary,
   mdDepOutdated,
   mdDepDiff
-} = require('./changelog/templates');
+} = require('./changelog/markdown');
 
 const {
   getOptions,
@@ -71,7 +71,7 @@ const writeTagFile = (data, done) => {
   const tagDataKeys = ['tests', 'coverage', 'annotations', 'depsOutdated', 'summary'];
   const tagData = _.pick(data, tagDataKeys);
   if (createTag) {
-    console.log(`\n-- Creating tag file ${createTag}`);
+    console.log(chalk.green(`\n-- Creating tag file ${createTag}`));
     fs.writeFileSync(`${createTag}`, JSON.stringify(tagData));
   } else {
     console.log(`\n-- Tag file exists for v${targetVersion}, skipping write`);
@@ -117,11 +117,11 @@ const writeMdFiles = ({
   const mdPath = path.resolve(outputDir, `${targetVersion}.md`);
 
   if (fs.existsSync(`${mdPath}`)) {
-    console.log(chalk.red(`Markdown file "${mdPath}" exists, skipping write`));
+    console.log(chalk.red(`\nMarkdown file "${mdPath}" exists, skipping write`));
   } else {
-    console.log(`-- Writing markdown to file: \t\t${mdPath}`);
+    console.log(chalk.green(`\n-- Writing markdown to file: \t\t${mdPath}`));
     fs.writeFileSync(`${mdPath}`, markdown);
-    console.log(`-- Resetting trunk file for v${chalk.bold(nextVersion)}: \t${trunkPath}`);
+    console.log(chalk.green(`\n-- Resetting trunk file for v${chalk.bold(nextVersion)}: \t${trunkPath}`));
   }
   allDone(null, markdown);
 };
