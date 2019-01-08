@@ -1,0 +1,13 @@
+[
+  {"id":"a8692ecd-f2f9-42f8-9e8a-c75d8d4cf7ba","typeId":0,"label":"Year Composed","user":"8d1737dd-4f1a-4f47-a093-bca53051e4da"},
+  {"id":"c0410e64-860a-4ce7-b9ad-8c049d79b90a","typeId":1,"label":"Sub-Genre","user":"8d1737dd-4f1a-4f47-a093-bca53051e4da","options":[]},
+  {"id":"81321982-7542-44e4-bebc-119754108605","typeId":2,"label":"Composition Key","user":"8d1737dd-4f1a-4f47-a093-bca53051e4da","options":["C Major","C Minor","C# Major","C# Minor","D Major","D Minor","Eb Major","Eb Minor","F Major","F Minor","F# Major","F# Minor","G Major","G Minor","Ab Major","G# Minor","A Major","A Minor","Bb Major","Bb Minor","B Major","B Minor"]},
+  {"id":"e258150d-bee5-45e5-94dd-7f768826c869","typeId":3,"label":"Moods","user":"8d1737dd-4f1a-4f47-a093-bca53051e4da","options":["Aggressive","Cathartic","Cerebral","Energetic","Gloomy","Intense","Marching","Melancholy","Mellow","Playful","Reflective","Sensual","Sentimental","Spooky","Theatrical","Triumphant","Turbulent","Upbeat","Uplifting"]},
+  {"id":"5a17cad9-3b8d-4716-96fa-3af77b355521","typeId":4,"label":"Is Copyrighted","user":"8d1737dd-4f1a-4f47-a093-bca53051e4da"},
+  {"id":"e47e5b8d-ab76-4a93-9a45-5bdeda3221e6","typeId":5,"label":"Record Certification","user":"8d1737dd-4f1a-4f47-a093-bca53051e4da","options":["None","Gold","Platinum","Diamond"]},
+  {"id":"5a2df01a-f220-40ad-8697-1361ecd124e4","typeId":7,"label":"Live Performance","user":"8d1737dd-4f1a-4f47-a093-bca53051e4da"},
+  {"id":"84df1630-1bd3-480d-8b70-531118f14998","typeId":8,"label":"Sheet Music","user":"8d1737dd-4f1a-4f47-a093-bca53051e4da"},
+  {"id":"011cb6d5-3b43-44a3-9a18-171f6e6c5724","typeId":9,"label":"Average dB","user":"8d1737dd-4f1a-4f47-a093-bca53051e4da","min":0,"max":60,"unit":"dB"},
+  {"id":"a0fe7c88-8402-4cb6-91a3-d99ee3d452b9","typeId":9,"label":"Speed Progress","user":"8d1737dd-4f1a-4f47-a093-bca53051e4da","min":90,"max":130,"unit":"BPM"},
+  {"id":"117b86d6-eae6-4556-a662-5863fa56ab15","typeId":9,"label":"Dance Floor Response","user":"8d1737dd-4f1a-4f47-a093-bca53051e4da","min":0,"max":100}
+]

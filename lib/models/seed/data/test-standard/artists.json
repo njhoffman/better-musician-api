@@ -1,0 +1,5 @@
+[
+  {"id":"14e866a9-84b9-4504-88bc-41855ccc9d59","lastName":"Chopin","status":"private","user":"5dfca360-2c31-46b0-b0fb-e24373894a89","firstName":"Frederic","images":[{"file":"chopin.jpg","status":"public"}]},
+  {"id":"12f37996-f8f2-4a44-bd1f-6dbfbb9a53c8","lastName":"Beethoven","status":"private","user":"5dfca360-2c31-46b0-b0fb-e24373894a89","firstName":"Ludwig van","images":[{"file":"beethoven.jpg","status":"public"}]},
+  {"id":"7bd5f5db-d2a3-4b7b-9996-74000295d34a","lastName":"Vivaldi","status":"private","user":"5dfca360-2c31-46b0-b0fb-e24373894a89","firstName":"Antonio"}
+]

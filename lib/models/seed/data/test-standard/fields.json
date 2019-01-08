@@ -1,0 +1,13 @@
+[
+  {"id":"24feaedc-c4a7-40a7-9782-6ac4ffbfa365","typeId":0,"label":"Year Composed","user":"5dfca360-2c31-46b0-b0fb-e24373894a89"},
+  {"id":"0bd5d218-8516-451c-8f06-48136d48958c","typeId":1,"label":"Sub-Genre","user":"5dfca360-2c31-46b0-b0fb-e24373894a89","options":[]},
+  {"id":"6352668e-d701-497b-a4cf-5953af3043cd","typeId":2,"label":"Composition Key","user":"5dfca360-2c31-46b0-b0fb-e24373894a89","options":["C Major","C Minor","C# Major","C# Minor","D Major","D Minor","Eb Major","Eb Minor","F Major","F Minor","F# Major","F# Minor","G Major","G Minor","Ab Major","G# Minor","A Major","A Minor","Bb Major","Bb Minor","B Major","B Minor"]},
+  {"id":"98fdf899-0bdd-4a7e-bb08-cf0b97a74f11","typeId":3,"label":"Moods","user":"5dfca360-2c31-46b0-b0fb-e24373894a89","options":["Aggressive","Cathartic","Cerebral","Energetic","Gloomy","Intense","Marching","Melancholy","Mellow","Playful","Reflective","Sensual","Sentimental","Spooky","Theatrical","Triumphant","Turbulent","Upbeat","Uplifting"]},
+  {"id":"56e5aa81-d6f6-47d5-9e1e-c8dd720033e1","typeId":4,"label":"Is Copyrighted","user":"5dfca360-2c31-46b0-b0fb-e24373894a89"},
+  {"id":"bc3df846-ba15-4cec-a2e3-a44de3aacc67","typeId":5,"label":"Record Certification","user":"5dfca360-2c31-46b0-b0fb-e24373894a89","options":["None","Gold","Platinum","Diamond"]},
+  {"id":"1eb1628c-a6ce-4198-b4c6-81d6f2623f30","typeId":7,"label":"Live Performance","user":"5dfca360-2c31-46b0-b0fb-e24373894a89"},
+  {"id":"97fb9de4-b827-423c-90fe-02ec3eaff377","typeId":8,"label":"Sheet Music","user":"5dfca360-2c31-46b0-b0fb-e24373894a89"},
+  {"id":"e89dfdb1-a497-4c44-b912-3e2652850eeb","typeId":9,"label":"Average dB","user":"5dfca360-2c31-46b0-b0fb-e24373894a89","min":0,"max":60,"unit":"dB"},
+  {"id":"eee19b7f-3685-427b-93e7-f36aaec1c74c","typeId":9,"label":"Speed Progress","user":"5dfca360-2c31-46b0-b0fb-e24373894a89","min":90,"max":130,"unit":"BPM"},
+  {"id":"1484aed2-3bdd-4837-accf-8f39ae943bc5","typeId":9,"label":"Dance Floor Response","user":"5dfca360-2c31-46b0-b0fb-e24373894a89","min":0,"max":100}
+]

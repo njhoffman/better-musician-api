@@ -1,0 +1,4 @@
+[
+  {"id":"5dfca360-2c31-46b0-b0fb-e24373894a89","firstName":"Ashlynn","lastName":"Cummerata","email":"testuser@example.com","maxDifficulty":13,"maxProgress":0,"songBrushUpInterval":8,"songBrushUpDuration":180,"songBrushUpEmail":false,"songGoalEmail":true,"visualTheme":"steelBlue.dark","roles":["test","user","admin"],"password":"dummypassword"},
+  {"id":"7cefc4b7-3bdd-4213-8662-f3affd3feb0c","firstName":"Nya","lastName":"Grimes","email":"user2@example.com","maxDifficulty":1,"maxProgress":6,"songBrushUpInterval":8,"songBrushUpDuration":14,"songBrushUpEmail":false,"songGoalEmail":true,"visualTheme":"steelBlue.dark","roles":["user"],"password":"dummypassword"}
+]

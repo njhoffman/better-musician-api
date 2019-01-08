@@ -8,7 +8,6 @@ rethinkdb_data/
 .eslintcache
 
 nodemon-*.json
-lib/**/*.json
 
 reports/coverage/**
 reports/plato/**
