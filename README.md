@@ -1,4 +1,4 @@
-[![GitHub version](https://badge.fury.io/gh/njhoffman%2Fbetter-musician-api.svg)](https://github.com/njhoffman/better-musician-api/releases)
+[![Version](https://img.shields.io/github/release/njhoffman/better-musician-api.svg)](https://github.com/njhoffman/better-musician-api/releases)
 [![Build Status](https://travis-ci.org/njhoffman/better-musician-api.svg?branch=master)](https://travis-ci.org/njhoffman/better-musician-api)
 [![Coverage Status](https://coveralls.io/repos/github/njhoffman/better-musician-api/badge.svg?branch=master)](https://coveralls.io/github/njhoffman/better-musician-api?branch=master)
 
