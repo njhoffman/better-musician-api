@@ -1,3 +1,3 @@
-const { getConfig, initConfig } = require('./config');
+const config = require('./config');
 
-module.exports = { getConfig, initConfig };
+module.exports = config;

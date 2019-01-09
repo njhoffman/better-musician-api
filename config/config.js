@@ -44,7 +44,10 @@ const config = {
       coverage: true,
       annotations: true,
     }
-  }
+  },
+  // TODO: future configuration...
+  gitHooks: {},
+  travisKey: ''
 };
 
 const initConfig = () => (
@@ -97,4 +100,9 @@ const initConfig = () => (
 
 const getConfig = () => config;
 
-module.exports = { getConfig, initConfig };
+module.exports = {
+  getConfig,
+  initConfig,
+  appName: config.appName,
+  nameSpace: config.nameSpace
+};

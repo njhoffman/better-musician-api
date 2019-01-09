@@ -24,7 +24,7 @@ module.exports = function(routes) {
     });
 
     it('Should update validated fields', (done) => {
-      const data = { maxDifficulty : 13 };
+      const data = { lastName: 'Slugworth' };
       login(app)
         .then(headers => {
           request(app)
@@ -40,7 +40,7 @@ module.exports = function(routes) {
             .then(res => {
               expect(res.body.records[0])
                 .to.be.an('object')
-                .that.contains({ email: 'testuser@example.com', maxDifficulty: data.maxDifficulty });
+                .that.contains({ email: 'testuser@example.com', lastName: data.lastName });
               done();
             })
             .catch(done);
