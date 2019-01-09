@@ -1,13 +1,13 @@
-[![Version](https://img.shields.io/github/release/njhoffman/better-musician-api.svg)](https://github.com/njhoffman/better-musician-api/releases)
+[![Version](https://img.shields.io/github/tag/njhoffman/better-musician-api.svg)](https://github.com/njhoffman/better-musician-api)
 [![Build Status](https://travis-ci.org/njhoffman/better-musician-api.svg?branch=master)](https://travis-ci.org/njhoffman/better-musician-api)
 [![Coverage Status](https://coveralls.io/repos/github/njhoffman/better-musician-api/badge.svg?branch=master)](https://coveralls.io/github/njhoffman/better-musician-api?branch=master)
 
 [![Code Size](https://img.shields.io/github/languages/code-size/njhoffman/better-musician-api.svg)](https://github.com/njhoffman/better-musician-api)
 [![Repo Size](https://img.shields.io/github/repo-size/njhoffman/better-musician-api.svg)](https://github.com/njhoffman/better-musician-api)
-[![Dependencies](https://img.shields.io/david/njhoffman/better-musician-api.svg)](https://github.com/njhoffman/better-musician-api)
-[![Dev Dependencies](https://img.shields.io/david/dev/njhoffman/better-musician-api.svg)](https://github.com/njhoffman/better-musician-api)
+[![Dependencies](https://img.shields.io/david/njhoffman/better-musician-api.svg?label=deps)](https://david-dm.org/njhoffman/better-musician-api)
+[![Dev Dependencies](https://img.shields.io/david/dev/njhoffman/better-musician-api.svg?label=dev%20deps)](https://david-dm.org/njhoffman/better-musician-api?type=dev)
 
-[![](https://img.shields.io/github/commit-activity/y/njhoffman/better-musician-api.svg)](https://github.com/njhoffman/better-musician-api)
+[![Commit Activity](https://img.shields.io/github/commit-activity/y/njhoffman/better-musician-api.svg?label=activity)](https://github.com/njhoffman/better-musician-api)
 [![Last Commit](https://img.shields.io/github/last-commit/njhoffman/better-musician-api.svg)](https://github.com/njhoffman/better-musician-api)
 [![GitHub issues](https://img.shields.io/github/issues/njhoffman/better-musician-api.svg)](https://github.com/njhoffman/better-musician-api/issues)
 [![GitHub license](https://img.shields.io/github/license/njhoffman/better-musician-api.svg)](https://github.com/njhoffman/better-musician-api/blob/master/LICENSE.md)
