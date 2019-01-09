@@ -16,7 +16,7 @@
 TODO: Add badges for Uptime robot status, code climate maintainability, technical debt
 -->
 
-NodeJS RESTful API server for handling requests from [better-musician-api](https://github.com/njhoffman/better-musician-api).
+NodeJS RESTful API server for handling requests from [better-musician](https://github.com/njhoffman/better-musician).
 
 **Core Technology Stack**
 
